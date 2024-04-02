@@ -1,0 +1,111 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.services.qbittorrent;
+in
+{
+  options.services.qbittorrent = {
+    enable = mkEnableOption (lib.mdDoc "qBittorrent headless");
+
+    dataDir = mkOption {
+      type = types.path;
+      default = "/var/lib/qbittorrent";
+      description = lib.mdDoc ''
+        The directory where qBittorrent stores its data files.
+      '';
+    };
+
+    user = mkOption {
+      type = types.str;
+      default = "qbittorrent";
+      description = lib.mdDoc ''
+        User account under which qBittorrent runs.
+      '';
+    };
+
+    group = mkOption {
+      type = types.str;
+      default = "qbittorrent";
+      description = lib.mdDoc ''
+        Group under which qBittorrent runs.
+      '';
+    };
+
+    port = mkOption {
+      type = types.port;
+      default = 8080;
+      description = lib.mdDoc ''
+        qBittorrent web UI port.
+      '';
+    };
+
+    openFirewall = mkOption {
+      type = types.bool;
+      default = false;
+      description = lib.mdDoc ''
+        Open services.qBittorrent.port to the outside network.
+      '';
+    };
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.qbittorrent-nox;
+      defaultText = literalExpression "pkgs.qbittorrent-nox";
+      description = lib.mdDoc ''
+        The qbittorrent package to use.
+      '';
+    };
+  };
+
+  config = mkIf cfg.enable {
+    networking.firewall = mkIf cfg.openFirewall {
+      allowedTCPPorts = [ cfg.port ];
+    };
+
+    systemd.services.qbittorrent = {
+      # based on the plex.nix service module and
+      # https://github.com/qbittorrent/qBittorrent/blob/master/dist/unix/systemd/qbittorrent-nox%40.service.in
+      description = "qBittorrent-nox service";
+      documentation = [ "man:qbittorrent-nox(1)" ];
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+
+      serviceConfig = {
+        Type = "simple";
+        User = cfg.user;
+        Group = cfg.group;
+        StateDirectory = "qbittorrent";
+        StateDirectoryMode = "0700";
+        UMask = "0007";
+        WorkingDirectory = "/var/lib/qbittorrent";
+        TimeoutStopSec = 1800;
+        ExecStart = "${cfg.package}/bin/qbittorrent-nox";
+        # To prevent "Quit & shutdown daemon" from working; we want systemd to
+        # manage it!
+        #Restart = "on-success";
+        #UMask = "0002";
+        #LimitNOFILE = cfg.openFilesLimit;
+      };
+
+      environment = {
+        QBT_PROFILE=cfg.dataDir;
+        QBT_WEBUI_PORT=toString cfg.port;
+      };
+    };
+
+    users.users = mkIf (cfg.user == "qbittorrent") {
+      qbittorrent = {
+        group = cfg.group;
+        isSystemUser = true;
+      };
+    };
+
+    users.groups = mkIf (cfg.group == "qbittorrent") {
+      qbittorrent = {};
+    };
+
+  };
+}
+
