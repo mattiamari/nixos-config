@@ -1,12 +1,13 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 with lib;
 let
-  cfg = config.services.customCaddy;
-  
-  serviceConfig = types.submodule {
+  cfg = config.homelab.caddy;
+
+  serviceConfig = {name, ...}: {
     options = {
       name = mkOption {
         type = types.str;
+        default = name;
       };
       port = mkOption {
         type = types.port;
@@ -22,12 +23,12 @@ let
     @${serviceConfig.name} host ${serviceConfig.name}.${cfg.domain}
     handle @${serviceConfig.name} {
       ${serviceConfig.extraConfig}
-      reverse_proxy http://localhost:${serviceConfig.port}
+      reverse_proxy http://localhost:${toString serviceConfig.port}
     }
   '';
 in
 {
-  options.services.customCaddy = {
+  options.homelab.caddy = {
     enable = mkEnableOption "Custom Caddy service";
     
     domain = mkOption {
@@ -36,24 +37,25 @@ in
     };
 
     lanIP = mkOption {
-      type = types.ip;
+      type = types.str;
       description = mdDoc "LAN IP address";
     };
 
     privateServices = mkOption {
-      type = types.listOf serviceConfig;
-      default = [];
+      type = types.attrsOf (types.submodule serviceConfig);
+      default = {};
     };
 
     publicServices = mkOption {
-      type = types.listOf serviceConfig;
-      default = [];
+      type = types.attrsOf (types.submodule serviceConfig);
+      default = {};
     };
   };
 
   config = mkIf cfg.enable {
     services.caddy = {
       enable = true;
+      package = pkgs.callPackage ../packages/caddy {};
       virtualHosts = {
         "localhost".extraConfig = ''
           respond "Hello from localhost"
@@ -68,14 +70,14 @@ in
             output stdout
           }
 
-          ${concatMapStringsSep "\n" mkServiceConfig cfg.publicServices}
+          ${concatMapStringsSep "\n" mkServiceConfig (attrValues cfg.publicServices)}
 
           @out_of_lan not remote_ip ${cfg.lanIP}
           handle @out_of_lan {
             abort
           }
 
-          ${concatMapStringsSep "\n" mkServiceConfig cfg.privateServices}
+          ${concatMapStringsSep "\n" mkServiceConfig (attrValues cfg.privateServices)}
 
           handle {
             abort

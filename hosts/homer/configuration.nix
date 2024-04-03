@@ -16,6 +16,7 @@ in
       ../../modules/firefly.nix
       ../../modules/radarr-ita.nix
       ../../modules/sonarr-ita.nix
+      ../../modules/caddy.nix
     ];
 
   # Bootloader.
@@ -121,48 +122,10 @@ in
   #
   # Caddy
   #
-  services.caddy = {
+  homelab.caddy = {
     enable = true;
-    package = pkgs.callPackage ../../packages/caddy {};
-    virtualHosts = {
-      "localhost".extraConfig = ''
-        respond "Hello from localhost"
-      '';
-      "${publicHostname}".extraConfig = ''
-        respond "Hello from ${publicHostname}"
-      '';
-
-      "*.${publicHostname}".extraConfig = ''
-        tls {
-          dns cloudflare Qe10qpYR7d19msYnX9XbyjGJNSH82YEqhBtCaA5t
-        }
-
-        log {
-          output stdout
-        }
-
-        @out_of_lan not remote_ip 192.168.0.0/24
-        handle @out_of_lan {
-          abort
-        }
-
-
-        @qbittorrent host qbittorrent.${publicHostname}
-        handle @qbittorrent {
-          reverse_proxy http://localhost:${toString config.services.qbittorrent.port}
-        }
-
-        @jellyfin host jellyfin.${publicHostname}
-        handle @jellyfin {
-          reverse_proxy http://localhost:8096
-        }
-
-
-        handle {
-          abort
-        }
-      '';
-    };
+    domain = "test.mattiamari.xyz";
+    lanIP = "192.168.0.0/16";
   };
 
   # TODO
@@ -230,9 +193,7 @@ in
       };
     };
   };
-  services.caddy.virtualHosts."http://adguard.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:3000
-  '';
+  homelab.caddy.privateServices.adguard = {port = 3000;};
 
   services.jellyfin = {
     enable = true;
@@ -240,6 +201,7 @@ in
     group = "mediaserver";
     package = nixpkgsUnstable.jellyfin;
   };
+  homelab.caddy.privateServices.jellyfin = {port = 8096;};
 
   services.qbittorrent = {
     enable = true;
@@ -247,6 +209,7 @@ in
     group = "mediaserver";
     port = 8100;
   };
+  homelab.caddy.privateServices.qbittorrent = {port = 8100;};
 
   services.radarr = {
     enable = true;
@@ -254,9 +217,7 @@ in
     group = "mediaserver";
     package = nixpkgsUnstable.radarr;
   };
-  services.caddy.virtualHosts."http://radarr.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:7878
-  '';
+  homelab.caddy.privateServices.radarr = {port = 7878;};
 
   services.radarrIta = {
     enable = true;
@@ -265,9 +226,7 @@ in
     port = 7879;
     package = nixpkgsUnstable.radarr;
   };
-  services.caddy.virtualHosts."http://radarr-ita.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:7879
-  '';
+  homelab.caddy.privateServices.radarr-ita = {port = 7879;};
 
   services.sonarr = {
     enable = true;
@@ -275,9 +234,7 @@ in
     group = "mediaserver";
     package = nixpkgsUnstable.sonarr;
   };
-  services.caddy.virtualHosts."http://sonarr.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:8989
-  '';
+  homelab.caddy.privateServices.sonarr = {port = 8989;};
 
   services.sonarrIta= {
     enable = true;
@@ -286,17 +243,13 @@ in
     port = 8990;
     package = nixpkgsUnstable.sonarr;
   };
-  services.caddy.virtualHosts."http://sonarr-ita.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:8990
-  '';
+  homelab.caddy.privateServices.sonarr-ita = {port = 8990;};
 
   services.prowlarr = {
     enable = true;
     package = nixpkgsUnstable.prowlarr;
   };
-  services.caddy.virtualHosts."http://prowlarr.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:9696
-  '';
+  homelab.caddy.privateServices.prowlarr = {port = 9696;};
 
   services.photoprism = {
     enable = false;
@@ -311,15 +264,13 @@ in
   services.syncthing = {
     enable = true;
   };
-  # `Host "localhost"` is to avoid "host check error". (https://docs.syncthing.net/users/faq.html#why-do-i-get-host-check-error-in-the-gui-api)
-  services.caddy.virtualHosts."http://syncthing.${publicHostname}".extraConfig = ''
-    request_header Host "localhost"
-    reverse_proxy http://localhost:8384
-  '';
+  homelab.caddy.privateServices.syncthing = {
+    port = 8384;
+    # Prevents "host check error". (https://docs.syncthing.net/users/faq.html#why-do-i-get-host-check-error-in-the-gui-api)
+    extraConfig = ''request_header Host "localhost"'';
+  };
 
-  services.caddy.virtualHosts."http://firefly.${publicHostname}".extraConfig = ''
-    reverse_proxy http://localhost:8097
-  '';
+  homelab.caddy.privateServices.firefly = {port = 8097;};
 
   #
   # Containers
