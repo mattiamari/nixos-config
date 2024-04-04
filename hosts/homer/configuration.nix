@@ -2,11 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, nixpkgsUnstable,... }:
+{ pkgs, pkgsUnstable,... }:
 
 let
   publicHostname = "test.mattiamari.xyz";
-  lanIPAddr = "192.168.122.46";
+  serverLocalIP = "192.168.122.46";
 in
 {
   imports =
@@ -92,13 +92,11 @@ in
     gdu
     tree
     zip
-    cargo
-    gcc
     podman-compose
-    nixpkgsUnstable.jellyfin-ffmpeg
+    pkgsUnstable.jellyfin-ffmpeg
     mysql-client
     helix
-    nil
+    nil # Nix language server
   ];
 
   programs.zsh.enable = true;
@@ -124,8 +122,8 @@ in
   #
   homelab.caddy = {
     enable = true;
-    domain = "test.mattiamari.xyz";
-    lanIP = "192.168.0.0/16";
+    domain = publicHostname;
+    privateNetworkAddr = "192.168.0.0/16";
   };
 
   # TODO
@@ -188,7 +186,7 @@ in
       ];
       dns = {
         rewrites = [
-          {domain = "*.${publicHostname}"; answer = lanIPAddr;}
+          {domain = "*.${publicHostname}"; answer = serverLocalIP;}
         ];
       };
     };
@@ -199,7 +197,7 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    package = nixpkgsUnstable.jellyfin;
+    package = pkgsUnstable.jellyfin;
   };
   homelab.caddy.privateServices.jellyfin = {port = 8096;};
 
@@ -215,7 +213,7 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    package = nixpkgsUnstable.radarr;
+    package = pkgsUnstable.radarr;
   };
   homelab.caddy.privateServices.radarr = {port = 7878;};
 
@@ -224,7 +222,7 @@ in
     user = "mediaserver";
     group = "mediaserver";
     port = 7879;
-    package = nixpkgsUnstable.radarr;
+    package = pkgsUnstable.radarr;
   };
   homelab.caddy.privateServices.radarr-ita = {port = 7879;};
 
@@ -232,7 +230,7 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    package = nixpkgsUnstable.sonarr;
+    package = pkgsUnstable.sonarr;
   };
   homelab.caddy.privateServices.sonarr = {port = 8989;};
 
@@ -241,13 +239,13 @@ in
     user = "mediaserver";
     group = "mediaserver";
     port = 8990;
-    package = nixpkgsUnstable.sonarr;
+    package = pkgsUnstable.sonarr;
   };
   homelab.caddy.privateServices.sonarr-ita = {port = 8990;};
 
   services.prowlarr = {
     enable = true;
-    package = nixpkgsUnstable.prowlarr;
+    package = pkgsUnstable.prowlarr;
   };
   homelab.caddy.privateServices.prowlarr = {port = 9696;};
 
