@@ -19,6 +19,10 @@ in
       ../../modules/caddy.nix
     ];
 
+  fileSystems."/".options = [ "noatime" "nodiratime" ];
+
+  services.fstrim.enable = true;
+
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
@@ -65,16 +69,20 @@ in
   users.users.mattia = {
     isNormalUser = true;
     description = "Mattia";
+    group = "mattia";
     extraGroups = [ "networkmanager" "wheel" "famiglia" "mediaserver" "syncthing" ];
-    packages = with pkgs; [];
+    packages = [];
     shell = pkgs.zsh;
     linger = true;
   };
+  users.groups.mattia = {};
 
   users.users.famiglia = {
     isNormalUser = true;
     description = "famiglia";
+    group = "famiglia";
   };
+  users.groups.famiglia = {};
 
   users.users.mediaserver = {
     isSystemUser = true;
@@ -127,18 +135,46 @@ in
   };
 
   # TODO
-  # user: mediaserver, group: mediaserver
-  #   - jellyfin, qbittorrent, radarr, radarrIta, sonarr, sonarrIta, prowlarr
-  # - syncthing
-  # - photoprism
-  # - adguard home
-  # - ddclient
-  # - configurazione caddy + ssl (possibilmente senza dover aprire 80 e 443)
-  #   - https://github.com/emilylange/nixos-config/blob/22570786b24b606484447bef7a29fe565d475db7/packages/caddy/default.nix
-  #   - https://letsencrypt.org/docs/challenge-types/#dns-01-challenge
   # - wireguard VPN
-  # - samba
   # - https://github.com/crowdsecurity/crowdsec (o fail2ban) 
+  # - key-only ssh login
+
+  #
+  # SMB
+  #
+  services.samba = {
+    enable = true;
+    openFirewall = true;
+    enableNmbd = true;
+    extraConfig = ''
+      guest account = nobody
+      map to guest = bad user
+      server min protocol = SMB3
+      server smb encrypt = desired
+    '';
+    shares = {
+      storage = {
+        path = "/media/storage";
+        writable = true;
+        browseable = true;
+        "guest ok" = false;
+        "valid users" = "mattia";
+      };
+      famiglia = {
+        path = "/media/storage/famiglia";
+        writable = true;
+        browseable = true;
+        "guest ok" = false;
+        "valid users" = "@famiglia";
+      };
+      media = {
+        path = "/media/storage/media";
+        "read only" = true;
+        browseable = true;
+        "guest ok" = true;
+      };
+    };
+  };
 
   #
   # Services
@@ -234,7 +270,7 @@ in
   };
   homelab.caddy.privateServices.sonarr = {port = 8989;};
 
-  services.sonarrIta= {
+  services.sonarrIta = {
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
@@ -249,6 +285,7 @@ in
   };
   homelab.caddy.privateServices.prowlarr = {port = 9696;};
 
+  # TODO configure
   services.photoprism = {
     enable = false;
     originalsPath = /tmp/photoprism;

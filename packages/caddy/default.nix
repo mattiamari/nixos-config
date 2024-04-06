@@ -1,3 +1,5 @@
+# from: https://github.com/emilylange/nixos-config/blob/22570786b24b606484447bef7a29fe565d475db7/packages/caddy/default.nix
+
 { pkgs, ... }:
 
 with pkgs;
