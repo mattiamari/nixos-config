@@ -47,6 +47,12 @@ in
       description = mdDoc "Services accessible only from `lanIP`";
     };
 
+    extraPrivateServices = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = mdDoc "Custom services accessible only from `lanIP`";
+    };
+
     publicServices = mkOption {
       type = types.attrsOf (types.submodule serviceConfig);
       default = {};
@@ -85,6 +91,8 @@ in
           }
 
           ${concatMapStringsSep "\n" mkServiceConfig (attrValues cfg.privateServices)}
+
+          ${concatStringsSep "\n" cfg.extraPrivateServices}
 
           # Abort requests not handled above
           handle {

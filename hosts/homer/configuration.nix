@@ -2,11 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, pkgsUnstable,... }:
+{ pkgs, pkgsUnstable, ... }:
 
 let
   publicHostname = "test.mattiamari.xyz";
   serverLocalIP = "192.168.122.46";
+  privateNetwork = "192.168.0.0/16";
 in
 {
   imports =
@@ -28,15 +29,14 @@ in
   boot.loader.grub.device = "/dev/vda";
   boot.loader.grub.useOSProber = false;
 
-  networking.hostName = "homertest"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  boot.tmp.useTmpfs = true;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  networking.hostName = "homertest";
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  networking.resolvconf.useLocalResolver = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
@@ -65,7 +65,6 @@ in
   # Configure console keymap
   console.keyMap = "it";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.mattia = {
     isNormalUser = true;
     description = "Mattia";
@@ -131,13 +130,19 @@ in
   homelab.caddy = {
     enable = true;
     domain = publicHostname;
-    privateNetworkAddr = "192.168.0.0/16";
+    privateNetworkAddr = privateNetwork;
   };
 
   # TODO
-  # - wireguard VPN
+  # - handle secrets
+  # - backup script
+  # - grafana + prometheus
+  # - (wireguard VPN)
   # - https://github.com/crowdsecurity/crowdsec (o fail2ban) 
   # - key-only ssh login
+  # - service hardening
+  #   - https://github.com/andir/nixpkgs/commit/4d9c0cfdab5d681ff0372bf8b5a2ac6e650c9b8c
+  #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
 
   #
   # SMB
@@ -305,7 +310,9 @@ in
     extraConfig = ''request_header Host "localhost"'';
   };
 
-  homelab.caddy.privateServices.firefly = {port = 8097;};
+  services.firefly = {
+    enable = true;
+  };
 
   #
   # Containers
