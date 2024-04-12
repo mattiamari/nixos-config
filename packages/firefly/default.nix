@@ -18,6 +18,6 @@ stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out
-    cp -r . $out/
+    cp -r --reflink=auto . $out/
   '';
 }

@@ -18,7 +18,7 @@ let
     installPhase = ''
       runHook preInstall
       mkdir $out
-      cp -r . $out/
+      cp -r --reflink=auto . $out/
 
       ln -s ${appConfig} $out/.env
 
