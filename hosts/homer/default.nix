@@ -89,8 +89,6 @@ in
   };
   users.groups.mediaserver = {};
 
-  nixpkgs.config.allowUnfree = true;
-
   environment.systemPackages = with pkgs; [
     shadow
     wget

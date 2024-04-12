@@ -10,16 +10,23 @@
         let
           lib = nixpkgs.lib;
           system = "x86_64-linux";
-          pkgs = nixpkgs.legacyPackages.${system};
-          pkgsUnstable = nixpkgsUnstable.legacyPackages.${system};
+          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+          pkgsUnstable = import nixpkgsUnstable { inherit system; config.allowUnfree = true; };
         in {
         nixosConfigurations = {
           homertest = lib.nixosSystem {
             inherit system;
-            modules = [ ./hosts/homer/configuration.nix ];
+            modules = [ ./hosts/homer ];
             specialArgs = {
               inherit pkgsUnstable;
             };
+          };
+          rescusb = lib.nixosSystem {
+            inherit system;
+            modules = [
+              "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+              ./hosts/rescusb
+            ];
           };
         };
     };
