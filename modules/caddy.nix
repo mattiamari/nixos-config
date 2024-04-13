@@ -71,7 +71,6 @@ in
         '';
       };
 
-      # TODO handle secret
       extraConfig = ''
         *.${cfg.domain} {
           log {
@@ -79,7 +78,10 @@ in
           }
 
           tls {
-            dns cloudflare Qe10qpYR7d19msYnX9XbyjGJNSH82YEqhBtCaA5t
+            dns cloudflare {env.CLOUDFLARE_TOKEN}
+
+            # Prevents errors that may arise from the local DNS cache
+            resolvers 1.1.1.1
           }
 
           ${concatMapStringsSep "\n" mkServiceConfig (attrValues cfg.publicServices)}
@@ -101,6 +103,8 @@ in
         }
       '';
     };
+
+    systemd.services.caddy.serviceConfig.EnvironmentFile = "/home/mattia/secrets/cloudflare";
   };
   
 }

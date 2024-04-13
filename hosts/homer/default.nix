@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { pkgs, pkgsUnstable, ... }:
 
 let
@@ -69,19 +65,19 @@ in
     isNormalUser = true;
     description = "Mattia";
     group = "mattia";
-    extraGroups = [ "networkmanager" "wheel" "famiglia" "mediaserver" "syncthing" ];
+    extraGroups = [ "networkmanager" "wheel" "family" "mediaserver" "syncthing" ];
     packages = [];
     shell = pkgs.zsh;
-    linger = true;
+    # linger = true;
   };
   users.groups.mattia = {};
 
-  users.users.famiglia = {
+  users.users.family = {
     isNormalUser = true;
-    description = "famiglia";
-    group = "famiglia";
+    description = "family";
+    group = "family";
   };
-  users.groups.famiglia = {};
+  users.groups.family = {};
 
   users.users.mediaserver = {
     isSystemUser = true;
@@ -132,7 +128,6 @@ in
   };
 
   # TODO
-  # - handle secrets
   # - backup script
   # - grafana + prometheus
   # - (wireguard VPN)
@@ -163,12 +158,12 @@ in
         "guest ok" = false;
         "valid users" = "mattia";
       };
-      famiglia = {
-        path = "/media/storage/famiglia";
+      family = {
+        path = "/media/storage/family";
         writable = true;
         browseable = true;
         "guest ok" = false;
-        "valid users" = "@famiglia";
+        "valid users" = "@family";
       };
       media = {
         path = "/media/storage/media";
@@ -203,7 +198,7 @@ in
     use = "web, web=icanhazip.com";
     protocol = "cloudflare";
     username = "token";
-    passwordFile = "/home/mattia/nixos/ddclient_token";
+    passwordFile = "/home/mattia/secrets/ddclient_token";
     zone = "mattiamari.xyz";
     domains = [
       "mattiamari.xyz"
@@ -292,7 +287,6 @@ in
   services.photoprism = {
     enable = false;
     originalsPath = /tmp/photoprism;
-    # TODO    
     
     # settings = {
     #

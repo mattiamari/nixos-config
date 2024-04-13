@@ -24,7 +24,8 @@ let
 
       cd $out
       composer dump-autoload
-      php artisan package:discover
+      # Temporary key to make Laravel happy
+      APP_KEY=AFeducvAHDtEMbZJ7hVpnNrLUdr6XLs4 php artisan package:discover
       cd -
       
       rm -rf $out/storage
@@ -53,8 +54,7 @@ let
     #
     # Avoid the "#" character in your APP_KEY, it may break things.
     #
-    # TODO handle secret
-    APP_KEY=SomeRandomStringOf32CharsExactly
+    # APP_KEY=
 
     # Firefly III will launch using this language (for new users and unauthenticated visitors)
     # For a list of available languages: https://github.com/firefly-iii/firefly-iii/tree/main/resources/lang
@@ -448,8 +448,13 @@ in
         "php_admin_value[error_log]" = "stderr";
         "php_admin_flag[log_errors]" = true;
         "php_admin_flag[display_errors]" = true;
-        "catch_workers_output" = "yes";
+        "catch_workers_output" = true;
+        "clear_env" = false;
       };
+    };
+
+    systemd.services.phpfpm-firefly.serviceConfig = {
+      EnvironmentFile = "/home/mattia/secrets/firefly";
     };
 
     systemd.tmpfiles.rules = [
@@ -466,9 +471,11 @@ in
         User = user;
         Group = group;
         WorkingDirectory = pkg;
+        EnvironmentFile = "/home/mattia/secrets/firefly";
         ExecStart = initScript;
       };
     };
+
 
     homelab.caddy.extraPrivateServices = [
       ''
