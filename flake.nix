@@ -12,7 +12,11 @@
         inherit (inputs.nixpkgs) lib;
         
         pkgs = import inputs.nixpkgs { inherit system; config.allowUnfree = true; };
-        pkgsUnstable = import inputs.nixpkgsUnstable { inherit system; config.allowUnfree = true; };
+        pkgsUnstable = import inputs.nixpkgsUnstable {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = import ./overlays;
+        };
 
 
         nixosConfigurations = {

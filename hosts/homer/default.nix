@@ -1,4 +1,4 @@
-{ pkgs, pkgsUnstable, ... }:
+{ config, pkgs, pkgsUnstable, ... }:
 
 let
   publicHostname = "test.mattiamari.xyz";
@@ -9,11 +9,12 @@ in
   imports =
     [
       ./hardware-configuration.nix
+      ../../modules/caddy.nix
       ../../modules/qbittorrent.nix
       ../../modules/firefly.nix
       ../../modules/radarr-ita.nix
       ../../modules/sonarr-ita.nix
-      ../../modules/caddy.nix
+      ../../modules/filebrowser.nix
     ];
 
   fileSystems."/".options = [ "noatime" "nodiratime" ];
@@ -304,6 +305,15 @@ in
 
   services.firefly = {
     enable = true;
+  };
+
+  services.filebrowser = {
+    enable = true;
+    port = 9001;
+    package = pkgsUnstable.filebrowser;
+  };
+  homelab.caddy.publicServices.filebrowser = {
+    port = config.services.filebrowser.port;
   };
 
   #
