@@ -4,6 +4,8 @@ let
   publicHostname = "test.mattiamari.xyz";
   serverLocalIP = "192.168.122.46";
   privateNetwork = "192.168.0.0/16";
+  adminUser = "mattia";
+  secretsDir = "/home/${adminUser}/secrets";
 in
 {
   imports =
@@ -62,16 +64,16 @@ in
   # Configure console keymap
   console.keyMap = "it";
 
-  users.users.mattia = {
+  users.users.${adminUser} = {
     isNormalUser = true;
-    description = "Mattia";
-    group = "mattia";
+    description = "Admin";
+    group = adminUser;
     extraGroups = [ "networkmanager" "wheel" "family" "mediaserver" "syncthing" ];
     packages = [];
     shell = pkgs.zsh;
     # linger = true;
   };
-  users.groups.mattia = {};
+  users.groups.${adminUser} = {};
 
   users.users.family = {
     isNormalUser = true;
@@ -119,15 +121,6 @@ in
     allowedUDPPorts = [ 53 443 ];
   };
 
-  #
-  # Caddy
-  #
-  homelab.caddy = {
-    enable = true;
-    domain = publicHostname;
-    privateNetworkAddr = privateNetwork;
-  };
-
   # TODO
   # - backup script
   # - grafana + prometheus
@@ -157,7 +150,7 @@ in
         writable = true;
         browseable = true;
         "guest ok" = false;
-        "valid users" = "mattia";
+        "valid users" = adminUser;
       };
       family = {
         path = "/media/storage/family";
@@ -176,30 +169,24 @@ in
   };
 
   #
-  # Services
+  # Caddy
   #
-  services.mysql = {
+  homelab.caddy = {
     enable = true;
-    package = pkgs.mariadb;
-    ensureDatabases = [
-      "firefly"
-    ];
-    ensureUsers = [
-      {
-        name = "firefly";
-        ensurePermissions = {
-          "firefly.*" = "ALL PRIVILEGES";
-        };
-      }
-    ];
+    environmentFilePath = "${secretsDir}/caddy";
+    domain = publicHostname;
+    privateNetworkAddr = privateNetwork;
   };
 
+  #
+  # Services
+  #
   services.ddclient = {
     enable = true;
     use = "web, web=icanhazip.com";
     protocol = "cloudflare";
     username = "token";
-    passwordFile = "/home/mattia/secrets/ddclient_token";
+    passwordFile = "${secretsDir}/ddclient-cloudflare-key";
     zone = "mattiamari.xyz";
     domains = [
       "mattiamari.xyz"
@@ -215,7 +202,7 @@ in
       };
       users = [
         {
-          name = "mattia";
+          name = adminUser;
           password = "$2y$10$b2Sozdie36mtEFA3JDpX3eH9rd3tu6hixFkxu5Pd70h9.zxsFxp9i"; # "changeme"
         }
       ];
@@ -305,6 +292,7 @@ in
 
   services.firefly = {
     enable = true;
+    environmentFilePath = "${secretsDir}/firefly";
   };
 
   services.filebrowser = {

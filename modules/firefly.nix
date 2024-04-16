@@ -408,6 +408,11 @@ in
       default = pkgs.callPackage ../packages/firefly {};
     };
 
+    environmentFilePath = mkOption {
+      type = types.path;
+      description = mdDoc "Path to an environment file. Used to pass secrets";
+    };
+
     dbSocketPath = mkOption {
       type = types.path;
       default = "/run/mysqld/mysqld.sock";
@@ -454,7 +459,7 @@ in
     };
 
     systemd.services.phpfpm-firefly.serviceConfig = {
-      EnvironmentFile = "/home/mattia/secrets/firefly";
+      EnvironmentFile = cfg.environmentFilePath;
     };
 
     systemd.tmpfiles.rules = [
@@ -471,11 +476,26 @@ in
         User = user;
         Group = group;
         WorkingDirectory = pkg;
-        EnvironmentFile = "/home/mattia/secrets/firefly";
+        EnvironmentFile = cfg.environmentFilePath;
         ExecStart = initScript;
       };
     };
 
+    services.mysql = {
+      enable = true;
+      package = pkgs.mariadb;
+      ensureDatabases = [
+        "firefly"
+      ];
+      ensureUsers = [
+        {
+          name = user;
+          ensurePermissions = {
+            "${user}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ];
+    };
 
     homelab.caddy.extraPrivateServices = [
       ''

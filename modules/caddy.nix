@@ -30,6 +30,11 @@ in
 {
   options.homelab.caddy = {
     enable = mkEnableOption "Custom Caddy service";
+
+    environmentFilePath = mkOption {
+      type = types.path;
+      description = mdDoc "Path to an environment file. Used to pass secrets";
+    };
     
     domain = mkOption {
       type = types.str;
@@ -104,7 +109,7 @@ in
       '';
     };
 
-    systemd.services.caddy.serviceConfig.EnvironmentFile = "/home/mattia/secrets/cloudflare";
+    systemd.services.caddy.serviceConfig.EnvironmentFile = cfg.environmentFilePath;
   };
   
 }
