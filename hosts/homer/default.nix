@@ -96,7 +96,7 @@ in
     gdu
     tree
     zip
-    # borgbackup
+    borgbackup
     podman-compose
     pkgsUnstable.jellyfin-ffmpeg
     mysql-client
@@ -133,41 +133,81 @@ in
   #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
 
   # TODO
-  # services.borgbackup.jobs = {
-  #   system = {
-  #     paths = [
-  #       "/home"
-  #       "/var/lib"
-  #     ];
+  services.borgbackup.jobs =
+    let
+      preHook = ''
+        /run/wrappers/bin/mount /dev/disk/by-uuid/d3a10dc7-e09b-4737-a155-9806e26859ee /mnt/backup-a
+      '';
 
-  #     encryption = {
-  #       mode = "repokey-blake2";
-  #       passCommand = "cat ${secretsDir}/borg-system";
-  #     };
-  #   };
+      postHook = ''
+        /run/wrappers/bin/umount /mnt/backup-a
+      '';
 
-  #   mattia = {
-  #     paths = [
-  #       "/media/storage/mattia"
-  #     ];
+      readWritePaths = [
+        "/mnt/backup-a"
+      ];
+    in
+    {
+      system = {
+        paths = [
+          "/home"
+          "/var/lib"
+        ];
 
-  #     encryption = {
-  #       mode = "repokey-blake2";
-  #       passCommand = "cat ${secretsDir}/borg-system";
-  #     };
-  #   };
+        exclude = [
+          "*/cache"
+          "*/.cache"
+          "/var/lib/jellyfin/transcodes"
+        ];
 
-  #   family = {
-  #     paths = [
-  #       "/media/storage/famiglia"
-  #     ];
+        encryption = {
+          mode = "repokey-blake2";
+          passCommand = "cat ${secretsDir}/borg-system";
+        };
 
-  #     encryption = {
-  #       mode = "repokey-blake2";
-  #       passCommand = "cat ${secretsDir}/borg-family";
-  #     };
-  #   };
-  # };
+        repo = "/mnt/backup-a/borg-system";
+        removableDevice = true;
+
+        prune.keep = {
+          within = "1d"; # keep everything from last day
+          daily = 14;
+          weekly = 8;
+          monthly = 12;
+        };
+
+        inherit preHook;
+        inherit postHook;
+        inherit readWritePaths;
+      };
+
+      # mattia = {
+      #   paths = [
+      #     "/media/storage/mattia"
+      #   ];
+
+      #   encryption = {
+      #     mode = "repokey-blake2";
+      #     passCommand = "cat ${secretsDir}/borg-system";
+      #   };
+
+      #   inherit preHook;
+      #   inherit readWritePaths;
+      # };
+
+      # family = {
+      #   paths = [
+      #     "/media/storage/famiglia"
+      #   ];
+
+      #   encryption = {
+      #     mode = "repokey-blake2";
+      #     passCommand = "cat ${secretsDir}/borg-family";
+      #   };
+
+      #   inherit preHook;
+      #   inherit readWritePaths;
+      # };
+    };
 
   #
   # SMB
