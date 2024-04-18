@@ -1,7 +1,7 @@
 { lib, config, pkgs, ... }:
 with lib;
 let
-  cfg = config.homelab.caddy;
+  cfg = config.myCaddy;
 
   serviceConfig = { name, ... }: {
     options = {
@@ -28,7 +28,7 @@ let
   '';
 in
 {
-  options.homelab.caddy = {
+  options.myCaddy = {
     enable = mkEnableOption "Custom Caddy service";
 
     environmentFilePath = mkOption {

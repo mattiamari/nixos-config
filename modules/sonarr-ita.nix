@@ -11,7 +11,7 @@ let
       <Port>${toString cfg.port}</Port>
     </Config>
   '';
-  preStart = pkgs.writeShellScript "radarrIta-prestart" ''
+  preStart = pkgs.writeShellScript "sonarrIta-prestart" ''
     if [[ -f ${configFilePath} ]]; then
       sed -i 's|<Port>.*</Port>|<Port>${toString cfg.port}</Port>|g' ${configFilePath}
     else

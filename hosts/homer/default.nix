@@ -96,6 +96,7 @@ in
     gdu
     tree
     zip
+    # borgbackup
     podman-compose
     pkgsUnstable.jellyfin-ffmpeg
     mysql-client
@@ -130,6 +131,43 @@ in
   # - service hardening
   #   - https://github.com/andir/nixpkgs/commit/4d9c0cfdab5d681ff0372bf8b5a2ac6e650c9b8c
   #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
+
+  # TODO
+  # services.borgbackup.jobs = {
+  #   system = {
+  #     paths = [
+  #       "/home"
+  #       "/var/lib"
+  #     ];
+
+  #     encryption = {
+  #       mode = "repokey-blake2";
+  #       passCommand = "cat ${secretsDir}/borg-system";
+  #     };
+  #   };
+
+  #   mattia = {
+  #     paths = [
+  #       "/media/storage/mattia"
+  #     ];
+
+  #     encryption = {
+  #       mode = "repokey-blake2";
+  #       passCommand = "cat ${secretsDir}/borg-system";
+  #     };
+  #   };
+
+  #   family = {
+  #     paths = [
+  #       "/media/storage/famiglia"
+  #     ];
+
+  #     encryption = {
+  #       mode = "repokey-blake2";
+  #       passCommand = "cat ${secretsDir}/borg-family";
+  #     };
+  #   };
+  # };
 
   #
   # SMB
@@ -171,7 +209,7 @@ in
   #
   # Caddy
   #
-  homelab.caddy = {
+  myCaddy = {
     enable = true;
     environmentFilePath = "${secretsDir}/caddy";
     domain = publicHostname;
@@ -213,7 +251,7 @@ in
       };
     };
   };
-  homelab.caddy.privateServices.adguard = {port = 3000;};
+  myCaddy.privateServices.adguard = {port = 3000;};
 
   services.jellyfin = {
     enable = true;
@@ -221,7 +259,7 @@ in
     group = "mediaserver";
     package = pkgsUnstable.jellyfin;
   };
-  homelab.caddy.privateServices.jellyfin = {port = 8096;};
+  myCaddy.privateServices.jellyfin = {port = 8096;};
 
   services.qbittorrent = {
     enable = true;
@@ -229,7 +267,7 @@ in
     group = "mediaserver";
     port = 8100;
   };
-  homelab.caddy.privateServices.qbittorrent = {port = 8100;};
+  myCaddy.privateServices.qbittorrent = {port = 8100;};
 
   services.radarr = {
     enable = true;
@@ -237,7 +275,7 @@ in
     group = "mediaserver";
     package = pkgsUnstable.radarr;
   };
-  homelab.caddy.privateServices.radarr = {port = 7878;};
+  myCaddy.privateServices.radarr = {port = 7878;};
 
   services.radarrIta = {
     enable = true;
@@ -246,7 +284,7 @@ in
     port = 7879;
     package = pkgsUnstable.radarr;
   };
-  homelab.caddy.privateServices.radarr-ita = {port = 7879;};
+  myCaddy.privateServices.radarr-ita = {port = 7879;};
 
   services.sonarr = {
     enable = true;
@@ -254,7 +292,7 @@ in
     group = "mediaserver";
     package = pkgsUnstable.sonarr;
   };
-  homelab.caddy.privateServices.sonarr = {port = 8989;};
+  myCaddy.privateServices.sonarr = {port = 8989;};
 
   services.sonarrIta = {
     enable = true;
@@ -263,13 +301,13 @@ in
     port = 8990;
     package = pkgsUnstable.sonarr;
   };
-  homelab.caddy.privateServices.sonarr-ita = {port = 8990;};
+  myCaddy.privateServices.sonarr-ita = {port = 8990;};
 
   services.prowlarr = {
     enable = true;
     package = pkgsUnstable.prowlarr;
   };
-  homelab.caddy.privateServices.prowlarr = {port = 9696;};
+  myCaddy.privateServices.prowlarr = {port = 9696;};
 
   # TODO configure
   services.photoprism = {
@@ -284,7 +322,7 @@ in
   services.syncthing = {
     enable = true;
   };
-  homelab.caddy.privateServices.syncthing = {
+  myCaddy.privateServices.syncthing = {
     port = 8384;
     # Prevents "host check error". (https://docs.syncthing.net/users/faq.html#why-do-i-get-host-check-error-in-the-gui-api)
     extraConfig = ''request_header Host "localhost"'';
@@ -300,7 +338,7 @@ in
     port = 9001;
     package = pkgsUnstable.filebrowser;
   };
-  homelab.caddy.publicServices.filebrowser = {
+  myCaddy.publicServices.filebrowser = {
     port = config.services.filebrowser.port;
   };
 
