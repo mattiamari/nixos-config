@@ -7,6 +7,7 @@ let
 
   user = "firefly";
   group = "firefly";
+  storageDir = "/var/lib/firefly/storage";
 
   pkg = pkgs.stdenv.mkDerivation rec {
     pname = "firefly-iii-configured";
@@ -29,7 +30,7 @@ let
       cd -
       
       rm -rf $out/storage
-      ln -s ${cfg.storageDir} $out/storage
+      ln -s ${storageDir} $out/storage
       runHook postInstall
     '';
   };
@@ -389,8 +390,8 @@ let
     set -e
     
     # Init required directories
-    cp -r ${cfg.package}/storage/. ${cfg.storageDir}/
-    chmod -R 750 ${cfg.storageDir}/
+    cp -r ${cfg.package}/storage/. ${storageDir}/
+    chmod -R 750 ${storageDir}/
 
     # Init DB
     $PHP artisan firefly-iii:upgrade-database
@@ -416,11 +417,6 @@ in
     dbSocketPath = mkOption {
       type = types.path;
       default = "/run/mysqld/mysqld.sock";
-    };
-
-    storageDir = mkOption {
-      type = types.path;
-      default = "/var/lib/firefly/storage";
     };
   };
 
@@ -463,7 +459,7 @@ in
     };
 
     systemd.tmpfiles.rules = [
-      "d '${cfg.storageDir}' 0750 ${user} ${group}"
+      "d '${storageDir}' 0750 ${user} ${group}"
     ];
 
     systemd.services.firefly-init = {
@@ -512,11 +508,15 @@ in
       ''
     ];
 
+    # Look for unused ids in https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/misc/ids.nix
     users.users.${user} = {
       isSystemUser = true;
+      uid = 398;
       group = group;
     };
 
-    users.groups.${group} = {};
+    users.groups.${group} = {
+      gid = 398;
+    };
   };
 }
