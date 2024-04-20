@@ -20,7 +20,6 @@ in
     ];
 
   fileSystems."/".options = [ "noatime" "nodiratime" ];
-
   services.fstrim.enable = true;
 
   # Bootloader.
@@ -31,10 +30,7 @@ in
   boot.tmp.useTmpfs = true;
 
   networking.hostName = "homertest";
-
-  # Enable networking
   networking.networkmanager.enable = true;
-
   networking.resolvconf.useLocalResolver = true;
 
   # Set your time zone.
@@ -114,7 +110,13 @@ in
     defaultEditor = true;
   };
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+  };
 
   networking.firewall = {
     enable = true;
@@ -123,32 +125,53 @@ in
   };
 
   # TODO
-  # - backup script
   # - grafana + prometheus
   # - (wireguard VPN)
   # - https://github.com/crowdsecurity/crowdsec (o fail2ban) 
-  # - key-only ssh login
   # - service hardening
   #   - https://github.com/andir/nixpkgs/commit/4d9c0cfdab5d681ff0372bf8b5a2ac6e650c9b8c
   #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
 
-  # TODO
   services.borgbackup.jobs =
     let
-      preHook = ''
-        /run/wrappers/bin/mount /dev/disk/by-uuid/d3a10dc7-e09b-4737-a155-9806e26859ee /mnt/backup-a
-      '';
+      mkJob = { name, startAt, paths, exclude ? [] }: {
+        inherit startAt;
+        inherit paths;
+        inherit exclude;
+        persistentTimer = true;
 
-      postHook = ''
-        /run/wrappers/bin/umount /mnt/backup-a
-      '';
+        preHook = ''
+          mkdir -p /mnt/backup-a/${name}
+          /run/wrappers/bin/mount /dev/disk/by-uuid/d3a10dc7-e09b-4737-a155-9806e26859ee /mnt/backup-a/${name}
+        '';
 
-      readWritePaths = [
-        "/mnt/backup-a"
-      ];
+        postHook = ''
+          /run/wrappers/bin/umount /mnt/backup-a/${name}
+        '';
+
+        encryption = {
+          mode = "repokey-blake2";
+          passCommand = "cat ${secretsDir}/borg-${name}";
+        };
+
+        repo = "/mnt/backup-a/${name}/borg-${name}";
+        removableDevice = true;
+
+        readWritePaths = [ "/mnt/backup-a/${name}" ];
+
+        prune.keep = {
+          within = "1d"; # keep everything from last day
+          daily = 14;
+          weekly = 8;
+          monthly = 12;
+        };
+      };
     in
     {
-      system = {
+      system = mkJob {
+        name = "system";
+        startAt = "*-*-* 02:00"; # daily at 2 am
+      
         paths = [
           "/home"
           "/var/lib"
@@ -159,54 +182,25 @@ in
           "*/.cache"
           "/var/lib/jellyfin/transcodes"
         ];
-
-        encryption = {
-          mode = "repokey-blake2";
-          passCommand = "cat ${secretsDir}/borg-system";
-        };
-
-        repo = "/mnt/backup-a/borg-system";
-        removableDevice = true;
-
-        prune.keep = {
-          within = "1d"; # keep everything from last day
-          daily = 14;
-          weekly = 8;
-          monthly = 12;
-        };
-
-        inherit preHook;
-        inherit postHook;
-        inherit readWritePaths;
       };
 
-      # mattia = {
-      #   paths = [
-      #     "/media/storage/mattia"
-      #   ];
+      mattia = mkJob {
+        name = "mattia";
+        startAt = "*-*-* 02:10"; # daily at 2 am
 
-      #   encryption = {
-      #     mode = "repokey-blake2";
-      #     passCommand = "cat ${secretsDir}/borg-system";
-      #   };
+        paths = [
+         "/media/storage/mattia"
+        ];
+      };
 
-      #   inherit preHook;
-      #   inherit readWritePaths;
-      # };
+      family = mkJob {
+        name = "family";
+        startAt = "*-*-* 02:20"; # daily at 2 am
 
-      # family = {
-      #   paths = [
-      #     "/media/storage/famiglia"
-      #   ];
-
-      #   encryption = {
-      #     mode = "repokey-blake2";
-      #     passCommand = "cat ${secretsDir}/borg-family";
-      #   };
-
-      #   inherit preHook;
-      #   inherit readWritePaths;
-      # };
+        paths = [
+         "/media/storage/famiglia"
+        ];
+      };
     };
 
   #
@@ -394,12 +388,5 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.11"; # Did you read the comment?
-
+  system.stateVersion = "23.11";
 }
