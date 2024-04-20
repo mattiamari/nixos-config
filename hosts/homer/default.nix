@@ -1,16 +1,13 @@
 { config, pkgs, pkgsUnstable, ... }:
 
 let
-  publicHostname = "test.mattiamari.xyz";
-  serverLocalIP = "192.168.122.46";
-  privateNetwork = "192.168.0.0/16";
-  adminUser = "mattia";
-  secretsDir = "/home/${adminUser}/secrets";
+  myConfig = import ./common.nix;
 in
 {
   imports =
     [
       ./hardware-configuration.nix
+      ./backup.nix
       ../../modules/caddy.nix
       ../../modules/qbittorrent.nix
       ../../modules/firefly.nix
@@ -60,16 +57,16 @@ in
   # Configure console keymap
   console.keyMap = "it";
 
-  users.users.${adminUser} = {
+  users.users.${myConfig.adminUser} = {
     isNormalUser = true;
     description = "Admin";
-    group = adminUser;
+    group = myConfig.adminUser;
     extraGroups = [ "networkmanager" "wheel" "family" "mediaserver" "syncthing" ];
     packages = [];
     shell = pkgs.zsh;
     # linger = true;
   };
-  users.groups.${adminUser} = {};
+  users.groups.${myConfig.adminUser} = {};
 
   users.users.family = {
     isNormalUser = true;
@@ -132,76 +129,6 @@ in
   #   - https://github.com/andir/nixpkgs/commit/4d9c0cfdab5d681ff0372bf8b5a2ac6e650c9b8c
   #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
 
-  services.borgbackup.jobs =
-    let
-      mkJob = { name, startAt, paths, exclude ? [] }: {
-        inherit startAt;
-        inherit paths;
-        inherit exclude;
-        persistentTimer = true;
-
-        preHook = ''
-          mkdir -p /mnt/backup-a/${name}
-          /run/wrappers/bin/mount /dev/disk/by-uuid/d3a10dc7-e09b-4737-a155-9806e26859ee /mnt/backup-a/${name}
-        '';
-
-        postHook = ''
-          /run/wrappers/bin/umount /mnt/backup-a/${name}
-        '';
-
-        encryption = {
-          mode = "repokey-blake2";
-          passCommand = "cat ${secretsDir}/borg-${name}";
-        };
-
-        repo = "/mnt/backup-a/${name}/borg-${name}";
-        removableDevice = true;
-
-        readWritePaths = [ "/mnt/backup-a/${name}" ];
-
-        prune.keep = {
-          within = "1d"; # keep everything from last day
-          daily = 14;
-          weekly = 8;
-          monthly = 12;
-        };
-      };
-    in
-    {
-      system = mkJob {
-        name = "system";
-        startAt = "*-*-* 02:00"; # daily at 2 am
-      
-        paths = [
-          "/home"
-          "/var/lib"
-        ];
-
-        exclude = [
-          "*/cache"
-          "*/.cache"
-          "/var/lib/jellyfin/transcodes"
-        ];
-      };
-
-      mattia = mkJob {
-        name = "mattia";
-        startAt = "*-*-* 02:10"; # daily at 2 am
-
-        paths = [
-         "/media/storage/mattia"
-        ];
-      };
-
-      family = mkJob {
-        name = "family";
-        startAt = "*-*-* 02:20"; # daily at 2 am
-
-        paths = [
-         "/media/storage/famiglia"
-        ];
-      };
-    };
 
   #
   # SMB
@@ -222,7 +149,7 @@ in
         writable = true;
         browseable = true;
         "guest ok" = false;
-        "valid users" = adminUser;
+        "valid users" = myConfig.adminUser;
       };
       family = {
         path = "/media/storage/family";
@@ -245,9 +172,9 @@ in
   #
   myCaddy = {
     enable = true;
-    environmentFilePath = "${secretsDir}/caddy";
-    domain = publicHostname;
-    privateNetworkAddr = privateNetwork;
+    environmentFilePath = "${myConfig.secretsDir}/caddy";
+    domain = myConfig.publicHostname;
+    privateNetworkAddr = myConfig.privateNetwork;
   };
 
   #
@@ -258,7 +185,7 @@ in
     use = "web, web=icanhazip.com";
     protocol = "cloudflare";
     username = "token";
-    passwordFile = "${secretsDir}/ddclient-cloudflare-key";
+    passwordFile = "${myConfig.secretsDir}/ddclient-cloudflare-key";
     zone = "mattiamari.xyz";
     domains = [
       "mattiamari.xyz"
@@ -274,13 +201,13 @@ in
       };
       users = [
         {
-          name = adminUser;
+          name = myConfig.adminUser;
           password = "$2y$10$b2Sozdie36mtEFA3JDpX3eH9rd3tu6hixFkxu5Pd70h9.zxsFxp9i"; # "changeme"
         }
       ];
       dns = {
         rewrites = [
-          {domain = "*.${publicHostname}"; answer = serverLocalIP;}
+          { domain = "*.${myConfig.publicHostname}"; answer = myConfig.serverLocalIP; }
         ];
       };
     };
@@ -364,7 +291,7 @@ in
 
   services.firefly = {
     enable = true;
-    environmentFilePath = "${secretsDir}/firefly";
+    environmentFilePath = "${myConfig.secretsDir}/firefly";
   };
 
   services.filebrowser = {
