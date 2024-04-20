@@ -21,6 +21,14 @@
 
         nixosConfigurations = {
 
+          homer = lib.nixosSystem {
+            inherit system;
+            modules = [ ./hosts/homer ];
+            specialArgs = {
+              inherit pkgsUnstable;
+            };
+          };
+
           homertest = lib.nixosSystem {
             inherit system;
             modules = [ ./hosts/homer ];

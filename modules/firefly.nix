@@ -477,6 +477,8 @@ in
       };
     };
 
+    # TODO firefly cron service
+
     services.mysql = {
       enable = true;
       package = pkgs.mariadb;
