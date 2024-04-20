@@ -66,20 +66,28 @@ in
     shell = pkgs.zsh;
     # linger = true;
   };
-  users.groups.${myConfig.adminUser} = {};
+  users.groups.${myConfig.adminUser} = {
+    gid = 991;
+  };
 
   users.users.family = {
     isNormalUser = true;
     description = "family";
     group = "family";
+    uid = 1001;
   };
-  users.groups.family = {};
+  users.groups.family = {
+    gid = 992;
+  };
 
   users.users.mediaserver = {
     isSystemUser = true;
     group = "mediaserver";
+    uid = 994;
   };
-  users.groups.mediaserver = {};
+  users.groups.mediaserver = {
+    gid = 993;
+  };
 
   environment.systemPackages = with pkgs; [
     shadow
