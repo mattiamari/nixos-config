@@ -66,5 +66,9 @@ in
         Restart = "on-failure";
       };
     };
+
+    systemd.tmpfiles.rules = [
+      "d '${configDir}' 0700 ${cfg.user} ${cfg.group}"
+    ];
   };
 }

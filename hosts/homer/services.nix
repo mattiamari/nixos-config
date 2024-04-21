@@ -1,4 +1,4 @@
-{ config, pkgsUnstable, ... }:
+{ config, pkgs, pkgsUnstable, ... }:
 let
   myConfig = import ./common.nix;
 in
@@ -67,6 +67,17 @@ in
     package = pkgsUnstable.jellyfin;
   };
   myCaddy.privateServices.jellyfin = {port = 8096;};
+  environment.systemPackages = [
+    pkgsUnstable.jellyfin-web
+    pkgsUnstable.jellyfin-ffmpeg
+  ];
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-compute-runtime
+    ];
+  };
 
   services.qbittorrent = {
     enable = true;
@@ -116,15 +127,15 @@ in
   };
   myCaddy.privateServices.prowlarr = {port = 9696;};
 
-  # TODO configure
-  services.photoprism = {
-    enable = false;
-    originalsPath = /tmp/photoprism;
+  # # TODO configure
+  # services.photoprism = {
+  #   enable = false;
+  #   originalsPath = /tmp/photoprism;
     
-    # settings = {
-    #
-    # };
-  };
+  #   # settings = {
+  #   #
+  #   # };
+  # };
 
   services.syncthing = {
     enable = true;
@@ -135,17 +146,24 @@ in
     extraConfig = ''request_header Host "localhost"'';
   };
 
+  # TODO 50169 is for qbittorrent. Move syncthing to its own module
+  # 22000: transfers, 21027: discovery
+  networking.firewall = {
+    allowedTCPPorts = [ 22000 50169 ];
+    allowedUDPPorts = [ 21027 22000 50169 ];
+  };
+
   services.firefly = {
     enable = true;
     environmentFilePath = "${myConfig.secretsDir}/firefly";
   };
 
-  services.filebrowser = {
-    enable = true;
-    port = 9001;
-    package = pkgsUnstable.filebrowser;
-  };
-  myCaddy.publicServices.filebrowser = {
-    port = config.services.filebrowser.port;
-  };
+  # services.filebrowser = {
+  #   enable = true;
+  #   port = 9001;
+  #   package = pkgsUnstable.filebrowser;
+  # };
+  # myCaddy.publicServices.filebrowser = {
+  #   port = config.services.filebrowser.port;
+  # };
 }

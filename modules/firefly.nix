@@ -398,6 +398,7 @@ let
     $PHP artisan firefly-iii:correct-database
     $PHP artisan firefly-iii:report-integrity
     $PHP artisan firefly-iii:laravel-passport-keys
+    $PHP artisan cache:clear
   '';
 in
 {
