@@ -13,7 +13,7 @@ in
 
         preHook = ''
           mkdir -p /mnt/backup-a/${name}
-          /run/wrappers/bin/mount /dev/disk/by-uuid/d3a10dc7-e09b-4737-a155-9806e26859ee /mnt/backup-a/${name}
+          /run/wrappers/bin/mount /dev/disk/by-uuid/7a251ca0-e687-4806-ab32-745239051fe3 /mnt/backup-a/${name}
         '';
 
         postHook = ''
@@ -27,8 +27,8 @@ in
 
         repo = "/mnt/backup-a/${name}/borg-${name}";
         removableDevice = true;
-
         readWritePaths = [ "/mnt/backup-a/${name}" ];
+        extraCreateArgs = "--stats";
 
         prune.keep = {
           within = "1d"; # keep everything from last day
@@ -62,6 +62,11 @@ in
         paths = [
          "/media/storage/mattia"
         ];
+
+        exclude = [
+          "*/Software"
+          "*/things"
+        ];
       };
 
       family = mkJob {
@@ -73,4 +78,10 @@ in
         ];
       };
     };
+
+    systemd.tmpfiles.rules = [
+      "d '/mnt/backup-a/system' 0700 root root"
+      "d '/mnt/backup-a/mattia' 0700 root root"
+      "d '/mnt/backup-a/family' 0700 root root"
+    ];
 }

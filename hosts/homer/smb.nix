@@ -22,7 +22,7 @@ in
         "valid users" = myConfig.adminUser;
       };
       family = {
-        path = "/media/storage/family";
+        path = "/media/storage/famiglia";
         writable = true;
         browseable = true;
         "guest ok" = false;

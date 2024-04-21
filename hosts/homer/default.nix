@@ -15,16 +15,21 @@ in
   fileSystems."/".options = [ "noatime" "nodiratime" ];
   services.fstrim.enable = true;
 
+  fileSystems."/media/storage" = {
+    device = "/dev/disk/by-uuid/48ad7158-f929-41a4-83fb-30ff769edcf2";
+    fsType = "ext4";
+  };
+
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/vda";
-  boot.loader.grub.useOSProber = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   boot.tmp.useTmpfs = true;
 
-  networking.hostName = "homertest";
+  networking.hostName = "homer";
   networking.networkmanager.enable = true;
-  networking.resolvconf.useLocalResolver = true;
+  networking.networkmanager.insertNameservers = [ "1.1.1.1" ];
+  networking.resolvconf.useLocalResolver = false;
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
@@ -56,14 +61,15 @@ in
   users.users.${myConfig.adminUser} = {
     isNormalUser = true;
     description = "Admin";
+    uid = 1000;
     group = myConfig.adminUser;
-    extraGroups = [ "networkmanager" "wheel" "family" "mediaserver" "syncthing" ];
+    extraGroups = [ myConfig.adminUser "networkmanager" "wheel" "family" "mediaserver" "syncthing" ];
     packages = [];
     shell = pkgs.zsh;
     # linger = true;
   };
   users.groups.${myConfig.adminUser} = {
-    gid = 991;
+    gid = 1000;
   };
 
   users.users.family = {
@@ -73,13 +79,13 @@ in
     uid = 1001;
   };
   users.groups.family = {
-    gid = 992;
+    gid = 1001;
   };
 
   users.users.mediaserver = {
     isSystemUser = true;
     group = "mediaserver";
-    uid = 994;
+    uid = 993;
   };
   users.groups.mediaserver = {
     gid = 993;
@@ -93,10 +99,6 @@ in
     gdu
     tree
     zip
-    borgbackup
-    podman-compose
-    pkgsUnstable.jellyfin-ffmpeg
-    mysql-client
     helix
     nil # Nix language server
   ];
