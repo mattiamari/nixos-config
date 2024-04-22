@@ -10,8 +10,15 @@ in
     extraConfig = ''
       guest account = nobody
       map to guest = bad user
+
       server min protocol = SMB3
-      server smb encrypt = desired
+      server max protocol = SMB3
+      server smb encrypt = required
+      
+      load printers = no
+
+      deadtime = 30
+      use sendfiles = yes
     '';
     shares = {
       storage = {
@@ -26,7 +33,7 @@ in
         writable = true;
         browseable = true;
         "guest ok" = false;
-        "valid users" = "@family";
+        "valid users" = "@family"; # group "family"
       };
       media = {
         path = "/media/storage/media";
