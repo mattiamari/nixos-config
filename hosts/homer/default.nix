@@ -20,21 +20,22 @@ in
     fsType = "ext4";
   };
 
-  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.tmp.useTmpfs = true;
+
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 30;
+  };
 
   networking.hostName = "homer";
   networking.networkmanager.enable = true;
   networking.networkmanager.insertNameservers = [ "1.1.1.1" ];
   networking.resolvconf.useLocalResolver = false;
 
-  # Set your time zone.
   time.timeZone = "Europe/Rome";
 
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -49,13 +50,11 @@ in
     LC_TIME = "it_IT.UTF-8";
   };
 
-  # Configure keymap in X11
   services.xserver = {
     layout = "it";
     xkbVariant = "it";
   };
 
-  # Configure console keymap
   console.keyMap = "it";
 
   users.users.${myConfig.adminUser} = {
