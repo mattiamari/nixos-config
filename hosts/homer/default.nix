@@ -95,6 +95,8 @@ in
     wget
     git
     btop
+    htop
+    smartmontools
     gdu
     tree
     zip
@@ -140,6 +142,12 @@ in
   };
 
   virtualisation.oci-containers.backend = "podman";
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-old";
+  };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
