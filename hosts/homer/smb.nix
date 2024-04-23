@@ -7,6 +7,9 @@ in
     enable = true;
     openFirewall = true;
     enableNmbd = true;
+
+    # https://wiki.archlinux.org/title/Samba#Restrict_protocols_for_better_security
+    # https://wiki.archlinux.org/title/Samba#Improve_throughput
     extraConfig = ''
       guest account = nobody
       map to guest = bad user
@@ -20,6 +23,7 @@ in
       deadtime = 30
       use sendfiles = yes
     '';
+
     shares = {
       storage = {
         path = "/media/storage";

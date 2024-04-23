@@ -3,15 +3,27 @@ let
   myConfig = import ./common.nix;
 in
 {
-  imports =
-    [
-      ../../modules/caddy.nix
-      ../../modules/qbittorrent.nix
-      ../../modules/firefly.nix
-      ../../modules/radarr-ita.nix
-      ../../modules/sonarr-ita.nix
-      ../../modules/filebrowser.nix
+  imports = [
+    ../../modules/caddy.nix
+    ../../modules/qbittorrent.nix
+    ../../modules/firefly.nix
+    ../../modules/radarr-ita.nix
+    ../../modules/sonarr-ita.nix
+    ../../modules/filebrowser.nix
+  ];
+
+  networking.firewall = {
+    allowedTCPPorts = [
+      22000 # syncthing transfers
+      50169 # qbittorrent
     ];
+    allowedUDPPorts = [
+      22000 # syncthing transfers
+      21027 # syncthing discovery
+      50169 # qbittorrent
+      1900 # jellyfin DLNA
+    ];
+  };
 
   #
   # Caddy
@@ -41,6 +53,7 @@ in
 
   services.adguardhome = {
     enable = true;
+    mutableSettings = true;
     settings = {
       http = {
         address = "127.0.0.1:3000";
@@ -144,13 +157,6 @@ in
     port = 8384;
     # Prevents "host check error". (https://docs.syncthing.net/users/faq.html#why-do-i-get-host-check-error-in-the-gui-api)
     extraConfig = ''request_header Host "localhost"'';
-  };
-
-  # TODO 50169 is for qbittorrent. Move syncthing to its own module
-  # 22000: transfers, 21027: discovery
-  networking.firewall = {
-    allowedTCPPorts = [ 22000 50169 ];
-    allowedUDPPorts = [ 21027 22000 50169 ];
   };
 
   services.firefly = {
