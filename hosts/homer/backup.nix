@@ -1,6 +1,8 @@
-{ ... }:
+{ config, pkgs, ... }:
 let
   myConfig = import ./common.nix;
+  externalDiskUUID = "70afe25f-2ed5-4d41-a4dc-e4bd10052416";
+  externalDiskID = "ata-WDC_WD30EZRZ-00Z5HB0_WD-WCC4N3RT31NE";
 in
 {
   services.borgbackup.jobs =
@@ -52,6 +54,7 @@ in
           "*/cache"
           "*/.cache"
           "/var/lib/jellyfin/transcodes"
+          "*/.local/share/containers/storage/overlay"
         ];
       };
 
@@ -64,8 +67,8 @@ in
         ];
 
         exclude = [
-          "*/Software"
-          "*/things"
+          "/media/storage/mattia/Software"
+          "/media/storage/mattia/things"
         ];
       };
 
@@ -80,8 +83,64 @@ in
     };
 
     systemd.tmpfiles.rules = [
-      "d '/mnt/backup-a/system' 0700 root root"
-      "d '/mnt/backup-a/mattia' 0700 root root"
-      "d '/mnt/backup-a/family' 0700 root root"
+      "d /mnt/backup-a/system 0700 root root"
+      "d /mnt/backup-a/mattia 0700 root root"
+      "d /mnt/backup-a/family 0700 root root"
+    ];
+
+    # Auto-start backup when external disk is connected
+    services.udev = {
+      enable = true;
+      extraRules = ''
+        ACTION=="add", SUBSYSTEM=="block", ENV{DEVLINKS}=="*/dev/disk/by-uuid/${externalDiskUUID}*", ENV{SYSTEMD_WANTS}="restic-backups-everything.service"
+      '';
+    };
+    
+    # Needed for 'udisksctl power-off'
+    services.udisks2.enable = true;
+
+    services.restic.backups.everything = let b = config.services.borgbackup.jobs; in {
+      repository = "/mnt/backupb/everything/restic-everything";
+      passwordFile = "${myConfig.secretsDir}/restic-everything";
+      timerConfig = null;
+
+      paths = b.system.paths ++ b.mattia.paths ++ b.family.paths ++ [
+        "/media/storage/syncthing"
+      ];
+      exclude = b.system.exclude ++ b.mattia.exclude;
+
+      backupCleanupCommand = ''
+        sleep 2
+        ${pkgs.udisks}/bin/udisksctl power-off -b /dev/disk/by-id/${externalDiskID}
+      '';
+
+      pruneOpts = [
+        "--keep-daily 15"
+        "--keep-weekly 5"
+        "--keep-monthly 12"
+        "--keep-yearly 4"
+      ];
+    };
+
+    # Auto-mount and unmount external disk
+    systemd.services.restic-backups-everything = {
+      wants = [ "mnt-backupb-everything.mount" ];
+      after = [ "mnt-backupb-everything.mount" ];
+
+      unitConfig = {
+        PropagatesStopTo = "mnt-backupb-everything.mount";
+      };
+    };
+
+    systemd.mounts = [
+      {
+        what = "/dev/disk/by-uuid/${externalDiskUUID}";
+        where = "/mnt/backupb/everything";
+        type = "ext4";
+        options = "noauto,nofail";
+        mountConfig = {
+          DirectoryMode = "0700";
+        };
+      }
     ];
 }

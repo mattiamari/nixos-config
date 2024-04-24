@@ -488,12 +488,22 @@ in
       ];
       ensureUsers = [
         {
+          name = config.services.mysqlBackup.user;
+          ensurePermissions = { "*.*" = "SELECT, LOCK TABLES"; };
+        }
+        {
           name = user;
           ensurePermissions = {
             "${user}.*" = "ALL PRIVILEGES";
           };
         }
       ];
+    };
+
+    services.mysqlBackup = {
+      enable = true;
+      databases = [ "firefly" ];
+      calendar = "*-*-* 01:00";
     };
 
     myCaddy.extraPrivateServices = [
