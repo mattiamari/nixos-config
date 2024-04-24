@@ -19,6 +19,7 @@ in
         '';
 
         postHook = ''
+          ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/ata-WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876
           /run/wrappers/bin/umount /mnt/backup-a/${name}
         '';
 
@@ -111,6 +112,7 @@ in
 
       backupCleanupCommand = ''
         sleep 2
+        ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/${externalDiskID}
         ${pkgs.udisks}/bin/udisksctl power-off -b /dev/disk/by-id/${externalDiskID}
       '';
 
