@@ -478,7 +478,29 @@ in
       };
     };
 
-    # TODO firefly cron service
+    systemd.services.firefly-cron = {
+      requires = [ "mysql.service" "phpfpm-firefly.service" ];
+
+      serviceConfig = {
+        Type = "oneshot";
+        User = user;
+        Group = group;
+        WorkingDirectory = pkg;
+        EnvironmentFile = cfg.environmentFilePath;
+        ExecStart = pkgs.writeShellScript "firefly-cron.sh" ''
+          ${pkgs.php83}/bin/php artisan firefly-iii:cron
+        '';
+      };
+    };
+
+    systemd.timers.firefly-cron = {
+      wantedBy = [ "timers.target" ];
+
+      timerConfig = {
+        OnCalendar = "daily";
+        Unit = "firefly-cron.service";
+      };
+    };
 
     services.mysql = {
       enable = true;
