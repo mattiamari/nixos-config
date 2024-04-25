@@ -126,6 +126,9 @@ in
 
     # Auto-mount and unmount external disk
     systemd.services.restic-backups-everything = {
+      # Set to 'false' to prevent automatic backup from starting when connecting the external disk
+      enable = true;
+      
       wants = [ "mnt-backupb-everything.mount" ];
       after = [ "mnt-backupb-everything.mount" ];
 
