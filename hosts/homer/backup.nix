@@ -5,6 +5,10 @@ let
   externalDiskID = "ata-WDC_WD30EZRZ-00Z5HB0_WD-WCC4N3RT31NE";
 in
 {
+  #
+  # Backup A
+  #
+
   services.borgbackup.jobs =
     let
       mkJob = { name, startAt, paths, exclude ? [] }: {
@@ -49,6 +53,7 @@ in
         paths = [
           "/home"
           "/var/lib"
+          "/media/storage/syncthing"
         ];
 
         exclude = [
@@ -89,6 +94,11 @@ in
       "d /mnt/backup-a/family 0700 root root"
     ];
 
+
+    #
+    # Backup B (removable)
+    #
+
     # Auto-start backup when external disk is connected
     services.udev = {
       enable = true;
@@ -105,9 +115,7 @@ in
       passwordFile = "${myConfig.secretsDir}/restic-everything";
       timerConfig = null;
 
-      paths = b.system.paths ++ b.mattia.paths ++ b.family.paths ++ [
-        "/media/storage/syncthing"
-      ];
+      paths = b.system.paths ++ b.mattia.paths ++ b.family.paths;
       exclude = b.system.exclude ++ b.mattia.exclude;
 
       backupCleanupCommand = ''
