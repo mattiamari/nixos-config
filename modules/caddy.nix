@@ -70,6 +70,12 @@ in
       enable = true;
       package = pkgs.callPackage ../packages/caddy {};
 
+      globalConfig = ''
+        servers {
+          metrics
+        }
+      '';
+
       virtualHosts = {
         "localhost".extraConfig = ''
           respond "Hello from localhost"

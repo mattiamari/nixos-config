@@ -73,6 +73,46 @@ in
   };
   myCaddy.privateServices.adguard = {port = 3000;};
 
+  services.grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "127.0.0.1";
+        http_port = 9000;
+        domain = "grafana.home.mattiamari.xyz";
+      };
+    };
+  };
+  myCaddy.privateServices.grafana = { port = config.services.grafana.settings.server.http_port; };
+
+  services.prometheus = {
+    enable = true;
+    port = 9001;
+
+    exporters = {
+      node = {
+        enable = true;
+        enabledCollectors = [ "systemd" "processes" ];
+        port = 9002;
+      };
+    };
+
+    scrapeConfigs = [
+      {
+        job_name = "homer";
+        static_configs = [{
+          targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
+        }];
+      }
+      {
+        job_name = "caddy";
+        static_configs = [{
+          targets = [ "127.0.0.1:2019" ];
+        }];
+      }
+    ];
+  };
+
   services.jellyfin = {
     enable = true;
     user = "mediaserver";
@@ -166,7 +206,7 @@ in
 
   # services.filebrowser = {
   #   enable = true;
-  #   port = 9001;
+  #   port = 7000;
   #   package = pkgsUnstable.filebrowser;
   # };
   # myCaddy.publicServices.filebrowser = {
