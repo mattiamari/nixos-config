@@ -387,7 +387,7 @@ let
 
   initScript = pkgs.writeShellScript "firefly-init.sh" ''
     PHP=${pkgs.php83}/bin/php
-    set -e
+    set -xe
     
     # Init required directories
     cp -r ${cfg.package}/storage/. ${storageDir}/

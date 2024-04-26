@@ -149,6 +149,17 @@ in
     options = "--delete-old";
   };
 
+  systemd.services.set-drive-standby = let disk = "WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876"; in {
+    description = "Set standby timeout to backup drive";
+
+    wantedBy = [ "multi-user.target" ];
+    after = [ "dev-disk-by-id-ata-${disk}.device" ];
+    serviceConfig.Type = "oneshot";
+
+    # 120 = 10 minutes
+    script = "${pkgs.hdparm}/bin/hdparm -S 120 /dev/disk/by-id/ata-${disk}";
+  };
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   system.stateVersion = "23.11";
