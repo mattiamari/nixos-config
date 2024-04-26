@@ -61,7 +61,7 @@ in
         Group = cfg.group;
         StateDirectory = "radarrIta";
         StateDirectoryMode = "0700";
-        Umask = "0007";
+        UMask = "0007";
         ExecStartPre = "!${preStart}";
         ExecStart = "${cfg.package}/bin/Radarr -nobrowser -data='${configDir}'";
         Restart = "on-failure";

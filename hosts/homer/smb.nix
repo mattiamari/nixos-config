@@ -21,7 +21,7 @@ in
       load printers = no
 
       deadtime = 30
-      use sendfiles = yes
+      use sendfile = yes
     '';
 
     shares = {

@@ -60,7 +60,7 @@ in
         Group = cfg.group;
         StateDirectory = "sonarrIta";
         StateDirectoryMode = "0700";
-        Umask = "0007";
+        UMask = "0007";
         ExecStartPre = "!${preStart}";
         ExecStart = "${cfg.package}/bin/NzbDrone -nobrowser -data='${configDir}'";
         Restart = "on-failure";
