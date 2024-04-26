@@ -97,6 +97,10 @@ in
       };
     };
 
+    globalConfig = {
+      scrape_interval = "10s";
+    };
+
     scrapeConfigs = [
       {
         job_name = "homer";
