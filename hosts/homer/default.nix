@@ -157,8 +157,8 @@ in
     after = [ "dev-disk-by-id-ata-${disk}.device" ];
     serviceConfig.Type = "oneshot";
 
-    # 120 = 10 minutes
-    script = "${pkgs.hdparm}/bin/hdparm -S 120 -y /dev/disk/by-id/ata-${disk}";
+    # Standard -S values do not apply to WD Green drives. "2" seems to be ~30 minutes
+    script = "${pkgs.hdparm}/bin/hdparm -S 2 -y /dev/disk/by-id/ata-${disk}";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
