@@ -128,6 +128,22 @@ in
     };
   };
 
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    ensureUsers = [
+      {
+        name = config.services.mysqlBackup.user;
+        ensurePermissions = { "*.*" = "SELECT, LOCK TABLES"; };
+      }
+    ];
+  };
+
+  services.mysqlBackup = {
+    enable = true;
+    calendar = "*-*-* 01:00";
+  };
+
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 22 53 80 443 ];
@@ -135,7 +151,6 @@ in
   };
 
   # TODO
-  # - grafana + prometheus
   # - (wireguard VPN)
   # - https://github.com/crowdsecurity/crowdsec (o fail2ban) 
   # - service hardening

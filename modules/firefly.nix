@@ -503,30 +503,16 @@ in
     };
 
     services.mysql = {
-      enable = true;
-      package = pkgs.mariadb;
-      ensureDatabases = [
-        "firefly"
-      ];
+      ensureDatabases = [ "firefly" ];
       ensureUsers = [
         {
-          name = config.services.mysqlBackup.user;
-          ensurePermissions = { "*.*" = "SELECT, LOCK TABLES"; };
-        }
-        {
           name = user;
-          ensurePermissions = {
-            "${user}.*" = "ALL PRIVILEGES";
-          };
+          ensurePermissions = { "firefly.*" = "ALL PRIVILEGES"; };
         }
       ];
     };
 
-    services.mysqlBackup = {
-      enable = true;
-      databases = [ "firefly" ];
-      calendar = "*-*-* 01:00";
-    };
+    services.mysqlBackup.databases = [ "firefly" ];
 
     myCaddy.extraPrivateServices = [
       ''

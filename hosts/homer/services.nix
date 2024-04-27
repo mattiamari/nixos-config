@@ -1,4 +1,5 @@
-{ config, pkgs, pkgsUnstable, ... }:
+{ config, lib, pkgs, pkgsUnstable, ... }:
+with lib;
 let
   myConfig = import ./common.nix;
 in
@@ -184,15 +185,44 @@ in
   };
   myCaddy.privateServices.prowlarr = {port = 9696;};
 
-  # # TODO configure
-  # services.photoprism = {
-  #   enable = false;
-  #   originalsPath = /tmp/photoprism;
+  services.photoprism = {
+    enable = true;
+    originalsPath = "/media/storage/famiglia/Immagini";
     
-  #   # settings = {
-  #   #
-  #   # };
-  # };
+    settings = {
+      PHOTOPRISM_ADMIN_USER = "admin";
+      PHOTOPRISM_ADMIN_PASSWORD = "changeme";
+      PHOTOPRISM_SITE_URL = "https://photoprism.home.mattiamari.xyz";
+      PHOTOPRISM_FFMPEG_ENCODER = "intel";
+      PHOTOPRISM_DATABASE_DRIVER = "mysql";
+      PHOTOPRISM_DATABASE_SERVER = "/run/mysqld/mysqld.sock";
+      PHOTOPRISM_DATABASE_USER = "family";
+      PHOTOPRISM_DATABASE_NAME = "photoprismfamily";
+    };
+  };
+  myCaddy.privateServices.photoprism = { port = config.services.photoprism.port; };
+
+  systemd.services.photoprism.serviceConfig = {
+    User = mkForce "family";
+    Group = mkForce "family";
+  };
+
+  services.mysql =
+  let
+    user = config.services.photoprism.settings.PHOTOPRISM_DATABASE_USER;
+    db = config.services.photoprism.settings.PHOTOPRISM_DATABASE_NAME;
+  in
+  {
+    ensureDatabases = [ db ];
+    ensureUsers = [
+      {
+        name = user;
+        ensurePermissions = { "${db}.*" = "ALL PRIVILEGES"; };
+      }
+    ];
+  };
+
+  services.mysqlBackup.databases = [ config.services.photoprism.settings.PHOTOPRISM_DATABASE_NAME ];
 
   services.syncthing = {
     enable = true;
