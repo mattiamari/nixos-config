@@ -110,6 +110,11 @@ in
     enable = true;
   };
 
+  environment.shellAliases = {
+    ll = "ls -lah";
+    ".." = "cd ..";
+  };
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
