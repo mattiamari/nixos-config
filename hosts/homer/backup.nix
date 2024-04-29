@@ -2,8 +2,10 @@
 with lib;
 let
   myConfig = import ./common.nix;
-  externalDiskUUID = "70afe25f-2ed5-4d41-a4dc-e4bd10052416";
-  externalDiskID = "ata-WDC_WD30EZRZ-00Z5HB0_WD-WCC4N3RT31NE";
+  partA = "7a251ca0-e687-4806-ab32-745239051fe3";
+  diskA = "ata-WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876";
+  partB = "70afe25f-2ed5-4d41-a4dc-e4bd10052416";
+  diskB = "ata-WDC_WD30EZRZ-00Z5HB0_WD-WCC4N3RT31NE";
 
   backupAJobs = {
     system = {
@@ -12,6 +14,7 @@ let
       paths = [
         "/home"
         "/var/lib"
+        "/var/backup"
         "/media/storage/syncthing"
       ];
 
@@ -19,6 +22,7 @@ let
         "*/cache"
         "*/.cache"
         "/var/lib/jellyfin/transcodes"
+        "/var/lib/mysql" # already backed-up by mysqlbackup in /var/backup
         "*/.local/share/containers/storage/overlay"
       ];
     };
@@ -59,7 +63,8 @@ in
     persistentTimer = true;
 
     postHook = ''
-      ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/ata-WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876
+      df -h /dev/disk/by-uuid/${partA}
+      ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/${diskA}
     '';
 
     encryption = {
@@ -81,7 +86,7 @@ in
   }) backupAJobs;
 
   systemd.mounts = mapAttrsToList (name: opts: {
-    what = "/dev/disk/by-uuid/7a251ca0-e687-4806-ab32-745239051fe3";
+    what = "/dev/disk/by-uuid/${partA}";
     where = "/mnt/backupa/${name}";
     type = "ext4";
     options = "noauto,nofail";
@@ -90,7 +95,7 @@ in
     };
   }) backupAJobs ++ [
     {
-      what = "/dev/disk/by-uuid/${externalDiskUUID}";
+      what = "/dev/disk/by-uuid/${partB}";
       where = "/mnt/backupb/everything";
       type = "ext4";
       options = "noauto,nofail";
@@ -128,7 +133,7 @@ in
   services.udev = {
     enable = true;
     extraRules = ''
-      ACTION=="add", SUBSYSTEM=="block", ENV{DEVLINKS}=="*/dev/disk/by-uuid/${externalDiskUUID}*", ENV{SYSTEMD_WANTS}="restic-backups-everything.service"
+      ACTION=="add", SUBSYSTEM=="block", ENV{DEVLINKS}=="*/dev/disk/by-uuid/${partB}*", ENV{SYSTEMD_WANTS}="restic-backups-everything.service"
     '';
   };
   
@@ -145,8 +150,9 @@ in
 
     backupCleanupCommand = ''
       sleep 2
-      ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/${externalDiskID}
-      ${pkgs.udisks}/bin/udisksctl power-off -b /dev/disk/by-id/${externalDiskID}
+      df -h /dev/disk/by-uuid/${partB}
+      ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/${diskB}
+      ${pkgs.udisks}/bin/udisksctl power-off -b /dev/disk/by-id/${diskB}
     '';
 
     pruneOpts = [
