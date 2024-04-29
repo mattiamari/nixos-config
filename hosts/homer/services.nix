@@ -205,6 +205,7 @@ in
   systemd.services.photoprism.serviceConfig = {
     User = mkForce "family";
     Group = mkForce "family";
+    DynamicUser = mkForce false;
   };
 
   services.mysql =
