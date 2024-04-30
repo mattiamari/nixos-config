@@ -23,7 +23,12 @@ let
     @${serviceConfig.name} host ${serviceConfig.name}.${cfg.domain}
     handle @${serviceConfig.name} {
       ${serviceConfig.extraConfig}
-      reverse_proxy http://localhost:${toString serviceConfig.port}
+      reverse_proxy {
+        to http://localhost:${toString serviceConfig.port}
+        fail_duration 30s
+        unhealthy_status 5xx
+        unhealthy_latency 2s
+      }
     }
   '';
 in
