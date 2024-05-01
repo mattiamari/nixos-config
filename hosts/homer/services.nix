@@ -11,6 +11,7 @@ in
     ../../modules/radarr-ita.nix
     ../../modules/sonarr-ita.nix
     ../../modules/filebrowser.nix
+    ../../modules/meross-prometheus-exporter.nix
   ];
 
   networking.firewall = {
@@ -96,6 +97,13 @@ in
         enabledCollectors = [ "systemd" "processes" ];
         port = 9002;
       };
+
+      meross = {
+        enable = true;
+        port = 9003;
+        secretsFilePath = "${myConfig.secretsDir}/meross";
+        scrapeFrequencySeconds = 30;
+      };
     };
 
     globalConfig = {
@@ -106,7 +114,18 @@ in
       {
         job_name = "homer";
         static_configs = [{
-          targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
+          targets = [
+            "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+          ];
+        }];
+      }
+      {
+        job_name = "homer_power";
+        scrape_interval = "${toString config.services.prometheus.exporters.meross.scrapeFrequencySeconds}s";
+        static_configs = [{
+          targets = [
+            "127.0.0.1:${toString config.services.prometheus.exporters.meross.port}"
+          ];
         }];
       }
       {
