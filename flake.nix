@@ -29,6 +29,14 @@
             };
           };
 
+          marge = lib.nixosSystem {
+            inherit system;
+            modules = [ ./hosts/marge ];
+            specialArgs = {
+              inherit pkgsUnstable;
+            };
+          };
+
           homertest = lib.nixosSystem {
             inherit system;
             modules = [ ./hosts/homer ];
