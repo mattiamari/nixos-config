@@ -15,11 +15,6 @@ in
   fileSystems."/".options = [ "noatime" "nodiratime" ];
   services.fstrim.enable = true;
 
-  fileSystems."/media/storage" = {
-    device = "/dev/disk/by-uuid/48ad7158-f929-41a4-83fb-30ff769edcf2";
-    fsType = "ext4";
-  };
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -27,6 +22,18 @@ in
 
   boot.kernel.sysctl = {
     "vm.swappiness" = 30;
+  };
+
+  #
+  # ZFS
+  #
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs.forceImportRoot = false;
+  networking.hostId = "9b17c09b";
+  boot.zfs.extraPools = [ "storage" ];
+  services.zfs.autoScrub = {
+    enable = true;
+    interval = "*-*-01 03:00"; # monthly at 3:00
   };
 
   networking.hostName = "homer";

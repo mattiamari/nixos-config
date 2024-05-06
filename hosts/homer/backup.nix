@@ -34,10 +34,7 @@ let
        "/media/storage/mattia"
       ];
 
-      exclude = [
-        "/media/storage/mattia/Software"
-        "/media/storage/mattia/things"
-      ];
+      exclude = [];
     };
 
     family = {

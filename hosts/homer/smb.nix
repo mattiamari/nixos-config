@@ -45,6 +45,12 @@ in
         browseable = true;
         "guest ok" = true;
       };
+      public = {
+        path = "/media/storage/public";
+        writable = true;
+        browseable = true;
+        "guest ok" = true;
+      };
     };
   };
 }

@@ -94,7 +94,7 @@ in
     exporters = {
       node = {
         enable = true;
-        enabledCollectors = [ "systemd" "processes" ];
+        enabledCollectors = [ "systemd" "processes" "zfs" ];
         port = 9002;
       };
 
