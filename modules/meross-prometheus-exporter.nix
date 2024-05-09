@@ -39,6 +39,8 @@ in
         ExecStart = ''
           ${pkg}/start
         '';
+        Restart = "on-failure";
+        RestartSec = 5;
       };
 
       environment = {
