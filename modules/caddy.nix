@@ -25,9 +25,6 @@ let
       ${serviceConfig.extraConfig}
       reverse_proxy {
         to http://localhost:${toString serviceConfig.port}
-        fail_duration 30s
-        unhealthy_status 5xx
-        unhealthy_latency 2s
       }
     }
   '';
