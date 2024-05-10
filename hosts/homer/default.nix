@@ -153,8 +153,8 @@ in
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 53 80 443 ];
-    allowedUDPPorts = [ 53 443 ];
+    allowedTCPPorts = [ 22 53 80 443 853 ];
+    allowedUDPPorts = [ 53 443 853 ];
   };
 
   # TODO
