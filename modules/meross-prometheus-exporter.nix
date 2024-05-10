@@ -39,7 +39,7 @@ in
         ExecStart = ''
           ${pkg}/start
         '';
-        Restart = "on-failure";
+        Restart = "always";
         RestartSec = 5;
       };
 
