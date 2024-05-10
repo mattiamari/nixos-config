@@ -217,6 +217,7 @@ in
       PHOTOPRISM_DATABASE_SERVER = "/run/mysqld/mysqld.sock";
       PHOTOPRISM_DATABASE_USER = "family";
       PHOTOPRISM_DATABASE_NAME = "photoprismfamily";
+      PHOTOPRISM_WAKEUP_INTERVAL = "24h";
     };
   };
   myCaddy.privateServices.photoprism = { port = config.services.photoprism.port; };
