@@ -60,12 +60,13 @@ in
       http = {
         address = "127.0.0.1:3000";
       };
-      users = [
-        {
-          name = myConfig.adminUser;
-          password = "$2y$10$b2Sozdie36mtEFA3JDpX3eH9rd3tu6hixFkxu5Pd70h9.zxsFxp9i"; # "changeme"
-        }
-      ];
+      # Commenting this so that I can change password in the config file
+      # users = [
+      #   {
+      #     name = myConfig.adminUser;
+      #     password = "$2y$10$b2Sozdie36mtEFA3JDpX3eH9rd3tu6hixFkxu5Pd70h9.zxsFxp9i"; # "changeme"
+      #   }
+      # ];
       dns = {
         rewrites = [
           { domain = "*.${myConfig.publicHostname}"; answer = myConfig.serverLocalIP; }
