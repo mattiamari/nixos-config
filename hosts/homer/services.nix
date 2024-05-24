@@ -18,6 +18,7 @@ in
     allowedTCPPorts = [
       22000 # syncthing transfers
       50169 # qbittorrent
+      1900 # jellyfin DLNA
     ];
     allowedUDPPorts = [
       22000 # syncthing transfers

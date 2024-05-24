@@ -36,10 +36,22 @@ in
     interval = "*-*-01 03:00"; # monthly at 3:00
   };
 
-  networking.hostName = "homer";
-  networking.networkmanager.enable = true;
-  networking.networkmanager.insertNameservers = [ "1.1.1.1" ];
-  networking.resolvconf.useLocalResolver = false;
+  networking = {
+    hostName = "homer";
+
+    networkmanager.enable = true;
+    networkmanager.insertNameservers = [ "1.1.1.1" ];
+
+    resolvconf.useLocalResolver = false;
+
+    nftables.enable = true;
+
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 22 53 80 443 853 ];
+      allowedUDPPorts = [ 53 443 853 ];
+    };
+  };
 
   time.timeZone = "Europe/Rome";
 
@@ -149,12 +161,6 @@ in
   services.mysqlBackup = {
     enable = true;
     calendar = "*-*-* 01:00";
-  };
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 22 53 80 443 853 ];
-    allowedUDPPorts = [ 53 443 853 ];
   };
 
   # TODO
