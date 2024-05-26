@@ -1,11 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgsUnstable, ... }:
 {
   services.xserver = {
     enable = true;
     xkb.layout = "it";
   };
 
-  # Enable OpenGL
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -52,8 +51,6 @@
     autoNumlock = true;
   };
 
-  services.xserver.desktopManager.plasma5.enable = true;
-
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -76,10 +73,14 @@
     nwg-look
     vimix-icon-theme
     pavucontrol
-    pcmanfm
+    xfce.thunar
     feh
-    gwenview
+    loupe
+    gnome.gnome-calculator
     firefox
+    mpv
+    vlc
+    pkgsUnstable.jellyfin-media-player
   ];
 
   # Hint electron apps to use wayland
@@ -91,5 +92,4 @@
     style = "adwaita-dark";
   };
 
-  programs.dconf.enable = true;
 }

@@ -7,25 +7,28 @@
     outputs = { self, ...} @ inputs:
       let
         system = "x86_64-linux";
-      in
-      rec {
-        inherit (inputs.nixpkgs) lib;
-        
-        pkgs = import inputs.nixpkgs { inherit system; config.allowUnfree = true; };
+
+        pkgs = import inputs.nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+
         pkgsUnstable = import inputs.nixpkgsUnstable {
           inherit system;
           config.allowUnfree = true;
           overlays = import ./overlays;
         };
 
-
+        lib = inputs.nixpkgs.lib;
+      in
+      {
         nixosConfigurations = {
 
           bart = lib.nixosSystem {
             inherit system;
             modules = [ ./hosts/bart ];
             specialArgs = {
-              inherit pkgsUnstable;
+              inherit pkgs pkgsUnstable;
             };
           };
 
@@ -33,7 +36,7 @@
             inherit system;
             modules = [ ./hosts/homer ];
             specialArgs = {
-              inherit pkgsUnstable;
+              inherit pkgs pkgsUnstable;
             };
           };
 
