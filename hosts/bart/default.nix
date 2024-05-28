@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, homeManager, ... }:
 
 {
   imports = [
@@ -6,25 +6,18 @@
     ./desktop.nix
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
+  boot.tmp.useTmpfs = true;
+
+  fileSystems."/".options = [ "noatime" "nodiratime" ];
+  services.fstrim.enable = true;
+
   networking.hostName = "bart";
   networking.networkmanager.enable = true;
-
-  time.timeZone = "Europe/Rome";
-
-
-  i18n.defaultLocale = "en_GB.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = lib.mkForce "it";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
 
   services.printing.enable = true;
 
@@ -40,13 +33,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    tmux
-    helix
-    nil
-    git
-    htop
-    btop
-    gdu
     pinentry-curses
   ];
 
@@ -56,12 +42,6 @@
   };
 
   virtualisation.oci-containers.backend = "podman";
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-old";
-  };
 
   system.stateVersion = "23.11";
 }

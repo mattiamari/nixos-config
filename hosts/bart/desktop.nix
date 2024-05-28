@@ -73,14 +73,15 @@
     nwg-look
     vimix-icon-theme
     pavucontrol
+    pulseaudio # for pactl
     xfce.thunar
     feh
     loupe
     gnome.gnome-calculator
     firefox
+    chromium
     mpv
     vlc
-    pkgsUnstable.jellyfin-media-player
   ];
 
   # Hint electron apps to use wayland
