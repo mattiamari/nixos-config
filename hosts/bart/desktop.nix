@@ -1,10 +1,5 @@
 { config, pkgs, pkgsUnstable, ... }:
 {
-  services.xserver = {
-    enable = true;
-    xkb.layout = "it";
-  };
-
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -45,16 +40,27 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  services.xserver.displayManager.sddm = {
+  services.xserver = {
     enable = true;
-    wayland.enable = true;
-    autoNumlock = true;
+
+    xkb = {
+      layout = "it";
+      variant = "";
+    };
+
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      enableHidpi = true;
+    };
   };
+
 
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
     enableNvidiaPatches = true;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
   fonts.packages = with pkgs; [
@@ -75,13 +81,9 @@
     pavucontrol
     pulseaudio # for pactl
     xfce.thunar
-    feh
     loupe
     gnome.gnome-calculator
     firefox
-    chromium
-    mpv
-    vlc
   ];
 
   # Hint electron apps to use wayland
