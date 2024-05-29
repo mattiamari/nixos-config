@@ -6,9 +6,10 @@
         url = "github:nix-community/home-manager/release-23.11";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+      catppuccin.url = "github:catppuccin/nix";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, catppuccin, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -38,8 +39,8 @@
             bart = lib.nixosSystem {
               inherit system specialArgs;
               modules = defaultModules ++ [
+                catppuccin.nixosModules.catppuccin
                 ./hosts/bart
-                home-manager.nixosModules.home-manager
               ];
             };
 
@@ -65,7 +66,10 @@
         homeConfigurations = {
           mattia = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
-            modules = [ ./home-manager/mattia.nix ];
+            modules = [
+              catppuccin.homeManagerModules.catppuccin
+              ./home-manager/mattia.nix
+            ];
             extraSpecialArgs = { inherit pkgsUnstable; };
           };
         };

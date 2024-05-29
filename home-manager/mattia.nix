@@ -19,7 +19,7 @@
       gtk.enable = true;
       package = pkgs.vimix-cursors;
       name = "Vimix Cursors";
-      size = 24;
+      size = 36;
     };
   };
 
@@ -28,7 +28,7 @@
 
     oh-my-zsh = {
       enable = true;
-      theme = "catppuccin";
+      theme = "cloud";
     };
   };
 
@@ -37,8 +37,6 @@
     defaultEditor = true;
     
     settings = {
-      theme = "catppuccin_macchiato";
-
       editor = {
         line-number = "relative";
         cursor-shape = {
@@ -50,19 +48,18 @@
     };
   };
 
+  catppuccin = {
+    enable = true;
+    flavor = "macchiato";
+    accent = "teal";
+  };
+
   gtk = {
     enable = true;
-    theme = {
-      name = "vimix-dark-doder";
-      package = pkgs.vimix-gtk-themes;
-    };
-    iconTheme = {
-      name = "Vimix-Doder";
-      package = pkgs.vimix-icon-theme;
-    };
   };
 
   qt = {
     enable = true;
   };
+
 }
