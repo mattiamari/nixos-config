@@ -13,14 +13,33 @@
       vlc
       pkgsUnstable.obsidian
       calibre
+      pkgsUnstable.jellyfin-media-player
     ];
+  };
 
-    pointerCursor = {
-      gtk.enable = true;
-      package = pkgs.vimix-cursors;
-      name = "Vimix Cursors";
-      size = 36;
+  xdg = {
+    enable = true;
+
+    desktopEntries = {
+      jellyfinmediaplayerxcb = {
+        name = "Jellyfin Media Player XCB";
+        exec = "jellyfinmediaplayer --platform xcb";
+      };
     };
+  };
+
+  catppuccin = {
+    enable = true;
+    flavor = "macchiato";
+    accent = "teal";
+  };
+
+  gtk = {
+    enable = true;
+  };
+
+  qt = {
+    enable = true;
   };
 
   programs.zsh = {
@@ -48,18 +67,22 @@
     };
   };
 
-  catppuccin = {
+  programs.rofi = {
     enable = true;
-    flavor = "macchiato";
-    accent = "teal";
-  };
+    package = pkgs.rofi-wayland;
 
-  gtk = {
-    enable = true;
-  };
+    plugins = [
+      pkgs.rofi-calc
+    ];
 
-  qt = {
-    enable = true;
+    # Get possible values with `rofi -dump-config`
+    extraConfig = {
+      modes = "drun,window,calc,ssh";
+      combi-modes = "window,drun,ssh";
+      show-icons = true;
+      terminal = "alacritty";
+      combi-display-format = " <span weight='light'>{mode}</span> {text}";
+    };
   };
 
 }

@@ -42,6 +42,8 @@
     pinentryFlavor = "curses";
   };
 
+  services.flatpak.enable = true;
+
   virtualisation.oci-containers.backend = "podman";
 
   system.stateVersion = "23.11";

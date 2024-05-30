@@ -4,6 +4,9 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
+    extraPackages = [
+      pkgs.nvidia-vaapi-driver
+    ];
   };
 
   # Load nvidia driver for Xorg and Wayland
@@ -71,7 +74,7 @@
 
   environment.systemPackages = with pkgs; [
     nvtop-nvidia
-    wofi
+    rofi-wayland
     waybar
     hyprpaper
     alacritty
@@ -94,6 +97,7 @@
 
   catppuccin = {
     enable = true;
+    flavor = "macchiato";
     accent = "teal";
   };
 
