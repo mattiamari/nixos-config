@@ -80,6 +80,7 @@
         "$mod, Q, exec, alacritty"
         "$mod, E, exec, thunar"
         "$mod, R, exec, rofi -show combi"
+        # "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
         "$mod, C, killactive"
         "$mod, F, fullscreen, 1"
         "$mod, M, exit"
@@ -89,7 +90,12 @@
         "$mod, right, movefocus, r"
         "$mod, up, movefocus, u"
         "$mod, down, movefocus, d"
-      ];
+      ]
+        # switch workspaces
+        ++ builtins.genList (n: "$mod, ${toString (n+1)}, workspace, ${toString (n+1)}") 9
+        
+        # move windows between workspaces
+        ++ builtins.genList (n: "$mod SHIFT, ${toString (n+1)}, movetoworkspace, ${toString (n+1)}") 9;
 
       bindm = [
         # mouse movements
