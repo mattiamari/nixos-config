@@ -68,7 +68,7 @@
             inherit pkgs;
             modules = [
               catppuccin.homeManagerModules.catppuccin
-              ./home-manager/mattia.nix
+              ./home-manager/mattia
             ];
             extraSpecialArgs = { inherit pkgsUnstable; };
           };

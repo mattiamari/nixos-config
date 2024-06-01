@@ -75,8 +75,6 @@
   environment.systemPackages = with pkgs; [
     nvtop-nvidia
     rofi-wayland
-    waybar
-    hyprpaper
     alacritty
     nwg-look
     vimix-icon-theme
