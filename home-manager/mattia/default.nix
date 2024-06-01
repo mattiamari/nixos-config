@@ -1,5 +1,9 @@
-{ config, pkgs, pkgsUnstable, ... }:
+{ config, pkgs, pkgsUnstable, catppuccin, ... }:
 {
+  imports = [
+    catppuccin.homeManagerModules.catppuccin
+  ];
+  
   programs.home-manager.enable = true;
 
   home = {
@@ -53,7 +57,7 @@
     xwayland.enable = true;
 
     settings = {
-      exec-once = "hyprpaper";
+      # exec-once = "hyprpaper";
       
       monitor = "HDMI-A-2,3840x2160@60,auto,1.0,bitdepth,10";
       
@@ -96,25 +100,24 @@
     };
   };
 
-  # TODO it's in unstable for now
-  # services.hyprpaper =
-  # let
-  #   wall1 = "~/Pictures/wallpapers/yLXrKS.jpg";
-  # in {
-  #   enable = true;
-  #   settings = {
-  #     splash = false;
-  #     ipc = "on";
+  services.hyprpaper =
+  let
+    wall1 = "~/Pictures/wallpapers/yLXrKS.jpg";
+  in {
+    enable = true;
+    settings = {
+      splash = false;
+      ipc = "on";
 
-  #     preload = [
-  #       wall1
-  #     ];
+      preload = [
+        wall1
+      ];
 
-  #     wallpaper = [
-  #       ",${wall1}"
-  #     ];
-  #   };
-  # };
+      wallpaper = [
+        ",${wall1}"
+      ];
+    };
+  };
 
   programs.waybar = {
     enable = true;
@@ -153,12 +156,13 @@
     package = pkgs.rofi-wayland;
 
     plugins = [
-      pkgs.rofi-calc
+      # TODO bugged upstream
+      # pkgs.rofi-calc
     ];
 
     # Get possible values with `rofi -dump-config`
     extraConfig = {
-      modes = "drun,window,calc,ssh";
+      modes = "drun,window,ssh";
       combi-modes = "window,drun,ssh";
       show-icons = true;
       terminal = "alacritty";
@@ -168,7 +172,8 @@
 
   services.syncthing = {
     enable = true;
-    tray.enable = true;
+    # TODO waybar has no tray
+    tray.enable = false;
   };
 
 }

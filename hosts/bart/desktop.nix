@@ -45,23 +45,18 @@
 
   services.xserver = {
     enable = true;
+  };
 
-    xkb = {
-      layout = "it";
-      variant = "";
-    };
-
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      enableHidpi = true;
-    };
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    enableHidpi = true;
+    catppuccin.enable = true;
   };
 
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    enableNvidiaPatches = true;
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
@@ -73,10 +68,9 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    nvtop-nvidia
+    nvtopPackages.nvidia
     rofi-wayland
     alacritty
-    nwg-look
     vimix-icon-theme
     pavucontrol
     pulseaudio # for pactl
@@ -84,6 +78,7 @@
     loupe
     gnome.gnome-calculator
     firefox
+    home-manager
   ];
 
   # Hint electron apps to use wayland
@@ -99,6 +94,5 @@
     accent = "teal";
   };
 
-  services.displayManager.sddm.catppuccin.enable = true;
 
 }

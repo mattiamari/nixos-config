@@ -1,9 +1,9 @@
 {
     inputs = {
-      nixpkgs.url = "nixpkgs/nixos-23.11";
+      nixpkgs.url = "nixpkgs/nixos-24.05";
       nixpkgsUnstable.url = "nixpkgs/nixos-unstable";
       home-manager = {
-        url = "github:nix-community/home-manager/release-23.11";
+        url = "github:nix-community/home-manager/release-24.05";
         inputs.nixpkgs.follows = "nixpkgs";
       };
       catppuccin.url = "github:catppuccin/nix";
@@ -41,6 +41,12 @@
               modules = defaultModules ++ [
                 catppuccin.nixosModules.catppuccin
                 ./hosts/bart
+                home-manager.nixosModules.home-manager {
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.users.mattia = import ./home-manager/mattia;
+                  home-manager.extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
+                }
               ];
             };
 
@@ -67,10 +73,9 @@
           mattia = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
-              catppuccin.homeManagerModules.catppuccin
               ./home-manager/mattia
             ];
-            extraSpecialArgs = { inherit pkgsUnstable; };
+            extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
           };
         };
     };

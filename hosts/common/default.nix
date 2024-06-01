@@ -24,7 +24,11 @@
     LC_TIME = "it_IT.UTF-8";
   };
 
-  services.xserver.layout = "it";
+  services.xserver.xkb = {
+    layout = "it";
+    variant = "";
+  };
+  
   console.keyMap = "it";
 
   environment.systemPackages = with pkgs; [
