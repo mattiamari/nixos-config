@@ -18,6 +18,7 @@
       pkgsUnstable.obsidian
       calibre
       pkgsUnstable.jellyfin-media-player
+      gimp
     ];
 
     sessionVariables = {
@@ -63,6 +64,17 @@
       
       input = {
         kb_layout = "it";
+        numlock_by_default = true;
+      };
+
+      general = {
+        gaps_in = 5;
+        gaps_out = 10;
+        border_size = 1;
+      };
+
+      decoration = {
+        rounding = 10;
       };
 
       animations = {
@@ -70,8 +82,8 @@
       };
 
       misc = {
-        # disable anime wallpaper
-        force_default_wallpaper = false;
+        # force "hyprland logo" wallpaper
+        force_default_wallpaper = 0;
       };
 
       "$mod" = "SUPER";
@@ -84,12 +96,29 @@
         "$mod, C, killactive"
         "$mod, F, fullscreen, 1"
         "$mod, M, exit"
+
+        # float and pin (i.e. picture in picture that follows you across workspaces)
+        "$mod, P, toggleFloating"
+        "$mod, P, pin, active"
+        "$mod, P, fakefullscreen"
       
         # move focus with arrow keys
         "$mod, left, movefocus, l"
         "$mod, right, movefocus, r"
         "$mod, up, movefocus, u"
         "$mod, down, movefocus, d"
+
+        # switch to prev/next workspace
+        "$mod ALT, left, workspace, e-1"
+        "$mod ALT, right, workspace, e+1"
+
+        # volume control
+        ",code:123, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
+        ",code:122, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
+        ",code:121, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
+
+        # screenshots
+        ",Print,exec,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
       ]
         # switch workspaces
         ++ builtins.genList (n: "$mod, ${toString (n+1)}, workspace, ${toString (n+1)}") 9
@@ -175,6 +204,8 @@
       combi-display-format = " <span weight='light'>{mode}</span> {text}";
     };
   };
+
+  programs.lazygit.enable = true;
 
   services.syncthing = {
     enable = true;

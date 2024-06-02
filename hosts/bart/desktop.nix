@@ -49,8 +49,8 @@
 
   services.displayManager.sddm = {
     enable = true;
+    package = pkgs.kdePackages.sddm;
     wayland.enable = true;
-    enableHidpi = true;
     catppuccin.enable = true;
   };
 
@@ -71,10 +71,10 @@
     nvtopPackages.nvidia
     rofi-wayland
     alacritty
-    vimix-icon-theme
     pavucontrol
     pulseaudio # for pactl
     xfce.thunar
+    ffmpegthumbnailer
     loupe
     gnome.gnome-calculator
     firefox
@@ -84,15 +84,12 @@
   # Hint electron apps to use wayland
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  qt = {
-    enable = true;
-  };
-
   catppuccin = {
     enable = true;
     flavor = "macchiato";
     accent = "teal";
   };
 
-
+  # thunar thumbnailer
+  services.tumbler.enable = true;
 }
