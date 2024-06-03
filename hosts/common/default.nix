@@ -40,6 +40,7 @@
     gdu
     tree
     zip
+    file
     helix
     nil # Nix language server
   ];

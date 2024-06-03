@@ -62,7 +62,7 @@
     systemd.enable = true;
     xwayland.enable = true;
 
-    # https://wiki.hyprland.org/0.40.0/Configuring/Variables/
+    # https://wiki.hyprland.org/0.40.0/Configuring/Variables
     settings = {
       monitor = "HDMI-A-2,3840x2160@60,auto,1.0,bitdepth,10";
       
@@ -95,8 +95,13 @@
         force_default_wallpaper = 0;
       };
 
+      debug = {
+        disable_logs = true;
+      };
+
       "$mod" = "SUPER";
 
+      # https://wiki.hyprland.org/0.40.0/Configuring/Dispatchers
       bind = [
         "$mod, Q, exec, alacritty"
         "$mod, E, exec, thunar"
@@ -117,14 +122,26 @@
         "$mod, up, movefocus, u"
         "$mod, down, movefocus, d"
 
+        # move window
+        "$mod SHIFT, left, movewindow, l"
+        "$mod SHIFT, right, movewindow, r"
+        "$mod SHIFT, up, movewindow, u"
+        "$mod SHIFT, down, movewindow, d"
+
+        # resize window
+        "$mod CONTROL, left, resizeactive, -10% 0%"
+        "$mod CONTROL, right, resizeactive, 10% 0%"
+        "$mod CONTROL, up, resizeactive, 0% -10%"
+        "$mod CONTROL, down, resizeactive, 0% 10%"
+
         # switch to prev/next workspace
         "$mod ALT, left, workspace, e-1"
         "$mod ALT, right, workspace, e+1"
 
         # volume control
-        ",code:123, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
-        ",code:122, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
-        ",code:121, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
+        ",code:123, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ",code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ",code:121, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
         # brightness control
         ",code:233, exec, ddccontrol -r 0x10 -W +5 dev:/dev/i2c-8"
@@ -171,6 +188,61 @@
     systemd.enable = true;
     catppuccin.mode = "createLink";
     style = ./waybar.css;
+
+    settings = {
+      main = {
+        layer = "top";
+        position = "top";
+        modules-left = [ "hyprland/workspaces" ];
+        modules-center = [ "hyprland/window" ];
+        modules-right = [ "pulseaudio" "network" "cpu" "memory" "temperature" "clock" "tray" ];
+
+        "hyprland/workspaces" = {
+          active-only = false;
+        };
+
+        clock = {
+          tooltip-format = "{calendar}";
+          format-alt = "{:%Y-%m-%d %H:%M}";
+        };
+
+        cpu = {
+          format = "  {usage}%  {avg_frequency}Ghz";
+          on-click = "${pkgs.alacritty}/bin/alacritty -e '${pkgs.btop}/bin/btop'";
+        };
+
+        memory = {
+          format = "  {}%";
+        };
+
+        temperature = {
+          format = " {temperatureC}°C";
+          hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
+          critical-threshold = 86;
+        };
+
+        network = {
+          format-ethernet = "󰈀  {ipaddr}";
+          format-wifi = "󰖩 {essid} ({signalStrength}%)";
+          on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
+        };
+
+        pulseaudio = {
+          format = "{icon}  {volume}%  {format_source}";
+          format-muted = "󰝟 {format_source}";
+          format-source = "󰍬 {volume}%";
+          format-source-muted = "󰍭";
+          format-icons = {
+            default = [ "" "" ];
+          };
+          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+        };
+
+        tray = {
+          icon-size = 20;
+        };
+      };
+    };
   };
 
   programs.zsh = {
@@ -221,8 +293,7 @@
 
   services.syncthing = {
     enable = true;
-    # TODO waybar has no tray
-    tray.enable = false;
+    tray.enable = true;
   };
 
 }

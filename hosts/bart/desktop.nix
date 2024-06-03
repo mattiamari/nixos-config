@@ -60,6 +60,7 @@
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
+  # list installed fonts: `fc-list -v`
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk
@@ -71,8 +72,6 @@
     nvtopPackages.nvidia
     rofi-wayland
     alacritty
-    pavucontrol
-    pulseaudio # for pactl
     xfce.thunar
     ffmpegthumbnailer
     loupe
