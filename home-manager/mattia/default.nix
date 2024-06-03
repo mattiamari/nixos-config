@@ -22,8 +22,12 @@
     ];
 
     sessionVariables = {
-      # to make cursor visible in hyprland
-      WLR_NO_HARDWARE_CURSORS = "1";
+      # for hyprland
+      LIBVA_DRIVER_NAME = "nvidia";
+      GBM_BACKEND = "nvidia-drm";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      NVD_BACKEND = "direct";
+      ELECTRON_OZONE_PLATFORM_HINT = "auto";
     };
   };
 
@@ -31,6 +35,7 @@
     enable = true;
 
     desktopEntries = {
+      # does not work on wayland. force running on xwayland
       jellyfinmediaplayerxcb = {
         name = "Jellyfin Media Player XCB";
         exec = "jellyfinmediaplayer --platform xcb";
@@ -57,9 +62,8 @@
     systemd.enable = true;
     xwayland.enable = true;
 
+    # https://wiki.hyprland.org/0.40.0/Configuring/Variables/
     settings = {
-      # exec-once = "hyprpaper";
-      
       monitor = "HDMI-A-2,3840x2160@60,auto,1.0,bitdepth,10";
       
       input = {
@@ -79,6 +83,11 @@
 
       animations = {
         enabled = true;
+      };
+
+      dwindle = {
+        # whether to apply gaps when there is only one window on a workspace (default: disabled - 0) no border - 1, with border - 2
+        no_gaps_when_only = 1;
       };
 
       misc = {
@@ -117,6 +126,10 @@
         ",code:122, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
         ",code:121, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
 
+        # brightness control
+        ",code:233, exec, ddccontrol -r 0x10 -W +5 dev:/dev/i2c-8"
+        ",code:232, exec, ddccontrol -r 0x10 -W -5 dev:/dev/i2c-8"
+
         # screenshots
         ",Print,exec,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
       ]
@@ -130,7 +143,6 @@
         # mouse movements
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
-        "$mod ALT, mouse:272, resizewindow"
       ];
     };
   };

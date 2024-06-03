@@ -27,6 +27,8 @@
     pulse.enable = true;
   };
 
+  services.ddccontrol.enable = true;
+
   users.users.mattia = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
