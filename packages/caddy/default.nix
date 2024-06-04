@@ -38,12 +38,12 @@ caddy.override {
         cp -r --reflink=auto . $out
       '';
 
-      outputHash = "sha256-2Kc4f7Yrg319sunQDlzWm8TnFd/UR8kwrkUldL2HYpk=";
+      outputHash = "sha256-O0DnxJ+jpfo19kgwb56PCU8DRvcHtRNsfsrTqfQbyns=";
       outputHashMode = "recursive";
     };
 
     subPackages = [ "." ];
-    ldflags = [ "-s" "-w" ]; ## don't include version info twice
+    ldflags = [ "-s" "-w" ]; # don't include version info twice
     vendorHash = null;
   });
 }
