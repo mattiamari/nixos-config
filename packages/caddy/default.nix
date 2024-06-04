@@ -19,7 +19,7 @@ caddy.override {
       ];
 
       plugins = [
-        "github.com/caddy-dns/cloudflare@e52afcd970f5655d702396bea5b3f99a7500f1a8"
+        "github.com/caddy-dns/cloudflare@44030f9306f4815aceed3b042c7f3d2c2b110c97"
       ];
 
       configurePhase = ''
@@ -38,7 +38,7 @@ caddy.override {
         cp -r --reflink=auto . $out
       '';
 
-      outputHash = "sha256-O0DnxJ+jpfo19kgwb56PCU8DRvcHtRNsfsrTqfQbyns=";
+      outputHash = "sha256-g8ee2r3/HaT2RLp3jbjSklfSyZ7INNN0jfP9sw3yxus=";
       outputHashMode = "recursive";
     };
 
