@@ -68,7 +68,7 @@ in
       #     password = "$2y$10$b2Sozdie36mtEFA3JDpX3eH9rd3tu6hixFkxu5Pd70h9.zxsFxp9i"; # "changeme"
       #   }
       # ];
-      dns = {
+      filtering = {
         rewrites = [
           { domain = "*.${myConfig.publicHostname}"; answer = myConfig.serverLocalIP; }
         ];
