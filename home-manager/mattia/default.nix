@@ -258,6 +258,12 @@
     };
   };
 
+  programs.eza.enable = true;
+  programs.fzf.enable = true;
+  programs.ripgrep.enable = true;
+  programs.zoxide.enable = true;
+  programs.bat.enable = true;
+
   programs.helix = {
     enable = true;
     defaultEditor = true;
