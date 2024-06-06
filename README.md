@@ -1,4 +1,4 @@
-# My WIP NixOS config
+# My NixOS config
 
 ## Generating ISO image for RescUSB
 ```bash

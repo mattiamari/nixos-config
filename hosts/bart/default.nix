@@ -39,6 +39,9 @@
     pinentry-curses
   ];
 
+  # required for easyeffects
+  programs.dconf.enable = true;
+
   programs.gnupg.agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-curses;

@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsUnstable, catppuccin, ... }:
+{ config, pkgs, lib, pkgsUnstable, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeManagerModules.catppuccin
@@ -19,6 +19,8 @@
       calibre
       pkgsUnstable.jellyfin-media-player
       gimp
+      xournalpp
+      spotify
     ];
 
     sessionVariables = {
@@ -43,6 +45,7 @@
     };
   };
 
+  # https://nix.catppuccin.com/options/home-manager-options.html
   catppuccin = {
     enable = true;
     flavor = "macchiato";
@@ -105,7 +108,7 @@
       bind = [
         "$mod, Q, exec, alacritty"
         "$mod, E, exec, thunar"
-        "$mod, R, exec, rofi -show combi"
+        "$mod, SPACE, exec, rofi -show combi"
         # "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
         "$mod, C, killactive"
         "$mod, F, fullscreen, 1"
@@ -165,23 +168,23 @@
   };
 
   services.hyprpaper =
-  let
-    wall1 = "~/Pictures/wallpapers/yLXrKS.jpg";
-  in {
-    enable = true;
-    settings = {
-      splash = false;
-      ipc = "on";
+    let
+      wall1 = "~/Pictures/wallpapers/yLXrKS.jpg";
+    in {
+      enable = true;
+      settings = {
+        splash = false;
+        ipc = "on";
 
-      preload = [
-        wall1
-      ];
+        preload = [
+          wall1
+        ];
 
-      wallpaper = [
-        ",${wall1}"
-      ];
+        wallpaper = [
+          ",${wall1}"
+        ];
+      };
     };
-  };
 
   programs.waybar = {
     enable = true;
@@ -189,6 +192,7 @@
     catppuccin.mode = "createLink";
     style = ./waybar.css;
 
+    # https://github.com/Alexays/Waybar/wiki/Configuration
     settings = {
       main = {
         layer = "top";
@@ -296,4 +300,11 @@
     tray.enable = true;
   };
 
+  # Fix "the system tray is not currently available" message from syncthing tray
+  systemd.user.services.syncthingtray.Service.ExecStartPre = lib.mkForce "${pkgs.coreutils}/bin/sleep 3";
+  systemd.user.services.syncthingtray.Service.ExecStart = lib.mkForce "${pkgs.syncthingtray}/bin/syncthingtray --wait";
+  systemd.user.services.syncthingtray.Unit.After = lib.mkForce "waybar.service";
+  systemd.user.services.syncthingtray.Unit.Requires = lib.mkForce "waybar.service";
+
+  services.easyeffects.enable = true;
 }
