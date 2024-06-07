@@ -239,6 +239,7 @@
           format-icons = {
             default = [ "" "" ];
           };
+          ignored-sinks = ["Easy Effects Sink"];
           on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
         };
 
