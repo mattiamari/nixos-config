@@ -42,6 +42,13 @@
         name = "Jellyfin Media Player XCB";
         exec = "jellyfinmediaplayer --platform xcb";
       };
+
+      whatsapp = {
+        name = "WhatsApp";
+        # forcing x11 because glitches
+        exec = "${pkgs.chromium}/bin/chromium --app=\"https://web.whatsapp.com\" --name=WhatsApp --ozone-platform-hint=x11";
+        icon = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48/apps/whatsapp.svg";
+      };
     };
   };
 
@@ -112,7 +119,8 @@
         # "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
         "$mod, C, killactive"
         "$mod, F, fullscreen, 1"
-        "$mod, M, exit"
+        "$mod, M, exec, rofi -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
+        ", XF86Calculator, exec, rofi -show calc -modi calc -no-show-match -no-sort"
 
         # float and pin (i.e. picture in picture that follows you across workspaces)
         "$mod, P, toggleFloating"
@@ -163,6 +171,10 @@
         # mouse movements
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
+      ];
+
+      windowrule = [
+        "tile, title:^web\.whatsapp\.com.*$"
       ];
     };
   };
@@ -250,6 +262,24 @@
     };
   };
 
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi-wayland;
+
+    plugins = [
+      pkgs.rofi-calc
+    ];
+
+    # Get possible values with `rofi -dump-config`
+    extraConfig = {
+      modes = "drun,window,ssh";
+      combi-modes = "window,drun,ssh";
+      show-icons = true;
+      terminal = "alacritty";
+      combi-display-format = " <span weight='light'>{mode}</span> {text}";
+    };
+  };
+
   programs.zsh = {
     enable = true;
 
@@ -278,25 +308,6 @@
           select = "underline";
         };
       };
-    };
-  };
-
-  programs.rofi = {
-    enable = true;
-    package = pkgs.rofi-wayland;
-
-    plugins = [
-      # TODO bugged upstream
-      # pkgs.rofi-calc
-    ];
-
-    # Get possible values with `rofi -dump-config`
-    extraConfig = {
-      modes = "drun,window,ssh";
-      combi-modes = "window,drun,ssh";
-      show-icons = true;
-      terminal = "alacritty";
-      combi-display-format = " <span weight='light'>{mode}</span> {text}";
     };
   };
 

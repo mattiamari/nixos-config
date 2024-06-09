@@ -70,7 +70,6 @@
 
   environment.systemPackages = with pkgs; [
     nvtopPackages.nvidia
-    rofi-wayland
     alacritty
     xfce.thunar
     ffmpegthumbnailer
