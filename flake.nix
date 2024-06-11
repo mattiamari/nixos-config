@@ -7,9 +7,12 @@
         inputs.nixpkgs.follows = "nixpkgs";
       };
       catppuccin.url = "github:catppuccin/nix";
+
+      # https://github.com/NixOS/nixpkgs/pull/284857
+      nixpkgsIdea.url = "github:panda2134/nixpkgs";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, catppuccin, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, catppuccin, nixpkgsIdea, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -22,6 +25,11 @@
           inherit system;
           config.allowUnfree = true;
           overlays = import ./overlays;
+        };
+
+        pkgsIdea = import nixpkgsIdea {
+          inherit system;
+          config.allowUnfree = true;
         };
       in
       {
@@ -76,6 +84,14 @@
               ./home-manager/mattia
             ];
             extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
+          };
+
+          work = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              ./home-manager/work
+            ];
+            extraSpecialArgs = { inherit pkgsUnstable catppuccin pkgsIdea; };
           };
         };
     };

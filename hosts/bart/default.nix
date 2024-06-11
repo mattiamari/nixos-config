@@ -19,6 +19,14 @@
   networking.hostName = "bart";
   networking.networkmanager.enable = true;
 
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+  };
+
   services.printing.enable = true;
 
   services.pipewire = {
@@ -33,6 +41,15 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
     shell = pkgs.zsh;
+  };
+
+  users.users.work = {
+    isNormalUser = true;
+    extraGroups = [ "networkmanager" ];
+    shell = pkgs.zsh;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAXc/DBxDckVOYmMtlA3cAowsgW7v5FyYknfmg51It+"
+    ];
   };
 
   environment.systemPackages = with pkgs; [

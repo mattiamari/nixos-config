@@ -51,6 +51,21 @@
         "type": "indirect"
       }
     },
+    "nixpkgsIdea": {
+      "locked": {
+        "lastModified": 1710268333,
+        "narHash": "sha256-fiiWYlwnrzuGQ6ku5KrZ3Fiz22nscOM2LiywXQSkJFY=",
+        "owner": "panda2134",
+        "repo": "nixpkgs",
+        "rev": "a2aa07e5f4243c95416cceaadb1bbd94bde1a041",
+        "type": "github"
+      },
+      "original": {
+        "owner": "panda2134",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgsUnstable": {
       "locked": {
         "lastModified": 1717602782,
@@ -71,6 +86,7 @@
         "catppuccin": "catppuccin",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
+        "nixpkgsIdea": "nixpkgsIdea",
         "nixpkgsUnstable": "nixpkgsUnstable"
       }
     }
