@@ -22,10 +22,6 @@
       xournalpp
       spotify
     ];
-
-    sessionVariables = {
-      # for hyprland
-    };
   };
 
   xdg = {
@@ -40,8 +36,7 @@
 
       whatsapp = {
         name = "WhatsApp";
-        # forcing x11 because glitches
-        exec = "${pkgs.chromium}/bin/chromium --app=\"https://web.whatsapp.com\" --name=WhatsApp --ozone-platform-hint=x11";
+        exec = "${pkgs.chromium}/bin/chromium --app=\"https://web.whatsapp.com\" --name=WhatsApp";
         icon = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48/apps/whatsapp.svg";
       };
     };
