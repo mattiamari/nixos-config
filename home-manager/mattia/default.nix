@@ -144,6 +144,11 @@
         ",code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ",code:121, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
+        # media control
+        ",XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous"
+        ",XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next"
+        ",XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
+
         # brightness control
         ",code:233, exec, ddccontrol -r 0x10 -W +5 dev:/dev/i2c-8"
         ",code:232, exec, ddccontrol -r 0x10 -W -5 dev:/dev/i2c-8"
