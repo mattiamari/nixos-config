@@ -43,6 +43,7 @@
     file
     helix
     nil # Nix language server
+    just
   ];
 
   programs.zsh.enable = true;
