@@ -20,8 +20,18 @@
       pkgsUnstable.jellyfin-media-player
       gimp
       xournalpp
+      libreoffice-fresh
       spotify
+      sshfs
     ];
+
+    pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      name = "Adwaita";
+      package = pkgs.gnome.adwaita-icon-theme;
+      size = 24;
+    };
   };
 
   xdg = {
@@ -49,12 +59,41 @@
     accent = "teal";
   };
 
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
+    };
+  };
+
   gtk = {
     enable = true;
+    theme = {
+      name = "Adwaita";
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    
+    gtk2.extraConfig = ''
+      gtk-application-prefer-dark-theme = true
+    '';
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
   };
 
   qt = {
     enable = true;
+    style = {
+      name = "adwaita-dark";
+    };
   };
 
   wayland.windowManager.hyprland = {
