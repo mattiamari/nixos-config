@@ -206,6 +206,17 @@ in
   };
   myCaddy.privateServices.prowlarr = {port = 9696;};
 
+  services.navidrome = {
+    enable = true;
+    user = "mediaserver";
+    group = "mediaserver";
+    port = 4533;
+    settings = {
+      MusicFolder = "/media/storage/media/music";
+    };
+  };
+  myCaddy.services.navidrome = { port = 4533; };
+
   services.photoprism = {
     enable = true;
     originalsPath = "/media/storage/famiglia/Immagini";
