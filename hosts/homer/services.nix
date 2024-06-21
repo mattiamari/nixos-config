@@ -210,12 +210,12 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    port = 4533;
     settings = {
+      Port = 4533;
       MusicFolder = "/media/storage/media/music";
     };
   };
-  myCaddy.services.navidrome = { port = 4533; };
+  myCaddy.publicServices.navidrome = { port = 4533; };
 
   services.photoprism = {
     enable = true;
