@@ -1,4 +1,4 @@
-{ config, pkgs, lib, pkgsUnstable, catppuccin, pkgsIdea, ... }:
+{ config, pkgs, lib, pkgsUnstable, pkgsOld, pkgsCustom, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeManagerModules.catppuccin
@@ -6,20 +6,20 @@
   
   programs.home-manager.enable = true;
 
-  nixpkgs.overlays = [
-    (final: prev: { jetbrains.idea-ultimate = pkgsIdea.jetbrains.idea-ultimate.override { vmopts = "-Xmx16000m"; }; })
-  ];
-  
   home = {
     username = "work";
     homeDirectory = "/home/work";
 
     stateVersion = "24.05";
 
-    packages = with pkgs; [
+    packages =
+    let
+      idea = pkgsCustom.jetbrains.idea-ultimate.override { vmopts = "-Xmx8G"; };
+    in
+    with pkgs; [
       openfortivpn
       jdt-language-server
-      jetbrains.idea-ultimate
+      idea
     ];
 
     sessionVariables = {
@@ -80,10 +80,5 @@
   programs.neovim = {
     enable = true;
     defaultEditor = true;
-    package = pkgsUnstable.neovim-unwrapped;
-
-    plugins = with pkgsUnstable.vimPlugins; [
-      nvim-jdtls
-    ];
   };
 }

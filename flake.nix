@@ -2,17 +2,16 @@
     inputs = {
       nixpkgs.url = "nixpkgs/nixos-24.05";
       nixpkgsUnstable.url = "nixpkgs/nixos-unstable";
+      nixpkgsOld.url = "nixpkgs/nixos-23.11";
+      nixpkgsCustom.url = "github:mattiamari/nixpkgs/fix-intellij-remote-dev";
       home-manager = {
         url = "github:nix-community/home-manager/release-24.05";
         inputs.nixpkgs.follows = "nixpkgs";
       };
       catppuccin.url = "github:catppuccin/nix";
-
-      # https://github.com/NixOS/nixpkgs/pull/284857
-      nixpkgsIdea.url = "github:panda2134/nixpkgs";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, catppuccin, nixpkgsIdea, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, nixpkgsOld, nixpkgsCustom, home-manager, catppuccin, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -27,7 +26,12 @@
           overlays = import ./overlays;
         };
 
-        pkgsIdea = import nixpkgsIdea {
+        pkgsOld = import nixpkgsOld {
+          inherit system;
+          config.allowUnfree = true;
+        };
+
+        pkgsCustom = import nixpkgsCustom {
           inherit system;
           config.allowUnfree = true;
         };
@@ -36,7 +40,7 @@
         nixosConfigurations =
           let
             lib = nixpkgs.lib;
-            specialArgs = { inherit pkgs pkgsUnstable; };
+            specialArgs = { inherit pkgs pkgsUnstable pkgsOld pkgsCustom; };
 
             defaultModules = [
               ./hosts/common
@@ -53,7 +57,8 @@
                   home-manager.useGlobalPkgs = true;
                   home-manager.useUserPackages = true;
                   home-manager.users.mattia = import ./home-manager/mattia;
-                  home-manager.extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
+                  home-manager.users.work = import ./home-manager/work;
+                  home-manager.extraSpecialArgs = specialArgs // { inherit catppuccin; };
                 }
               ];
             };
@@ -91,7 +96,7 @@
             modules = [
               ./home-manager/work
             ];
-            extraSpecialArgs = { inherit pkgsUnstable catppuccin pkgsIdea; };
+            extraSpecialArgs = { inherit pkgsUnstable pkgsOld catppuccin; };
           };
         };
     };
