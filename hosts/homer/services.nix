@@ -206,13 +206,21 @@ in
   };
   myCaddy.privateServices.prowlarr = {port = 9696;};
 
+  services.lidarr = {
+    enable = true;
+    package = pkgsUnstable.lidarr;
+    user = "mediaserver";
+    group = "mediaserver";
+  };
+  myCaddy.privateServices.lidarr = { port = 8686; };
+
   services.navidrome = {
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
     settings = {
       Port = 4533;
-      MusicFolder = "/media/storage/media/music";
+      MusicFolder = "/media/storage/media/music/main";
     };
   };
   myCaddy.publicServices.navidrome = { port = 4533; };

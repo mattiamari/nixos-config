@@ -32,6 +32,7 @@ let
 
       paths = [
        "/media/storage/mattia"
+       "/media/storage/media/music/main"
       ];
 
       exclude = [];
