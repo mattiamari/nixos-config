@@ -179,7 +179,7 @@
         "$mod ALT, right, workspace, e+1"
 
         # volume control
-        ",code:123, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ",code:123, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+"
         ",code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ",code:121, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
@@ -286,7 +286,7 @@
             default = [ "" "" ];
           };
           ignored-sinks = ["Easy Effects Sink"];
-          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+          on-click = "${pkgs.pwvucontrol}/bin/pwvucontrol";
         };
 
         tray = {
