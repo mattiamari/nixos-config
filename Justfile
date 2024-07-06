@@ -1,6 +1,9 @@
 switch:
     nixos-rebuild switch --flake . --use-remote-sudo
 
+boot:
+    nixos-rebuild boot --flake . --use-remote-sudo
+
 build:
     nixos-rebuild build --flake .
 
