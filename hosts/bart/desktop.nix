@@ -60,6 +60,14 @@
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-volman
+      thunar-archive-plugin
+    ];
+  };
+
   programs.virt-manager.enable = true;
 
   # list installed fonts: `fc-list -v`
@@ -73,7 +81,6 @@
   environment.systemPackages = with pkgs; [
     nvtopPackages.nvidia
     alacritty
-    xfce.thunar
     ffmpegthumbnailer
     loupe
     gnome.gnome-calculator

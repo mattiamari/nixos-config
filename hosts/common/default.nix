@@ -40,6 +40,7 @@
     gdu
     tree
     zip
+    p7zip
     file
     helix
     nil # Nix language server
