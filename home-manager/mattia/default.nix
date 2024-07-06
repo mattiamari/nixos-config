@@ -44,10 +44,17 @@
         exec = "jellyfinmediaplayer --platform xcb";
       };
 
+      # "--use-angle=vulkan --use-cmd-decoder=passthrough" prevents flickering
       whatsapp = {
         name = "WhatsApp";
-        exec = "${pkgs.chromium}/bin/chromium --app=\"https://web.whatsapp.com\" --name=WhatsApp";
+        exec = "${pkgs.chromium}/bin/chromium --use-angle=vulkan --use-cmd-decoder=passthrough --app=\"https://web.whatsapp.com\" --name=WhatsApp";
         icon = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48/apps/whatsapp.svg";
+      };
+
+      navidrome = {
+        name = "Navidrome";
+        exec = "${pkgs.chromium}/bin/chromium --use-angle=vulkan --use-cmd-decoder=passthrough --app=\"https://navidrome.home.mattiamari.xyz\" --name=Navidrome";
+        # icon = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48/apps/whatsapp.svg";
       };
     };
   };
