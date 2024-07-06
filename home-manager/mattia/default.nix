@@ -78,7 +78,8 @@
   gtk = {
     enable = true;
     theme = {
-      name = "Adwaita";
+      name = "Adwaita-dark";
+      package = pkgs.gnome.gnome-themes-extra;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -98,9 +99,9 @@
 
   qt = {
     enable = true;
-    style = {
-      name = "adwaita-dark";
-    };
+    style.catppuccin.enable = false;
+    style.name = "adwaita-dark";
+    platformTheme.name = "adwaita";
   };
 
   wayland.windowManager.hyprland = {
