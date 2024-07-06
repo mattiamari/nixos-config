@@ -60,6 +60,8 @@
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
+  programs.virt-manager.enable = true;
+
   # list installed fonts: `fc-list -v`
   fonts.packages = with pkgs; [
     noto-fonts

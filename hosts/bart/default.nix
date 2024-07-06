@@ -39,7 +39,7 @@
 
   users.users.mattia = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "libvirtd" ];
     shell = pkgs.zsh;
   };
 
@@ -66,7 +66,11 @@
 
   services.flatpak.enable = true;
 
-  virtualisation.oci-containers.backend = "podman";
+  virtualisation = {
+    oci-containers.backend = "podman";
+    libvirtd.enable = true;
+    spiceUSBRedirection.enable = true;
+  };
 
   system.stateVersion = "23.11";
 }
