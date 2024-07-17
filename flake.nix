@@ -2,7 +2,6 @@
     inputs = {
       nixpkgs.url = "nixpkgs/nixos-24.05";
       nixpkgsUnstable.url = "nixpkgs/nixos-unstable";
-      nixpkgsOld.url = "nixpkgs/nixos-23.11";
       nixpkgsCustom.url = "github:mattiamari/nixpkgs/fix-intellij-remote-dev";
       home-manager = {
         url = "github:nix-community/home-manager/release-24.05";
@@ -11,7 +10,7 @@
       catppuccin.url = "github:catppuccin/nix";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, nixpkgsOld, nixpkgsCustom, home-manager, catppuccin, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, nixpkgsCustom, home-manager, catppuccin, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -26,11 +25,6 @@
           overlays = import ./overlays;
         };
 
-        pkgsOld = import nixpkgsOld {
-          inherit system;
-          config.allowUnfree = true;
-        };
-
         pkgsCustom = import nixpkgsCustom {
           inherit system;
           config.allowUnfree = true;
@@ -40,7 +34,7 @@
         nixosConfigurations =
           let
             lib = nixpkgs.lib;
-            specialArgs = { inherit pkgs pkgsUnstable pkgsOld pkgsCustom; };
+            specialArgs = { inherit pkgs pkgsUnstable pkgsCustom; };
 
             defaultModules = [
               ./hosts/common
@@ -96,7 +90,7 @@
             modules = [
               ./home-manager/work
             ];
-            extraSpecialArgs = { inherit pkgsUnstable pkgsOld catppuccin; };
+            extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
           };
         };
     };

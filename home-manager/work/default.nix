@@ -1,4 +1,4 @@
-{ config, pkgs, lib, pkgsUnstable, pkgsOld, pkgsCustom, catppuccin, ... }:
+{ config, pkgs, lib, pkgsUnstable, pkgsCustom, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeManagerModules.catppuccin

@@ -7,6 +7,12 @@ boot:
 build:
     nixos-rebuild build --flake .
 
+homer-boot:
+    nixos-rebuild boot --flake .#homer --target-host mattia@homer --build-host mattia@homer --use-remote-sudo
+
+homer-switch:
+    nixos-rebuild switch --flake .#homer --target-host mattia@homer --build-host mattia@homer --use-remote-sudo
+
 update:
     nix flake update
 
