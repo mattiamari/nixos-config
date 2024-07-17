@@ -38,10 +38,10 @@
     enable = true;
 
     desktopEntries = {
-      # does not work on wayland. force running on xwayland
+      # https://github.com/jellyfin/jellyfin-media-player/issues/165
       jellyfinmediaplayerxcb = {
-        name = "Jellyfin Media Player XCB";
-        exec = "jellyfinmediaplayer --platform xcb";
+        name = "Jellyfin Media Player (no GPU)";
+        exec = "jellyfinmediaplayer --disable-gpu";
       };
 
       # "--use-angle=vulkan --use-cmd-decoder=passthrough" prevents flickering
