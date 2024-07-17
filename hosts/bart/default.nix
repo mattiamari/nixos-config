@@ -37,6 +37,8 @@
 
   services.ddccontrol.enable = true;
 
+  services.udisks2.enable = true;
+
   users.users.mattia = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "libvirtd" ];
