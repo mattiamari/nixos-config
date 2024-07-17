@@ -214,6 +214,13 @@ in
   };
   myCaddy.privateServices.lidarr = { port = 8686; };
 
+  services.bazarr = {
+    enable = true;
+    user = "mediaserver";
+    group = "mediaserver";
+  };
+  myCaddy.privateServices.bazarr = { port = 6767; };
+
   services.navidrome = {
     enable = true;
     user = "mediaserver";
