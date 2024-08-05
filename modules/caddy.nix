@@ -19,8 +19,8 @@ let
     };
   };
 
-  mkServiceConfig = serviceConfig: ''
-    @${serviceConfig.name} host ${serviceConfig.name}.${cfg.domain}
+  mkServiceConfig = domain: serviceConfig: ''
+    @${serviceConfig.name} host ${serviceConfig.name}.${domain}
     handle @${serviceConfig.name} {
       ${serviceConfig.extraConfig}
       reverse_proxy {
@@ -38,9 +38,14 @@ in
       description = mdDoc "Path to an environment file. Used to pass secrets";
     };
     
-    domain = mkOption {
+    privateDomain = mkOption {
       type = types.str;
-      description = mdDoc "Domain name to expose";
+      description = mdDoc "Domain name for private services";
+    };
+
+    publicDomain = mkOption {
+      type = types.str;
+      description = mdDoc "Domain name for public services";
     };
 
     privateNetworkAddr = mkOption {
@@ -85,9 +90,9 @@ in
       };
 
       extraConfig = ''
-        *.${cfg.domain} {
+        *.${cfg.privateDomain} {
           log {
-            output file /var/log/caddy/access-${cfg.domain}.log
+            output file /var/log/caddy/access-${cfg.privateDomain}.log
           }
 
           tls {
@@ -97,17 +102,35 @@ in
             resolvers 1.1.1.1
           }
 
-          ${concatMapStringsSep "\n" mkServiceConfig (attrValues cfg.publicServices)}
-
           # Abort connections not coming from LAN
           @out_of_lan not remote_ip ${cfg.privateNetworkAddr}
           handle @out_of_lan {
             abort
           }
 
-          ${concatMapStringsSep "\n" mkServiceConfig (attrValues cfg.privateServices)}
+          ${concatMapStringsSep "\n" (mkServiceConfig cfg.privateDomain) (attrValues cfg.privateServices)}
 
           ${concatStringsSep "\n" cfg.extraPrivateServices}
+
+          # Abort requests not handled above
+          handle {
+            abort
+          }
+        }
+
+        *.${cfg.publicDomain} {
+          log {
+            output file /var/log/caddy/access-${cfg.publicDomain}.log
+          }
+
+          tls {
+            dns cloudflare {env.CLOUDFLARE_TOKEN}
+
+            # Prevents errors that may arise from the local DNS cache
+            resolvers 1.1.1.1
+          }
+
+          ${concatMapStringsSep "\n" (mkServiceConfig cfg.publicDomain) (attrValues cfg.publicServices)}
 
           # Abort requests not handled above
           handle {

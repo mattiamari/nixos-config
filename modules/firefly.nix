@@ -382,7 +382,7 @@ let
     # Please make sure this URL matches the external URL of your Firefly III installation.
     # It is used to validate specific requests and to generate URLs in emails.
     #
-    APP_URL=https://firefly.${config.myCaddy.domain}
+    APP_URL=https://firefly.${config.myCaddy.publicDomain}
   '';
 
   initScript = pkgs.writeShellScript "firefly-init.sh" ''
@@ -516,7 +516,7 @@ in
 
     myCaddy.extraPrivateServices = [
       ''
-        @firefly host firefly.${config.myCaddy.domain}
+        @firefly host firefly.${config.myCaddy.privateDomain}
         handle @firefly {
           root * ${pkg}/public
 

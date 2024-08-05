@@ -34,7 +34,8 @@ in
   myCaddy = {
     enable = true;
     environmentFilePath = "${myConfig.secretsDir}/caddy";
-    domain = myConfig.publicHostname;
+    publicDomain = myConfig.publicHostname;
+    privateDomain = myConfig.privateHostname;
     privateNetworkAddr = myConfig.privateNetwork;
   };
 
@@ -71,7 +72,7 @@ in
       # ];
       filtering = {
         rewrites = [
-          { domain = "*.${myConfig.publicHostname}"; answer = myConfig.serverLocalIP; }
+          { domain = "*.${myConfig.privateHostname}"; answer = myConfig.serverLocalIP; }
         ];
       };
     };
