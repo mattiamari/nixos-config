@@ -288,12 +288,12 @@ in
     environmentFilePath = "${myConfig.secretsDir}/firefly";
   };
 
-  # services.filebrowser = {
-  #   enable = true;
-  #   port = 7000;
-  #   package = pkgsUnstable.filebrowser;
-  # };
-  # myCaddy.publicServices.filebrowser = {
-  #   port = config.services.filebrowser.port;
-  # };
+  services.filebrowser = {
+    enable = true;
+    port = 7000;
+    package = pkgsUnstable.filebrowser;
+  };
+  myCaddy.publicServices.filebrowser = {
+    port = config.services.filebrowser.port;
+  };
 }
