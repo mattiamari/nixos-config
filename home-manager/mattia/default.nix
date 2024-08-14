@@ -111,7 +111,10 @@
 
     # https://wiki.hyprland.org/0.40.0/Configuring/Variables
     settings = {
-      monitor = "HDMI-A-2,3840x2160@60,auto,1.0,bitdepth,10";
+      monitor = [
+        "HDMI-A-2,3840x2160@60,auto,1.0,bitdepth,10"
+        "Unknown-1,disable"
+      ];
       
       input = {
         kb_layout = "it";
