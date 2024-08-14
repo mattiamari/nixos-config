@@ -66,7 +66,7 @@
     pinentryPackage = pkgs.pinentry-curses;
   };
 
-  services.flatpak.enable = true;
+  # services.flatpak.enable = true;
 
   virtualisation = {
     oci-containers.backend = "podman";
