@@ -342,7 +342,6 @@
 
   programs.helix = {
     enable = true;
-    defaultEditor = true;
     
     settings = {
       editor = {
@@ -354,6 +353,11 @@
         };
       };
     };
+  };
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
   };
 
   programs.lazygit.enable = true;
