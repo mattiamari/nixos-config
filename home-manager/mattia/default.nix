@@ -358,6 +358,22 @@
   programs.neovim = {
     enable = true;
     defaultEditor = true;
+    vimAlias = true;
+
+    extraPackages = with pkgs; [
+      gcc
+      gnumake
+      unzip
+      fd
+      wl-clipboard
+    ];
+  };
+
+  home.file = {
+    ".config/nvim" = {
+      source = ./nvim;
+      recursive = true;
+    };
   };
 
   programs.lazygit.enable = true;
