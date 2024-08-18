@@ -1,11 +1,11 @@
-{ config, lib, pkgs, ...}:
+{ config, lib, meross-prometheus-exporter, ...}:
 with lib;
 let
   cfg = config.services.prometheus.exporters.meross;
-  pkg = pkgs.callPackage ../packages/meross-prometheus-exporter {};
+  pkg = meross-prometheus-exporter;
 in
 { 
-   options.services.prometheus.exporters.meross = {
+  options.services.prometheus.exporters.meross = {
     enable = mkEnableOption (mdDoc "Meross Prometheus Exporter");
 
     port = mkOption {
@@ -40,7 +40,7 @@ in
           ${pkg}/start
         '';
         Restart = "always";
-        RestartSec = 5;
+        RestartSec = 30;
       };
 
       environment = {

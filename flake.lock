@@ -2,11 +2,11 @@
   "nodes": {
     "catppuccin": {
       "locked": {
-        "lastModified": 1722997334,
-        "narHash": "sha256-vE5FcKVQ3E0txJKt5w3vOlfcN1XoTAlxK9PnQ/CJavA=",
+        "lastModified": 1723691425,
+        "narHash": "sha256-F25VvHFMaqr26b7goaVWspXaK6XTRFz8RnILV+9OPkk=",
         "owner": "catppuccin",
         "repo": "nix",
-        "rev": "66f4ea170093b62f319f41cebd2337a51b225c5a",
+        "rev": "552056779a136092eb6358c573d925630172fc30",
         "type": "github"
       },
       "original": {
@@ -36,19 +36,38 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "meross-prometheus-exporter": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
       "locked": {
-        "lastModified": 1723282977,
-        "narHash": "sha256-oTK91aOlA/4IsjNAZGMEBz7Sq1zBS0Ltu4/nIQdYDOg=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "a781ff33ae258bbcfd4ed6e673860c3e923bf2cc",
+        "lastModified": 1723989914,
+        "narHash": "sha256-vMi3/He/UjZQlBO4VuJK3ovveNhSvVYo9DR4COZ7zVQ=",
+        "owner": "mattiamari",
+        "repo": "meross-prometheus-exporter",
+        "rev": "f643640cef0b5c0463a9509e7e0d793a716048f2",
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-24.05",
-        "type": "indirect"
+        "owner": "mattiamari",
+        "repo": "meross-prometheus-exporter",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1723891200,
+        "narHash": "sha256-uljX21+D/DZgb9uEFFG2dkkQbPZN+ig4Z6+UCLWFVAk=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "a0d6390cb3e82062a35d0288979c45756e481f60",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "a0d6390cb3e82062a35d0288979c45756e481f60",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixpkgsCustom": {
@@ -69,11 +88,11 @@
     },
     "nixpkgsUnstable": {
       "locked": {
-        "lastModified": 1723175592,
-        "narHash": "sha256-M0xJ3FbDUc4fRZ84dPGx5VvgFsOzds77KiBMW/mMTnI=",
+        "lastModified": 1723637854,
+        "narHash": "sha256-med8+5DSWa2UnOqtdICndjDAEjxr5D7zaIiK4pn0Q7c=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5e0ca22929f3342b19569b21b2f3462f053e497b",
+        "rev": "c3aa7b8938b17aebd2deecf7be0636000d62a2b9",
         "type": "github"
       },
       "original": {
@@ -82,11 +101,27 @@
         "type": "indirect"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1723688146,
+        "narHash": "sha256-sqLwJcHYeWLOeP/XoLwAtYjr01TISlkOfz+NG82pbdg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c3d4ac725177c030b1e289015989da2ad9d56af0",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-24.05",
+        "type": "indirect"
+      }
+    },
     "root": {
       "inputs": {
         "catppuccin": "catppuccin",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs",
+        "meross-prometheus-exporter": "meross-prometheus-exporter",
+        "nixpkgs": "nixpkgs_2",
         "nixpkgsCustom": "nixpkgsCustom",
         "nixpkgsUnstable": "nixpkgsUnstable"
       }

@@ -106,7 +106,7 @@ in
         enable = true;
         port = 9003;
         secretsFilePath = "${myConfig.secretsDir}/meross";
-        scrapeFrequencySeconds = 30;
+        scrapeFrequencySeconds = 60;
       };
     };
 

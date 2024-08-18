@@ -8,9 +8,10 @@
         inputs.nixpkgs.follows = "nixpkgs";
       };
       catppuccin.url = "github:catppuccin/nix";
+      meross-prometheus-exporter.url = "github:mattiamari/meross-prometheus-exporter";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, nixpkgsCustom, home-manager, catppuccin, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, nixpkgsCustom, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -34,7 +35,7 @@
         nixosConfigurations =
           let
             lib = nixpkgs.lib;
-            specialArgs = { inherit pkgs pkgsUnstable pkgsCustom; };
+            specialArgs = { inherit pkgs pkgsUnstable pkgsCustom meross-prometheus-exporter; };
 
             defaultModules = [
               ./hosts/common
@@ -58,7 +59,8 @@
             };
 
             homer = lib.nixosSystem {
-              inherit system specialArgs;
+              inherit system;
+              specialArgs = specialArgs // {meross-prometheus-exporter = meross-prometheus-exporter.packages.${system}.default;};
               modules = defaultModules ++ [ ./hosts/homer ];
             };
 
