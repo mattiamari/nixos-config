@@ -334,6 +334,11 @@
     };
   };
 
+  programs.git = {
+    enable = true;
+    delta.enable = true; # fancy diff
+  };
+
   programs.eza.enable = true;
   programs.fzf.enable = true;
   programs.ripgrep.enable = true;
