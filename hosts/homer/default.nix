@@ -33,7 +33,8 @@ in
   boot.zfs.extraPools = [ "storage" ];
   services.zfs.autoScrub = {
     enable = true;
-    interval = "*-*-01 03:00"; # monthly at 3:00
+    interval = "*-*-01 03:00:00"; # monthly at 3:00
+    randomizedDelaySec = "0h";
   };
 
   networking = {
