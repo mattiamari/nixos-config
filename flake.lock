@@ -70,22 +70,6 @@
         "type": "github"
       }
     },
-    "nixpkgsCustom": {
-      "locked": {
-        "lastModified": 1721200276,
-        "narHash": "sha256-NSeGviBJolzxFXgWmLCBrt4DZVLWLMdN7inKzy/4jYQ=",
-        "owner": "mattiamari",
-        "repo": "nixpkgs",
-        "rev": "77da7fea790751f9d671a539f6fea100c540a446",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mattiamari",
-        "ref": "fix-intellij-remote-dev",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgsUnstable": {
       "locked": {
         "lastModified": 1726062873,
@@ -122,7 +106,6 @@
         "home-manager": "home-manager",
         "meross-prometheus-exporter": "meross-prometheus-exporter",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgsCustom": "nixpkgsCustom",
         "nixpkgsUnstable": "nixpkgsUnstable"
       }
     }

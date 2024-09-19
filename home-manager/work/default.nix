@@ -1,4 +1,4 @@
-{ config, pkgs, lib, pkgsUnstable, pkgsCustom, catppuccin, ... }:
+{ config, pkgs, lib, pkgsUnstable, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeManagerModules.catppuccin
@@ -14,11 +14,10 @@
 
     packages =
     let
-      idea = pkgsCustom.jetbrains.idea-ultimate.override { vmopts = "-Xmx8G"; };
+      idea = pkgsUnstable.jetbrains.idea-ultimate.override { vmopts = "-Xmx8G"; };
     in
     with pkgs; [
       openfortivpn
-      jdt-language-server
       idea
     ];
 
@@ -43,12 +42,12 @@
     };
   };
 
-  programs.eza.enable = true;
-  programs.fzf.enable = true;
-  programs.fd.enable = true;
+  programs.eza.enable = true; # `ls` alternative
+  programs.fzf.enable = true; # fuzzy finder
+  programs.fd.enable = true; # `find` alternative
   programs.ripgrep.enable = true;
-  programs.zoxide.enable = true;
-  programs.bat.enable = true;
+  programs.zoxide.enable = true; # smart `cd` command
+  programs.bat.enable = true; # nicer `cat`
   programs.lazygit.enable = true;
 
   programs.helix = {

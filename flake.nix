@@ -2,7 +2,6 @@
     inputs = {
       nixpkgs.url = "nixpkgs/nixos-24.05";
       nixpkgsUnstable.url = "nixpkgs/nixos-unstable";
-      nixpkgsCustom.url = "github:mattiamari/nixpkgs/fix-intellij-remote-dev";
       home-manager = {
         url = "github:nix-community/home-manager/release-24.05";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -11,7 +10,7 @@
       meross-prometheus-exporter.url = "github:mattiamari/meross-prometheus-exporter";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, nixpkgsCustom, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -25,17 +24,12 @@
           config.allowUnfree = true;
           overlays = import ./overlays;
         };
-
-        pkgsCustom = import nixpkgsCustom {
-          inherit system;
-          config.allowUnfree = true;
-        };
       in
       {
         nixosConfigurations =
           let
             lib = nixpkgs.lib;
-            specialArgs = { inherit pkgs pkgsUnstable pkgsCustom meross-prometheus-exporter; };
+            specialArgs = { inherit pkgs pkgsUnstable meross-prometheus-exporter; };
 
             defaultModules = [
               ./hosts/common
