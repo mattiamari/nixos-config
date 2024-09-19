@@ -22,7 +22,22 @@
         pkgsUnstable = import nixpkgsUnstable {
           inherit system;
           config.allowUnfree = true;
-          overlays = import ./overlays;
+          #overlays = import ./overlays;
+
+          overlays = [
+            (final: prev: {
+              jetbrains = (prev.recurseIntoAttrs (prev.callPackages ./packages/jetbrains {
+                jdk = final.jetbrains.jdk;
+              }) // {
+                jdk = prev.callPackage ./packages/jetbrains-jdk {
+                  jdk = prev.jdk21;
+                };
+                jcef = prev.callPackage ./packages/jetbrains-jdk/jcef.nix {
+                  jdk = prev.jdk21;
+                };
+              });
+            })
+          ];
         };
       in
       {
