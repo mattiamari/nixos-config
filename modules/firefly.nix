@@ -488,7 +488,7 @@ in
         WorkingDirectory = pkg;
         EnvironmentFile = cfg.environmentFilePath;
         ExecStart = pkgs.writeShellScript "firefly-cron.sh" ''
-          ${pkgs.php83}/bin/php artisan firefly-iii:cron
+          ${pkgs.php83}/bin/php artisan firefly-iii:cron --force --date=$(date '+%Y-%m-%d')
         '';
       };
     };
