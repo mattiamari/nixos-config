@@ -150,6 +150,7 @@ in
       sleep 2
       df -h /dev/disk/by-uuid/${partB}
       ${pkgs.smartmontools}/bin/smartctl -iA /dev/disk/by-id/${diskB}
+      sleep 2
       ${pkgs.udisks}/bin/udisksctl power-off -b /dev/disk/by-id/${diskB}
     '';
 
