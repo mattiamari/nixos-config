@@ -362,6 +362,7 @@
 
   programs.neovim = {
     enable = true;
+    package = pkgsUnstable.neovim-unwrapped;
     defaultEditor = true;
     vimAlias = true;
 
