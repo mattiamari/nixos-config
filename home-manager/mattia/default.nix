@@ -365,6 +365,7 @@
     package = pkgsUnstable.neovim-unwrapped;
     defaultEditor = true;
     vimAlias = true;
+    withPython3 = true;
 
     extraPackages = with pkgs; [
       gcc
