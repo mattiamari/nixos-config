@@ -19,6 +19,9 @@
     with pkgs; [
       openfortivpn
       idea
+      podman-compose
+      podman-tui
+      dive
     ];
 
     sessionVariables = {

@@ -13,6 +13,11 @@
 
   boot.tmp.useTmpfs = true;
 
+  # Prevent restart on kernel panic
+  boot.kernelParams = [
+    "panic=0"
+  ];
+
   fileSystems."/".options = [ "noatime" "nodiratime" ];
   services.fstrim.enable = true;
 
@@ -56,6 +61,7 @@
 
   environment.systemPackages = with pkgs; [
     pinentry-curses
+    shadow # for rootless podman
   ];
 
   # required for easyeffects
@@ -69,6 +75,13 @@
   # services.flatpak.enable = true;
 
   virtualisation = {
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      dockerSocket.enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+
     oci-containers.backend = "podman";
     libvirtd.enable = true;
     spiceUSBRedirection.enable = true;
