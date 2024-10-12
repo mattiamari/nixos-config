@@ -68,6 +68,12 @@
     ];
   };
 
+  # Keyring
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.sddm.enableGnomeKeyring = true;
+  programs.seahorse.enable = true;
+
+
   programs.virt-manager.enable = true;
 
   # list installed fonts: `fc-list -v`
