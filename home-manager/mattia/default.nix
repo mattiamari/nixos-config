@@ -15,6 +15,7 @@
     packages = with pkgs; [
       mpv
       vlc
+      pkgsUnstable.supersonic-wayland
       pkgsUnstable.obsidian
       calibre
       pkgsUnstable.jellyfin-media-player
