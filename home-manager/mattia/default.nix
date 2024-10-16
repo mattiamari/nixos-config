@@ -24,6 +24,7 @@
       libreoffice-fresh
       spotify
       sshfs
+      pkgsUnstable.telegram-desktop
     ];
 
     pointerCursor = {
