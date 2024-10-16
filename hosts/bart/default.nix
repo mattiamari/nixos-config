@@ -74,6 +74,32 @@
 
   # services.flatpak.enable = true;
 
+  # Keyboard remapping
+  services.kanata = {
+    enable = true;
+    keyboards = {
+      default = {
+        devices = [
+          "/dev/input/by-id/usb-Logitech_USB_Receiver-if02-event-mouse"
+        ];
+        extraDefCfg = "process-unmapped-keys yes";
+        config = ''
+          (defsrc
+            caps
+          )
+
+          (defalias
+            escctrl (tap-hold 150 150 esc lctrl)
+          )
+
+          (deflayer base
+            @escctrl
+          )
+        '';
+      };
+    };
+  };
+
   virtualisation = {
     podman = {
       enable = true;
