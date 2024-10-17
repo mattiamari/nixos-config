@@ -222,6 +222,7 @@
 
       windowrule = [
         "tile, title:^web\.whatsapp\.com.*$"
+        "float, title:Calculator"
       ];
     };
   };
