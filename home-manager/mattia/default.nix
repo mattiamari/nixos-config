@@ -25,6 +25,7 @@
       spotify
       sshfs
       pkgsUnstable.telegram-desktop
+      brave
     ];
 
     pointerCursor = {
