@@ -68,6 +68,9 @@
     ];
   };
 
+  services.gvfs.enable = true; # for automount, trash, etc.
+  services.tumbler.enable = true; # fot thumnbnails
+
   # Keyring
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
@@ -112,6 +115,4 @@
     accent = "teal";
   };
 
-  # thunar thumbnailer
-  services.tumbler.enable = true;
 }
