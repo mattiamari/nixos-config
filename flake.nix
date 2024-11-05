@@ -78,6 +78,20 @@
               modules = defaultModules ++ [ ./hosts/marge ];
             };
 
+            wsl = lib.nixosSystem {
+              inherit system specialArgs;
+              modules = defaultModules ++ [
+                catppuccin.nixosModules.catppuccin
+                ./hosts/wsl
+                home-manager.nixosModules.home-manager {
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.users.work = import ./home-manager/work;
+                  home-manager.extraSpecialArgs = specialArgs // { inherit catppuccin; };
+                }
+              ];
+            };
+
             rescusb = lib.nixosSystem {
               inherit system;
               modules = [
