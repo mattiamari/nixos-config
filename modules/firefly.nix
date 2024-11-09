@@ -464,7 +464,7 @@ in
     ];
 
     systemd.services.firefly-init = {
-      wantedBy = [ "multi-user.target" ];
+      requiredBy = [ "phpfpm-firefly.service" ];
       before = [ "phpfpm-firefly.service" ];
       after = [ "mysql.service" ];
 
