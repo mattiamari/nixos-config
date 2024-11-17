@@ -12,13 +12,9 @@
 
     stateVersion = "24.05";
 
-    packages =
-    let
-      idea = pkgsUnstable.jetbrains.idea-ultimate.override { vmopts = "-Xmx8G"; };
-    in
-    with pkgs; [
+    packages = with pkgs; [
       openfortivpn
-      idea
+      #pkgsUnstable.jetbrains.idea-ultimate
       podman-compose
       podman-tui
       dive
