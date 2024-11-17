@@ -318,7 +318,7 @@ in
       RemainAfterExit = true;
     };
 
-    script = "${pkgs.podman}/bin/podman pod create --name=ghostfolio-pod --publish=3333:3333";
+    script = "${pkgs.podman}/bin/podman pod create --replace --name=ghostfolio-pod --publish=3333:3333";
     preStop = "${pkgs.podman}/bin/podman pod rm -if ghostfolio-pod";
   };
 
