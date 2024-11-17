@@ -298,4 +298,79 @@ in
   myCaddy.publicServices.filebrowser = {
     port = config.services.filebrowser.port;
   };
+
+  users.users.ghostfolio = {
+    isSystemUser = true;
+    group = "ghostfolio";
+    uid = 399;
+  };
+  users.groups.ghostfolio = {
+    gid = 399;
+  };
+
+  systemd.services.podman-pod-ghostfolio = {
+    description = "Podman Pod Ghostfolio";
+    requiredBy = [ "podman-ghostfolio.service" "podman-ghostfolio-redis.service" ];
+    before = [ "podman-ghostfolio.service" "podman-ghostfolio-redis.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+
+    script = "${pkgs.podman}/bin/podman pod create --name=ghostfolio-pod --publish=3333:3333";
+    preStop = "${pkgs.podman}/bin/podman pod rm -if ghostfolio-pod";
+  };
+
+  virtualisation.oci-containers.containers.ghostfolio = {
+    image = "docker.io/ghostfolio/ghostfolio:2.122.0";
+    autoStart = true;
+    user = "${toString config.users.users.ghostfolio.uid}:${toString config.users.groups.ghostfolio.gid}";
+    dependsOn = [ "ghostfolio-redis" ];
+    extraOptions = [
+      "--pod=ghostfolio-pod"
+    ];
+
+    environment = {
+      REDIS_HOST = "localhost";
+      REDIS_PORT = "6379";
+      # REDIS_PASSWORD = "";
+
+      POSTGRES_DB = "ghostfolio";
+      POSTGRES_USER = "ghostfolio";
+      # POSTGRES_PASSWORD = "";
+
+      DATABASE_URL = "postgresql://ghostfolio@localhost/ghostfolio?host=/var/run/postgresql";
+    };
+
+    environmentFiles = [ "${myConfig.secretsDir}/ghostfolio" ];
+
+    volumes = [
+      "/var/run/postgresql:/var/run/postgresql"
+    ];
+  };
+
+  virtualisation.oci-containers.containers.ghostfolio-redis = {
+    image = "docker.io/redis:7-alpine";
+    autoStart = true;
+    extraOptions = [
+      "--pod=ghostfolio-pod"
+    ];
+  };
+
+
+  myCaddy.privateServices.ghostfolio = { port = 3333; };
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [
+      "ghostfolio"
+    ];
+    ensureUsers = [
+      {
+        name = "ghostfolio";
+        ensureDBOwnership = true;
+      }
+    ];
+  };
 }
