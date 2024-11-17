@@ -165,6 +165,7 @@ in
     user = "mediaserver";
     group = "mediaserver";
     port = 8100;
+    package = pkgsUnstable.qbittorrent-nox;
   };
   myCaddy.privateServices.qbittorrent = {port = 8100;};
 
