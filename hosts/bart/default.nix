@@ -49,6 +49,13 @@
 
   services.udisks2.enable = true;
 
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
+  services.blueman.enable = true;
+
   users.users.mattia = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "libvirtd" ];
