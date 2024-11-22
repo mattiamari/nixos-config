@@ -205,6 +205,8 @@
         # brightness control
         ",code:233, exec, ddccontrol -r 0x10 -W +5 dev:/dev/i2c-8"
         ",code:232, exec, ddccontrol -r 0x10 -W -5 dev:/dev/i2c-8"
+        "$mod, F2, exec, ddccontrol -r 0x10 -w 100 dev:/dev/i2c-8"
+        "$mod, F1, exec, ddccontrol -r 0x10 -w 50 dev:/dev/i2c-8"
 
         # screenshots
         ",Print,exec,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
