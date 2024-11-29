@@ -152,6 +152,10 @@
         disable_logs = true;
       };
 
+      exec-once = [
+        "${pkgs.dunst}/bin/dunst"
+      ];
+
       "$mod" = "SUPER";
 
       # https://wiki.hyprland.org/0.40.0/Configuring/Dispatchers
