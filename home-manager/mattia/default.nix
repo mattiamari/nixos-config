@@ -21,7 +21,7 @@
       pkgsUnstable.jellyfin-media-player
       gimp
       xournalpp
-      libreoffice-fresh
+      pkgsUnstable.libreoffice-fresh
       spotify
       sshfs
       pkgsUnstable.telegram-desktop
