@@ -32,7 +32,7 @@
       gtk.enable = true;
       x11.enable = true;
       name = "Adwaita";
-      package = pkgs.gnome.adwaita-icon-theme;
+      package = pkgs.adwaita-icon-theme;
       size = 24;
     };
   };
@@ -82,7 +82,7 @@
     enable = true;
     theme = {
       name = "Adwaita-dark";
-      package = pkgs.gnome.gnome-themes-extra;
+      package = pkgs.gnome-themes-extra;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -138,10 +138,10 @@
         enabled = true;
       };
 
-      dwindle = {
+      #dwindle = {
         # whether to apply gaps when there is only one window on a workspace (default: disabled - 0) no border - 1, with border - 2
-        no_gaps_when_only = 1;
-      };
+      #  no_gaps_when_only = 1;
+      #};
 
       misc = {
         # force "hyprland logo" wallpaper
@@ -159,20 +159,23 @@
       "$mod" = "SUPER";
 
       # https://wiki.hyprland.org/0.40.0/Configuring/Dispatchers
-      bind = [
-        "$mod, Q, exec, alacritty"
-        "$mod, E, exec, thunar"
-        "$mod, SPACE, exec, rofi -show combi"
-        # "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
+      bind = let
+        rofi = "/etc/profiles/per-user/mattia/bin/rofi"; 
+        thunar = "/run/current-system/sw/bin/thunar"; 
+      in [
+        "$mod, Q, exec, ${pkgs.alacritty}/bin/alacritty"
+        "$mod, E, exec, ${thunar}"
+        "$mod, SPACE, exec, ${rofi} -show combi"
+        "$mod, W, exec, ${rofi} -show calc -modi calc -no-show-match -no-sort"
         "$mod, C, killactive"
         "$mod, F, fullscreen, 1"
-        "$mod, M, exec, rofi -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
-        ", XF86Calculator, exec, rofi -show calc -modi calc -no-show-match -no-sort"
+        "$mod, M, exec, ${rofi} -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
+        ", XF86Calculator, exec, ${rofi} -show calc -modi calc -no-show-match -no-sort"
 
         # float and pin (i.e. picture in picture that follows you across workspaces)
         "$mod, P, toggleFloating"
         "$mod, P, pin, active"
-        "$mod, P, fakefullscreen"
+        #"$mod, P, fakefullscreen"
       
         # move focus with arrow keys
         "$mod, left, movefocus, l"
@@ -230,6 +233,10 @@
       windowrule = [
         "tile, title:^web\.whatsapp\.com.*$"
         "float, title:Calculator"
+      ];
+
+      windowrulev2 = [
+        "float, class:(firefox), title:^Extension.*Bitwarden.*$"
       ];
     };
   };

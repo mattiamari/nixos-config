@@ -1,16 +1,6 @@
 { config, pkgs, pkgsUnstable, ... }:
 {
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = [
-      pkgs.nvidia-vaapi-driver
-    ];
-  };
-
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+  hardware.graphics.enable = true;
 
   hardware.nvidia = {
 
@@ -45,6 +35,7 @@
 
   services.xserver = {
     enable = true;
+    videoDrivers = ["nvidia"];
   };
 
   services.displayManager.sddm = {
@@ -54,11 +45,21 @@
     catppuccin.enable = true;
   };
 
+  # TODO remove if using uwsm
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
+
+  # TODO coming in NixOS 24.11
+  # programs.uwsm = {
+  #   enable = true;
+  #   waylandCompositors.hyprland = {
+  #     binPath = "${pkgs.hyprland}/bin/hyprland";
+  #     prettyName = "Hyprland";
+  #   };
+  # };
 
   programs.thunar = {
     enable = true;
@@ -82,7 +83,7 @@
   # list installed fonts: `fc-list -v`
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     nerdfonts
   ];
@@ -92,7 +93,9 @@
     alacritty
     ffmpegthumbnailer
     loupe
-    gnome.gnome-calculator
+    gnome-calculator
+    kdePackages.ark
+    rar
     firefox
     home-manager
   ];
