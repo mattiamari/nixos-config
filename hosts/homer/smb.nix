@@ -6,50 +6,54 @@ in
   services.samba = {
     enable = true;
     openFirewall = true;
-    enableNmbd = true;
+    nmbd.enable = true;
 
     # https://wiki.archlinux.org/title/Samba#Restrict_protocols_for_better_security
     # https://wiki.archlinux.org/title/Samba#Improve_throughput
-    extraConfig = ''
-      guest account = nobody
-      map to guest = bad user
+    settings = {
+      global = {
+        "invalid users" = ["root"];
+        "passwd program" = "/run/wrappers/bin/passwd %u";
+        security = "user";
 
-      server min protocol = SMB3
-      server max protocol = SMB3
-      server smb encrypt = required
-      
-      load printers = no
+        "guest account" = "nobody";
+        "map to guest" = "never";
 
-      deadtime = 30
-      use sendfile = yes
-    '';
+        "server min protocol" = "SMB3";
+        "server max protocol" = "SMB3";
+        "server smb encrypt" = "required";
 
-    shares = {
+        "load printers" = "no";
+
+        "deadtime" = "30";
+        "use sendfile" = "yes";
+      };
+
       storage = {
         path = "/media/storage";
-        writable = true;
-        browseable = true;
-        "guest ok" = false;
+        writable = "yes";
+        browseable = "yes";
+        "guest ok" = "no";
         "valid users" = myConfig.adminUser;
       };
       family = {
         path = "/media/storage/famiglia";
-        writable = true;
-        browseable = true;
-        "guest ok" = false;
+        writable = "yes";
+        browseable = "yes";
+        "guest ok" = "no";
         "valid users" = "@family"; # group "family"
       };
       media = {
         path = "/media/storage/media";
-        "read only" = true;
-        browseable = true;
-        "guest ok" = true;
+        "read only" = "yes";
+        browseable = "yes";
+        "guest ok" = "yes";
       };
       public = {
         path = "/media/storage/public";
-        writable = true;
-        browseable = true;
-        "guest ok" = true;
+        writable = "yes";
+        browseable = "yes";
+        "guest ok" = "yes";
       };
     };
   };

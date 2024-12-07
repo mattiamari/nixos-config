@@ -44,7 +44,7 @@ in
   #
   services.ddclient = {
     enable = true;
-    use = "cmd, cmd='${pkgs.curl}/bin/curl -fs https://ipv4.icanhazip.com'"; # https://github.com/ddclient/ddclient/issues/635#issuecomment-2098950409
+    usev4 = "cmd, cmd='${pkgs.curl}/bin/curl -fs https://ipv4.icanhazip.com'"; # https://github.com/ddclient/ddclient/issues/635#issuecomment-2098950409
     protocol = "cloudflare";
     username = "token";
     passwordFile = "${myConfig.secretsDir}/ddclient-cloudflare-key";
@@ -152,7 +152,7 @@ in
     pkgsUnstable.jellyfin-web
     pkgsUnstable.jellyfin-ffmpeg
   ];
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver
