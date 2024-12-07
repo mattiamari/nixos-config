@@ -5,7 +5,7 @@
   nix.gc = {
     automatic = true;
     dates = "weekly";
-    options = "--delete-old";
+    options = "--delete-older-than 7d";
   };
 
   time.timeZone = "Europe/Rome";

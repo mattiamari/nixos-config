@@ -25,6 +25,12 @@
     };
   };
 
+  nix.gc = {
+    automatic = true;
+    frequency = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
   # https://nix.catppuccin.com/options/home-manager-options.html
   catppuccin = {
     enable = true;
