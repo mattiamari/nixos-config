@@ -138,11 +138,6 @@
         enabled = true;
       };
 
-      #dwindle = {
-        # whether to apply gaps when there is only one window on a workspace (default: disabled - 0) no border - 1, with border - 2
-      #  no_gaps_when_only = 1;
-      #};
-
       misc = {
         # force "hyprland logo" wallpaper
         force_default_wallpaper = 0;
@@ -158,19 +153,16 @@
 
       "$mod" = "SUPER";
 
-      # https://wiki.hyprland.org/0.40.0/Configuring/Dispatchers
-      bind = let
-        rofi = "/etc/profiles/per-user/mattia/bin/rofi"; 
-        thunar = "/run/current-system/sw/bin/thunar"; 
-      in [
-        "$mod, Q, exec, ${pkgs.alacritty}/bin/alacritty"
-        "$mod, E, exec, ${thunar}"
-        "$mod, SPACE, exec, ${rofi} -show combi"
-        "$mod, W, exec, ${rofi} -show calc -modi calc -no-show-match -no-sort"
+      # https://wiki.hyprland.org/0.45.0/Configuring/Dispatchers
+      bind = [
+        "$mod, Q, exec, alacritty"
+        "$mod, E, exec, thunar"
+        "$mod, SPACE, exec, rofi -show combi"
+        "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
         "$mod, C, killactive"
         "$mod, F, fullscreen, 1"
-        "$mod, M, exec, ${rofi} -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
-        ", XF86Calculator, exec, ${rofi} -show calc -modi calc -no-show-match -no-sort"
+        "$mod, M, exec, rofi -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
+        ", XF86Calculator, exec, rofi -show calc -modi calc -no-show-match -no-sort"
 
         # float and pin (i.e. picture in picture that follows you across workspaces)
         "$mod, P, toggleFloating"
@@ -230,13 +222,22 @@
         "$mod, mouse:273, resizewindow"
       ];
 
-      windowrule = [
+      windowrulev2 = [
+        # Smart gaps
+        "bordersize 0, floating:0, onworkspace:w[tv1]"
+        "rounding 0, floating:0, onworkspace:w[tv1]"
+        "bordersize 0, floating:0, onworkspace:f[1]"
+        "rounding 0, floating:0, onworkspace:f[1]"
+
         "tile, title:^web\.whatsapp\.com.*$"
         "float, title:Calculator"
+        "float, title:^Extension.*Bitwarden.*$"
       ];
 
-      windowrulev2 = [
-        "float, class:(firefox), title:^Extension.*Bitwarden.*$"
+      workspace = [
+        # Smart gaps
+        "w[tv1], gapsin:0, gapsout:0"
+        "f[1], gapsout:0, gapsin:0"
       ];
     };
   };

@@ -36,6 +36,7 @@
   services.xserver = {
     enable = true;
     videoDrivers = ["nvidia"];
+    displayManager.sddm.wayland.enable = true;
   };
 
   services.displayManager.sddm = {
@@ -45,21 +46,11 @@
     catppuccin.enable = true;
   };
 
-  # TODO remove if using uwsm
   programs.hyprland = {
     enable = true;
+    withUWSM = true;
     xwayland.enable = true;
-    portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
-
-  # TODO coming in NixOS 24.11
-  # programs.uwsm = {
-  #   enable = true;
-  #   waylandCompositors.hyprland = {
-  #     binPath = "${pkgs.hyprland}/bin/hyprland";
-  #     prettyName = "Hyprland";
-  #   };
-  # };
 
   programs.thunar = {
     enable = true;
