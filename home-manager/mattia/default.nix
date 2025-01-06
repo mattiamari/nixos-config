@@ -21,6 +21,7 @@
       pkgsUnstable.jellyfin-media-player
       gimp
       xournalpp
+      okular
       pkgsUnstable.libreoffice-fresh
       spotify
       sshfs
