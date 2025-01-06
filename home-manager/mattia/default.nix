@@ -73,6 +73,8 @@
     enable = true;
     flavor = "macchiato";
     accent = "teal";
+    waybar.mode = "createLink";
+    kvantum.enable = false;
   };
 
   dconf = {
@@ -108,7 +110,6 @@
 
   qt = {
     enable = true;
-    style.catppuccin.enable = false;
     style.name = "adwaita-dark";
     platformTheme.name = "adwaita";
   };
@@ -270,7 +271,6 @@
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    catppuccin.mode = "createLink";
     style = ./waybar.css;
 
     # https://github.com/Alexays/Waybar/wiki/Configuration

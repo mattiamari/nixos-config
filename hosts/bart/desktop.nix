@@ -36,14 +36,12 @@
   services.xserver = {
     enable = true;
     videoDrivers = ["nvidia"];
-    displayManager.sddm.wayland.enable = true;
   };
 
   services.displayManager.sddm = {
     enable = true;
     package = pkgs.kdePackages.sddm;
     wayland.enable = true;
-    catppuccin.enable = true;
   };
 
   programs.hyprland = {
@@ -107,6 +105,7 @@
     enable = true;
     flavor = "macchiato";
     accent = "teal";
+    sddm.enable = true;
   };
 
 }
