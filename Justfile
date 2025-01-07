@@ -24,3 +24,6 @@ repl:
 
 gc:
     sudo nix-collect-garbage --delete-older-than 7d
+
+gc-user:
+    nix-collect-garbage --delete-older-than 7d
