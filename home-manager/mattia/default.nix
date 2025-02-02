@@ -157,6 +157,7 @@
 
       exec-once = [
         "${pkgs.dunst}/bin/dunst"
+        "${pkgs.waybar}/bin/waybar"
       ];
 
       "$mod" = "SUPER";
@@ -271,7 +272,7 @@
 
   programs.waybar = {
     enable = true;
-    systemd.enable = true;
+    systemd.enable = false;
     style = ./waybar.css;
 
     # https://github.com/Alexays/Waybar/wiki/Configuration
