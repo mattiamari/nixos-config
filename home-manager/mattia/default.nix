@@ -393,21 +393,108 @@
     vimAlias = true;
     withPython3 = true;
 
+    plugins = with pkgsUnstable.vimPlugins; [
+      LazyVim
+    ];
+
     extraPackages = with pkgs; [
+      # lazyvim requirements
+      git
+      lazygit
       gcc
       gnumake
-      unzip
+      curl
+      fzf
+      ripgrep
       fd
+
+      unzip
       wl-clipboard
+      nil # Nix language server
+      bacon # Rust code checker
+      rust-analyzer
     ];
+
+    extraLuaConfig = ''
+      require("lazy").setup({
+        spec = {
+          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+          { import = "lazyvim.plugins.extras.lang.rust" },
+
+          -- import/override with your plugins
+          -- { import = "plugins" },
+
+          {
+            "nvim-treesitter/nvim-treesitter",
+            opts = {
+              ensure_installed = {
+                "bash",
+                "html",
+                "css",
+                "javascript",
+                "json",
+                "lua",
+                "markdown",
+                "markdown_inline",
+                "query",
+                "regex",
+                "vim",
+                "yaml",
+                "nix",
+              },
+            },
+          },
+
+          {
+            "neovim/nvim-lspconfig",
+            opts = {
+              servers = {
+                nil_ls = {
+                  mason = false,
+                },
+                bacon_ls = {
+                  mason = false,
+                },
+              },
+            }
+          }
+
+        },
+        defaults = {
+          lazy = false,
+          version = false, -- always use the latest git commit
+        },
+        install = { colorscheme = { "tokyonight", "habamax" } },
+        checker = {
+          enabled = true, -- check for plugin updates periodically
+          notify = false, -- notify on update
+        }, -- automatically check for plugin updates
+        performance = {
+          rtp = {
+            -- disable some rtp plugins
+            disabled_plugins = {
+              "gzip",
+              -- "matchit",
+              -- "matchparen",
+              -- "netrwPlugin",
+              "tarPlugin",
+              "tohtml",
+              "tutor",
+              "zipPlugin",
+            },
+          },
+        },
+      })
+    '';
   };
 
-  home.file = {
-    ".config/nvim" = {
-      source = ./nvim;
-      recursive = true;
-    };
-  };
+  # Keeping this here for when I'll want to move the nvim config in its own file
+  #home.file = {
+  #  ".config/nvim" = {
+  #    source = ./nvim;
+  #    recursive = true;
+  #  };
+  #};
 
   programs.lazygit.enable = true;
 
