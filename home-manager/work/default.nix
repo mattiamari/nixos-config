@@ -102,6 +102,7 @@
       fzf
       ripgrep
       fd
+      tree-sitter
 
       unzip
       wl-clipboard
