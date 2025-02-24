@@ -79,6 +79,7 @@
 
   environment.systemPackages = with pkgs; [
     nvtopPackages.nvidia
+    pwvucontrol
     alacritty
     ffmpegthumbnailer
     loupe
