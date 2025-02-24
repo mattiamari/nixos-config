@@ -27,6 +27,7 @@
       sshfs
       pkgsUnstable.telegram-desktop
       brave
+      sqlitebrowser
     ];
 
     pointerCursor = {
