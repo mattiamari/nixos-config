@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgsUnstable, ... }:
 
 {
   imports = [
@@ -117,6 +117,23 @@
           )
         '';
       };
+    };
+  };
+
+  services.ollama = {
+    enable = true;
+    package = pkgsUnstable.ollama-cuda;
+    acceleration = "cuda";
+  };
+
+  services.open-webui = {
+    enable = true;
+    package = pkgsUnstable.open-webui;
+    environment = {
+      ANONYMIZED_TELEMETRY = "False";
+      DO_NOT_TRACK = "True";
+      SCARF_NO_ANALYTICS = "True";
+      WEBUI_AUTH = "False";
     };
   };
 

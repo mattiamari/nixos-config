@@ -27,7 +27,9 @@
       sshfs
       pkgsUnstable.telegram-desktop
       brave
+      (callPackage ../../packages/zen-browser.nix {})
       sqlitebrowser
+      torzu
     ];
 
     pointerCursor = {
@@ -421,6 +423,7 @@
       require("lazy").setup({
         spec = {
           { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+          { import = "lazyvim.plugins.extras.coding.luasnip" },
           { import = "lazyvim.plugins.extras.lang.rust" },
 
           -- import/override with your plugins
