@@ -1,11 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    # include NixOS-WSL modules
-    <nixos-wsl/modules>
-  ];
-
   wsl.enable = true;
   wsl.defaultUser = "work";
   wsl.interop.includePath = false;
@@ -19,6 +14,12 @@
     "flakes"
   ];
 
+  users.users.work = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
+  };
+
   environment.systemPackages = with pkgs; [
     btop
     curl
@@ -26,6 +27,14 @@
     git
     scc
   ];
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+  };
 
   programs.zsh = {
     enable = true;
@@ -37,6 +46,17 @@
   };
 
   programs.tmux.enable = true;
+
+  virtualisation = {
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      dockerSocket.enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+
+    oci-containers.backend = "podman";
+  };
 
   system.stateVersion = "23.11";
 }

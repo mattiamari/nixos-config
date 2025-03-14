@@ -1,4 +1,4 @@
-{ config, pkgs, lib, pkgsUnstable, catppuccin, ... }:
+{ config, pkgs, lib, pkgsUnstable, pkgsMaven, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeManagerModules.catppuccin
@@ -14,14 +14,26 @@
 
     packages = with pkgs; [
       openfortivpn
-      #pkgsUnstable.jetbrains.idea-ultimate
+      pkgsUnstable.jetbrains.idea-ultimate
       podman-compose
       podman-tui
       dive
+      jdk8_headless
+      pkgsMaven.maven # maven 3.6.3
+      pkgsMaven.tomcat8 # tomcat 8.5.51
+      nodejs_20
+      pkgsUnstable.pnpm
+      pkgsUnstable.watchexec
     ];
 
     sessionVariables = {
       COLORTERM = "truecolor";
+      JAVA_HOME = pkgs.jdk8.home;
+      M2_HOME = "${pkgsMaven.maven}/maven";
+      MAVEN_HOME = "${pkgsMaven.maven}/maven";
+      CATALINA_HOME = pkgsMaven.tomcat8;
+      CATALINA_BASE = "/home/work/vivaticket/catalina-base";
+      CATALINA_TMPDIR = "/tmp";
     };
   };
 
@@ -37,6 +49,8 @@
     flavor = "macchiato";
     accent = "teal";
   };
+
+  # programs.bash.enable = true;
 
   programs.zsh = {
     enable = true;

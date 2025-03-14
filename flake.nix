@@ -2,6 +2,8 @@
     inputs = {
       nixpkgs.url = "nixpkgs/nixos-24.11";
       nixpkgsUnstable.url = "nixpkgs/nixos-unstable";
+      nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+      nixpkgs-maven.url = "nixpkgs/79cb2cb9869d7bb8a1fac800977d3864212fd97d";
       home-manager = {
         url = "github:nix-community/home-manager/release-24.11";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -10,7 +12,7 @@
       meross-prometheus-exporter.url = "github:mattiamari/meross-prometheus-exporter";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgsUnstable, nixos-wsl, nixpkgs-maven, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
       let
         system = "x86_64-linux";
 
@@ -29,6 +31,10 @@
             "dotnet-sdk-6.0.428"
           ];
           overlays = import ./overlays;
+        };
+
+        pkgsMaven = import nixpkgs-maven {
+          inherit system;
         };
       in
       {
@@ -53,7 +59,7 @@
                   home-manager.useUserPackages = true;
                   home-manager.users.mattia = import ./home-manager/mattia;
                   home-manager.users.work = import ./home-manager/work;
-                  home-manager.extraSpecialArgs = specialArgs // { inherit catppuccin; };
+                  home-manager.extraSpecialArgs = specialArgs // { inherit catppuccin pkgsMaven; };
                 }
               ];
             };
@@ -72,13 +78,14 @@
             wsl = lib.nixosSystem {
               inherit system specialArgs;
               modules = defaultModules ++ [
+                nixos-wsl.nixosModules.default
                 catppuccin.nixosModules.catppuccin
                 ./hosts/wsl
                 home-manager.nixosModules.home-manager {
                   home-manager.useGlobalPkgs = true;
                   home-manager.useUserPackages = true;
                   home-manager.users.work = import ./home-manager/work;
-                  home-manager.extraSpecialArgs = specialArgs // { inherit catppuccin; };
+                  home-manager.extraSpecialArgs = specialArgs // { inherit catppuccin pkgsMaven; };
                 }
               ];
             };
