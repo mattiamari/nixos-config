@@ -324,7 +324,7 @@ in
   };
 
   virtualisation.oci-containers.containers.ghostfolio = {
-    image = "docker.io/ghostfolio/ghostfolio:2.129.0";
+    image = "docker.io/ghostfolio/ghostfolio:2.125.0";
     autoStart = true;
     user = "${toString config.users.users.ghostfolio.uid}:${toString config.users.groups.ghostfolio.gid}";
     dependsOn = [ "ghostfolio-redis" ];
