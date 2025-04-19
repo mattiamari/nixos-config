@@ -380,4 +380,14 @@ in
       }
     ];
   };
+
+  services.calibre-web = {
+    enable = true;
+    user = "mediaserver";
+    group = "mediaserver";
+    options = {
+      calibreLibrary = "/media/storage/media/calibre-books";
+    };
+  };
+  myCaddy.privateServices.calibre = { port = 8083; };
 }
