@@ -381,6 +381,8 @@ in
     ];
   };
 
+  services.postgresqlBackup.databases = [ "ghostfolio" ];
+
   services.calibre-web = {
     enable = true;
     user = "mediaserver";

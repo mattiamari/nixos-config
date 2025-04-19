@@ -23,6 +23,7 @@ let
         "*/.cache"
         "/var/lib/jellyfin/transcodes"
         "/var/lib/mysql" # already backed-up by mysqlbackup in /var/backup
+        "/var/lib/postgresql" # already backed-up by postgresqlBackup in /var/backup
         "*/.local/share/containers/storage/overlay"
       ];
     };

@@ -121,6 +121,13 @@ in
     calendar = "*-*-* 01:00";
   };
 
+  services.postgresqlBackup = {
+    enable = true;
+    startAt = "*-*-* 01:00:00";
+    compression = "zstd";
+    compressionLevel = 10;
+  };
+
   # TODO
   # - (wireguard VPN)
   # - https://github.com/crowdsecurity/crowdsec (o fail2ban) 
