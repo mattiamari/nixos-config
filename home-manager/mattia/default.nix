@@ -26,7 +26,7 @@
       spotify
       sshfs
       pkgsUnstable.telegram-desktop
-      brave
+      ungoogled-chromium
       (callPackage ../../packages/zen-browser.nix {})
       sqlitebrowser
       torzu

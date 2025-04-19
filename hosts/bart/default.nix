@@ -121,14 +121,15 @@
   };
 
   services.ollama = {
-    enable = true;
+    enable = false;
     package = pkgsUnstable.ollama-cuda;
     acceleration = "cuda";
   };
 
   services.open-webui = {
-    enable = true;
+    enable = false;
     package = pkgsUnstable.open-webui;
+    port = 9123;
     environment = {
       ANONYMIZED_TELEMETRY = "False";
       DO_NOT_TRACK = "True";

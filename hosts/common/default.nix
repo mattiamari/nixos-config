@@ -45,6 +45,7 @@
     helix
     nil # Nix language server
     just
+    parallel
   ];
 
   programs.zsh.enable = true;
