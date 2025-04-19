@@ -1,7 +1,7 @@
 { config, pkgs, lib, pkgsUnstable, catppuccin, ... }:
 {
   imports = [
-    catppuccin.homeManagerModules.catppuccin
+    catppuccin.homeModules.catppuccin
   ];
   
   programs.home-manager.enable = true;

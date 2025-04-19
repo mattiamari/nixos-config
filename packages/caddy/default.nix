@@ -38,7 +38,7 @@ caddy.override {
         cp -r --reflink=auto . $out
       '';
 
-      outputHash = "sha256-1/TjjhFNIc0woyAn7HigzLtAAdm2Wjm/rn5jgBgekkA=";
+      outputHash = "sha256-zUDdQpfDT0c6Xt7T6vOfA22irEktJ4+bqHtCv2QF3jc=";
       outputHashMode = "recursive";
     };
 
