@@ -376,14 +376,24 @@
 
   programs.helix = {
     enable = true;
+
+    extraPackages = [
+      pkgsUnstable.simple-completion-language-server
+    ];
     
     settings = {
       editor = {
         line-number = "relative";
+
         cursor-shape = {
           insert = "bar";
           normal = "block";
           select = "underline";
+        };
+
+        lsp = {
+          display-inlay-hints = true;
+          display-messages = true;
         };
       };
     };
@@ -435,8 +445,10 @@
               ensure_installed = {
                 "bash",
                 "html",
+                "jinja",
                 "css",
                 "javascript",
+                "sql",
                 "json",
                 "lua",
                 "markdown",
