@@ -401,7 +401,7 @@
 
   programs.neovim = {
     enable = true;
-    package = pkgsUnstable.neovim-unwrapped;
+    package = pkgs.neovim-unwrapped;
     defaultEditor = true;
     vimAlias = true;
     withPython3 = true;

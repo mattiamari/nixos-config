@@ -1,6 +1,9 @@
 { config, pkgs, pkgsUnstable, ... }:
 {
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [nvidia-vaapi-driver];
+  };
 
   hardware.nvidia = {
 
@@ -85,7 +88,7 @@
     loupe
     gnome-calculator
     kdePackages.ark
-    rar
+    # rar
     firefox
     home-manager
   ];
