@@ -30,6 +30,7 @@
       (callPackage ../../packages/zen-browser.nix {})
       sqlitebrowser
       torzu
+      betaflight-configurator
     ];
 
     pointerCursor = {
