@@ -107,7 +107,7 @@
     pinentryPackage = pkgs.pinentry-curses;
   };
 
-  # services.flatpak.enable = true;
+  services.flatpak.enable = true;
 
   # Keyboard remapping
   services.kanata = {
