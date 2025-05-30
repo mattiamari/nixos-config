@@ -6,6 +6,11 @@
   
   programs.home-manager.enable = true;
 
+  nixpkgs.overlays = [
+    (final: prev: { jetbrains.idea-ultimate = pkgs.jetbrains.idea-ultimate.override { vmopts = "-Xmx16000m"; }; })
+  ];
+
+
   home = {
     username = "work";
     homeDirectory = "/home/work";
@@ -18,9 +23,8 @@
       podman-compose
       podman-tui
       dive
-      jdk8_headless
-      pkgsMaven.maven # maven 3.6.3
-      pkgsMaven.tomcat8 # tomcat 8.5.51
+      maven
+      corretto17
       nodejs_20
       pkgsUnstable.pnpm
       pkgsUnstable.watchexec
@@ -28,10 +32,13 @@
 
     sessionVariables = {
       COLORTERM = "truecolor";
-      JAVA_HOME = pkgs.jdk8.home;
-      M2_HOME = "${pkgsMaven.maven}/maven";
-      MAVEN_HOME = "${pkgsMaven.maven}/maven";
-      CATALINA_HOME = pkgsMaven.tomcat8;
+      JAVA_8_HOME = pkgs.jdk8.home;
+      JAVA_17_HOME = pkgs.corretto17.home;
+      JAVA_HOME = pkgs.corretto17.home;
+      MAVEN_36_HOME = "${pkgsMaven.maven}/maven";
+      MAVEN_HOME = "${pkgs.maven}/maven";
+      CATALINA_8_HOME = pkgsMaven.tomcat8;
+      CATALINA_9_HOME = pkgs.tomcat9;
       CATALINA_BASE = "/home/work/vivaticket/catalina-base";
       CATALINA_TMPDIR = "/tmp";
     };
