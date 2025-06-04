@@ -1,4 +1,4 @@
-{ config, pkgs, lib, pkgsUnstable, catppuccin, ... }:
+{ config, pkgs, lib, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeModules.catppuccin
@@ -15,22 +15,22 @@
     packages = with pkgs; [
       mpv
       vlc
-      pkgsUnstable.supersonic-wayland
-      pkgsUnstable.obsidian
+      supersonic-wayland
+      obsidian
       calibre
-      pkgsUnstable.jellyfin-media-player
+      jellyfin-media-player
       gimp
       xournalpp
-      okular
-      pkgsUnstable.libreoffice-fresh
+      kdePackages.okular
+      libreoffice-fresh
       spotify
       sshfs
-      pkgsUnstable.telegram-desktop
+      telegram-desktop
       ungoogled-chromium
       (callPackage ../../packages/zen-browser.nix {})
       sqlitebrowser
-      torzu
       betaflight-configurator
+      torzu
     ];
 
     pointerCursor = {
@@ -379,7 +379,7 @@
     enable = true;
 
     extraPackages = [
-      pkgsUnstable.simple-completion-language-server
+      pkgs.simple-completion-language-server
     ];
     
     settings = {
@@ -407,7 +407,7 @@
     vimAlias = true;
     withPython3 = true;
 
-    plugins = with pkgsUnstable.vimPlugins; [
+    plugins = with pkgs.vimPlugins; [
       LazyVim
     ];
 

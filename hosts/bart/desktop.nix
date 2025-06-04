@@ -1,7 +1,8 @@
-{ config, pkgs, pkgsUnstable, ... }:
+{ config, pkgs, ... }:
 {
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [nvidia-vaapi-driver];
   };
 
@@ -77,7 +78,7 @@
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-emoji
-    nerdfonts
+    nerd-fonts.noto
   ];
 
   environment.systemPackages = with pkgs; [
@@ -96,14 +97,12 @@
   environment.sessionVariables = {
     # Hint electron apps to use wayland
     NIXOS_OZONE_WL = "1";
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
     
-    # nvidia stuff
+    # VAAPI
     LIBVA_DRIVER_NAME = "nvidia";
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     NVD_BACKEND = "direct";
-  };
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+   };
 
   catppuccin = {
     enable = true;

@@ -1,15 +1,10 @@
-{ config, pkgs, lib, pkgsUnstable, pkgsMaven, catppuccin, ... }:
+{ config, pkgs, lib, pkgsMaven, catppuccin, ... }:
 {
   imports = [
     catppuccin.homeModules.catppuccin
   ];
   
   programs.home-manager.enable = true;
-
-  nixpkgs.overlays = [
-    (final: prev: { jetbrains.idea-ultimate = pkgs.jetbrains.idea-ultimate.override { vmopts = "-Xmx16000m"; }; })
-  ];
-
 
   home = {
     username = "work";
@@ -19,15 +14,15 @@
 
     packages = with pkgs; [
       openfortivpn
-      pkgsUnstable.jetbrains.idea-ultimate
+      jetbrains.idea-ultimate
       podman-compose
       podman-tui
       dive
       maven
       corretto17
       nodejs_20
-      pkgsUnstable.pnpm
-      pkgsUnstable.watchexec
+      pnpm
+      watchexec
     ];
 
     sessionVariables = {
@@ -109,7 +104,7 @@
     vimAlias = true;
     withPython3 = true;
 
-    plugins = with pkgsUnstable.vimPlugins; [
+    plugins = with pkgs.vimPlugins; [
       LazyVim
     ];
 

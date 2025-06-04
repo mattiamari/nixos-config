@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgsUnstable, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports = [
@@ -137,13 +137,13 @@
 
   services.ollama = {
     enable = false;
-    package = pkgsUnstable.ollama-cuda;
+    package = pkgs.ollama-cuda;
     acceleration = "cuda";
   };
 
   services.open-webui = {
     enable = false;
-    package = pkgsUnstable.open-webui;
+    package = pkgs.open-webui;
     port = 9123;
     environment = {
       ANONYMIZED_TELEMETRY = "False";

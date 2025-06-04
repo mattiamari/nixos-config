@@ -1,37 +1,25 @@
 {
     inputs = {
-      nixpkgs.url = "nixpkgs/nixos-24.11";
-      nixpkgsUnstable.url = "nixpkgs/nixos-unstable";
+      nixpkgs.url = "nixpkgs/nixos-unstable";
+      nixpkgs-2411.url = "nixpkgs/nixos-24.11";
       nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
       nixpkgs-maven.url = "nixpkgs/79cb2cb9869d7bb8a1fac800977d3864212fd97d";
       home-manager = {
-        url = "github:nix-community/home-manager/release-24.11";
+        url = "github:nix-community/home-manager";
         inputs.nixpkgs.follows = "nixpkgs";
       };
       catppuccin.url = "github:catppuccin/nix";
       meross-prometheus-exporter.url = "github:mattiamari/meross-prometheus-exporter";
     };
 
-    outputs = { self, nixpkgs, nixpkgsUnstable, nixos-wsl, nixpkgs-maven, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgs-2411, nixos-wsl, nixpkgs-maven, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
       let
         system = "x86_64-linux";
 
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
-          overlays = import ./overlays;
-        };
-
-        pkgsUnstable = import nixpkgsUnstable {
-          inherit system;
-          config.allowUnfree = true;
-          config.permittedInsecurePackages = [
-            "aspnetcore-runtime-wrapped-6.0.36"
-            "aspnetcore-runtime-6.0.36"
-            "dotnet-sdk-wrapped-6.0.428"
-            "dotnet-sdk-6.0.428"
-          ];
-          overlays = import ./overlays;
+          overlays = [ (import ./overlays { inherit nixpkgs-2411; }) ];
         };
 
         pkgsMaven = import nixpkgs-maven {
@@ -42,7 +30,7 @@
         nixosConfigurations =
           let
             lib = nixpkgs.lib;
-            specialArgs = { inherit pkgs pkgsUnstable meross-prometheus-exporter; };
+            specialArgs = { inherit meross-prometheus-exporter; };
 
             defaultModules = [
               ./hosts/common
@@ -50,9 +38,10 @@
           in
           {
 
-            bart = lib.nixosSystem {
+            bart = nixpkgs.lib.nixosSystem {
               inherit system specialArgs;
               modules = defaultModules ++ [
+                {nixpkgs.pkgs = pkgs;}
                 catppuccin.nixosModules.catppuccin
                 ./hosts/bart
                 home-manager.nixosModules.home-manager {
@@ -106,7 +95,7 @@
             modules = [
               ./home-manager/mattia
             ];
-            extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
+            extraSpecialArgs = { inherit catppuccin; };
           };
 
           work = home-manager.lib.homeManagerConfiguration {
@@ -114,7 +103,7 @@
             modules = [
               ./home-manager/work
             ];
-            extraSpecialArgs = { inherit pkgsUnstable catppuccin; };
+            extraSpecialArgs = { inherit catppuccin; };
           };
         };
     };
