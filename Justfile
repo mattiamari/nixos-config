@@ -7,11 +7,14 @@ boot:
 build:
     nixos-rebuild build --flake .
 
+homer-test:
+    nixos-rebuild test --flake .#homer --target-host mattia@homer --use-remote-sudo
+
 homer-boot:
-    nixos-rebuild boot --flake .#homer --target-host mattia@homer --build-host mattia@homer --use-remote-sudo
+    nixos-rebuild boot --flake .#homer --target-host mattia@homer --use-remote-sudo
 
 homer-switch:
-    nixos-rebuild switch --flake .#homer --target-host mattia@homer --build-host mattia@homer --use-remote-sudo
+    nixos-rebuild switch --flake .#homer --target-host mattia@homer --use-remote-sudo
 
 wsl-build-image:
   sudo nix run .#nixosConfigurations.wsl.config.system.build.tarballBuilder

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgsUnstable, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   myConfig = import ./common.nix;
@@ -10,7 +10,6 @@ in
     ../../modules/firefly.nix
     ../../modules/radarr-ita.nix
     ../../modules/sonarr-ita.nix
-    ../../modules/filebrowser.nix
     ../../modules/meross-prometheus-exporter.nix
   ];
 
@@ -152,12 +151,12 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    package = pkgsUnstable.jellyfin;
+    package = pkgs.jellyfin;
   };
   myCaddy.privateServices.jellyfin = {port = 8096;};
   environment.systemPackages = [
-    pkgsUnstable.jellyfin-web
-    pkgsUnstable.jellyfin-ffmpeg
+    pkgs.jellyfin-web
+    pkgs.jellyfin-ffmpeg
   ];
   hardware.graphics = {
     enable = true;
@@ -172,7 +171,7 @@ in
     user = "mediaserver";
     group = "mediaserver";
     port = 8100;
-    package = pkgsUnstable.qbittorrent-nox;
+    package = pkgs.qbittorrent-nox;
   };
   myCaddy.privateServices.qbittorrent = {port = 8100;};
 
@@ -180,7 +179,7 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    package = pkgsUnstable.radarr;
+    package = pkgs.radarr;
   };
   myCaddy.privateServices.radarr = {port = 7878;};
 
@@ -189,7 +188,7 @@ in
     user = "mediaserver";
     group = "mediaserver";
     port = 7879;
-    package = pkgsUnstable.radarr;
+    package = pkgs.radarr;
   };
   myCaddy.privateServices.radarr-ita = {port = 7879;};
 
@@ -197,7 +196,7 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    package = pkgsUnstable.sonarr;
+    package = pkgs.sonarr;
   };
   myCaddy.privateServices.sonarr = {port = 8989;};
 
@@ -206,19 +205,19 @@ in
     user = "mediaserver";
     group = "mediaserver";
     port = 8990;
-    package = pkgsUnstable.sonarr;
+    package = pkgs.sonarr;
   };
   myCaddy.privateServices.sonarr-ita = {port = 8990;};
 
   services.prowlarr = {
     enable = true;
-    package = pkgsUnstable.prowlarr;
+    package = pkgs.prowlarr;
   };
   myCaddy.privateServices.prowlarr = {port = 9696;};
 
   services.lidarr = {
     enable = true;
-    package = pkgsUnstable.lidarr;
+    package = pkgs.lidarr;
     user = "mediaserver";
     group = "mediaserver";
   };
@@ -299,11 +298,13 @@ in
 
   services.filebrowser = {
     enable = true;
-    port = 7000;
-    package = pkgsUnstable.filebrowser;
+    settings.port = 7000;
+    settings.address = "127.0.0.1";
+    user = "filebrowser";
+    group = "filebrowser";
   };
   myCaddy.publicServices.filebrowser = {
-    port = config.services.filebrowser.port;
+    port = config.services.filebrowser.settings.port;
   };
 
   users.users.ghostfolio = {

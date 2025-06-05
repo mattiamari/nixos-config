@@ -1,49 +1,17 @@
-# from: https://github.com/emilylange/nixos-config/blob/22570786b24b606484447bef7a29fe565d475db7/packages/caddy/default.nix
+{ lib, buildGoModule, ... }:
+let
+  version = "2.10.0";
+in
+buildGoModule {
+  pname = "caddy";
+  inherit version;
+  src = ./src;
+  vendorHash = "sha256-N+w72Q6/yfqHf2YScmZ/7U8TWyu9xG6O/0YnKEhChhQ=";
 
-{ pkgs, ... }:
-
-with pkgs;
-
-caddy.override {
-  buildGoModule = args: buildGoModule (args // {
-    src = stdenv.mkDerivation rec {
-      pname = "caddy-using-xcaddy-${xcaddy.version}";
-      inherit (caddy) version;
-
-      dontUnpack = true;
-      dontFixup = true;
-
-      nativeBuildInputs = [
-        cacert
-        go
-      ];
-
-      plugins = [
-        "github.com/caddy-dns/cloudflare@44030f9306f4815aceed3b042c7f3d2c2b110c97"
-      ];
-
-      configurePhase = ''
-        export GOCACHE=$TMPDIR/go-cache
-        export GOPATH="$TMPDIR/go"
-        export XCADDY_SKIP_BUILD=1
-      '';
-
-      buildPhase = ''
-        ${xcaddy}/bin/xcaddy build "${caddy.src.rev}" ${lib.concatMapStringsSep " " (plugin: "--with ${plugin}") plugins}
-        cd buildenv*
-        go mod vendor
-      '';
-
-      installPhase = ''
-        cp -r --reflink=auto . $out
-      '';
-
-      outputHash = "sha256-etfNAa40XT1A0qhIisCawm9gCqP+iTYsGxIkWJJpmxA=";
-      outputHashMode = "recursive";
-    };
-
-    subPackages = [ "." ];
-    ldflags = [ "-s" "-w" ]; # don't include version info twice
-    vendorHash = null;
-  });
+  meta = {
+    homepage = "https://caddyserver.com";
+    description = "Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS";
+    license = lib.licenses.asl20;
+    mainProgram = "caddy";
+  };
 }
