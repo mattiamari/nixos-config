@@ -1,7 +1,7 @@
 { nixpkgs-2411 }:
 
 final: prev: {
-  # Fix for buggy nwjs on latest nixpkgs
+  # Fix for buggy nwjs that breaks betaflight configurator
   nwjs = prev.nwjs.overrideAttrs {
     version = "0.84.0";
     src = prev.fetchurl {
@@ -23,8 +23,5 @@ final: prev: {
     installPhase = "mkdir -p $out";
   };
 
-  
   torzu = nixpkgs-2411.legacyPackages.${prev.system}.torzu;
-
-  # jetbrains.idea-ultimate = prev.jetbrains.idea-ultimate.override { vmopts = "-Xmx16000m"; };  
 }
