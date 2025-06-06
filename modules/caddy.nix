@@ -140,7 +140,12 @@ in
       '';
     };
 
-    systemd.services.caddy.serviceConfig.EnvironmentFile = cfg.environmentFilePath;
+    systemd.services.caddy.serviceConfig = {
+      EnvironmentFile = cfg.environmentFilePath;
+      ProtectSystem = "full";
+      AmbientCapabilities = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
+      CapabilitiesBoundingSet = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
+    };
   };
   
 }
