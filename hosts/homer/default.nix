@@ -12,6 +12,8 @@ in
       ./services.nix
     ];
 
+  nix.settings.trusted-users = ["mattia"];
+
   fileSystems."/".options = [ "noatime" "nodiratime" ];
   services.fstrim.enable = true;
 
