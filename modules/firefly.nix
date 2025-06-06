@@ -9,12 +9,14 @@ let
   group = "firefly";
   storageDir = "/var/lib/firefly/storage";
 
+  phpPkg = pkgs.php84;
+
   pkg = pkgs.stdenv.mkDerivation rec {
     pname = "firefly-iii-configured";
     version = src.version;
     src = cfg.package;
 
-    buildInputs = [ pkgs.php83 pkgs.php83Packages.composer ];
+    buildInputs = [ phpPkg pkgs.php84Packages.composer ];
 
     installPhase = ''
       runHook preInstall
@@ -386,7 +388,7 @@ let
   '';
 
   initScript = pkgs.writeShellScript "firefly-init.sh" ''
-    PHP=${pkgs.php83}/bin/php
+    PHP=${phpPkg}/bin/php
     set -xe
     
     # Init required directories
@@ -425,7 +427,7 @@ in
     services.phpfpm.pools.firefly = {
       user = user;
       group = group;
-      phpPackage = pkgs.php83.buildEnv {
+      phpPackage = phpPkg.buildEnv {
         extensions = { enabled, all }: enabled ++ (with all; [
           bcmath
           intl
@@ -488,7 +490,7 @@ in
         WorkingDirectory = pkg;
         EnvironmentFile = cfg.environmentFilePath;
         ExecStart = pkgs.writeShellScript "firefly-cron.sh" ''
-          ${pkgs.php83}/bin/php artisan firefly-iii:cron --force --date=$(date '+%Y-%m-%d')
+          ${phpPkg}/bin/php artisan firefly-iii:cron --force --date=$(date '+%Y-%m-%d')
         '';
       };
     };
