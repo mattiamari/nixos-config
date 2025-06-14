@@ -1,5 +1,4 @@
-{ config, pkgs, pkgsUnstable, ... }:
-
+{ config, pkgs, ... }:
 let
   myConfig = import ./common.nix;
 in
@@ -10,6 +9,7 @@ in
       ./backup.nix
       ./smb.nix
       ./services.nix
+      ./filebrowser.nix
     ];
 
   nix.settings.trusted-users = ["mattia"];

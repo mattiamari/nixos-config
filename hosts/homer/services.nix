@@ -296,17 +296,6 @@ in
     environmentFilePath = "${myConfig.secretsDir}/firefly";
   };
 
-  services.filebrowser = {
-    enable = true;
-    settings.port = 7000;
-    settings.address = "127.0.0.1";
-    user = "filebrowser";
-    group = "filebrowser";
-  };
-  myCaddy.publicServices.filebrowser = {
-    port = config.services.filebrowser.settings.port;
-  };
-
   users.users.ghostfolio = {
     isSystemUser = true;
     group = "ghostfolio";
