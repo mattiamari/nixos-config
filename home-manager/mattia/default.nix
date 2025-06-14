@@ -525,7 +525,6 @@
   systemd.user.services.syncthingtray.Service.ExecStartPre = lib.mkForce "${pkgs.coreutils}/bin/sleep 3";
   systemd.user.services.syncthingtray.Service.ExecStart = lib.mkForce "${pkgs.syncthingtray}/bin/syncthingtray --wait";
   systemd.user.services.syncthingtray.Unit.After = lib.mkForce "waybar.service";
-  systemd.user.services.syncthingtray.Unit.Requires = lib.mkForce "waybar.service";
 
   services.easyeffects.enable = true;
 }
