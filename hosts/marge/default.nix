@@ -6,6 +6,8 @@
     ./smb.nix
   ];
 
+  nix.settings.trusted-users = ["mattia"];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -44,11 +46,9 @@
   users.users.mattia = {
     isNormalUser = true;
     description = "Mattia";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "cdrom" ];
     packages = with pkgs; [];
   };
-
-  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
     rsync
@@ -58,6 +58,7 @@
     htop
     gdu
     helix
+    abcde
   ];
 
   environment.variables = {

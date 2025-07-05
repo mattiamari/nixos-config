@@ -62,7 +62,10 @@
 
           marge = lib.nixosSystem {
             inherit system specialArgs;
-            modules = defaultModules ++ [ ./hosts/marge ];
+            modules = defaultModules ++ [
+              {nixpkgs.pkgs = pkgs;}
+              ./hosts/marge
+            ];
           };
 
           wsl = lib.nixosSystem {

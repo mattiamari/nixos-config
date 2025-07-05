@@ -5,23 +5,23 @@
     openFirewall = true;
     enableNmbd = true;
 
-    # https://wiki.archlinux.org/title/Samba#Restrict_protocols_for_better_security
-    # https://wiki.archlinux.org/title/Samba#Improve_throughput
-    extraConfig = ''
-      guest account = nobody
-      map to guest = bad user
+    settings = {
+      # https://wiki.archlinux.org/title/Samba#Restrict_protocols_for_better_security
+      # https://wiki.archlinux.org/title/Samba#Improve_throughput
+      global = {
+        "guest account" = "nobody";
+        "map to guest" = "bad user";
 
-      server min protocol = SMB3
-      server max protocol = SMB3
-      server smb encrypt = required
+        "server min protocol" = "SMB3";
+        "server max protocol" = "SMB3";
+        "server smb encrypt" = "required";
       
-      load printers = no
+        "load printers" = "no";
 
-      deadtime = 30
-      use sendfile = yes
-    '';
-
-    shares = {
+        deadtime = 30;
+        "use sendfile" = "yes";
+      };
+      
       cdrom = {
         path = "/mnt/cdrom";
         writable = false;
