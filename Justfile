@@ -1,20 +1,20 @@
 switch:
-    nixos-rebuild switch --flake . --use-remote-sudo
+    nixos-rebuild switch --flake . --ask-sudo-password
 
 boot:
-    nixos-rebuild boot --flake . --use-remote-sudo
+    nixos-rebuild boot --flake . --ask-sudo-password
 
 build:
     nixos-rebuild build --flake .
 
 homer-test:
-    nixos-rebuild test --flake .#homer --target-host mattia@homer --use-remote-sudo
+    nixos-rebuild test --flake .#homer --target-host mattia@homer --ask-sudo-password
 
 homer-boot:
-    nixos-rebuild boot --flake .#homer --target-host mattia@homer --use-remote-sudo
+    nixos-rebuild boot --flake .#homer --target-host mattia@homer --ask-sudo-password
 
 homer-switch:
-    nixos-rebuild switch --flake .#homer --target-host mattia@homer --use-remote-sudo
+    nixos-rebuild switch --flake .#homer --target-host mattia@homer --ask-sudo-password
 
 wsl-build-image:
   sudo nix run .#nixosConfigurations.wsl.config.system.build.tarballBuilder
@@ -22,8 +22,8 @@ wsl-build-image:
 update:
     nix flake update
 
-history:
-    nix profile history --profile /nix/var/nix/profiles/system
+list-generations:
+    sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
 
 repl:
     nix repl -f flake:nixpkgs
