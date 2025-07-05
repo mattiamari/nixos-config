@@ -31,14 +31,19 @@ in
     gid = 990;
   };
 
-  systemd.tmpfiles.rules = [
-    "d ${dataDir} 0750 filebrowser filebrowser -"
-    "d ${dataDir}/media 0750 filebrowser filebrowser -"
+  # systemd.tmpfiles.rules = [
+  #   "d ${dataDir} 0750 filebrowser filebrowser -"
+  #   "d ${dataDir}/media 0750 filebrowser filebrowser -"
+  # ];
+  
+  systemd.mounts = [
+    {
+      what = "/media/storage/media";
+      where = "${dataDir}/media";
+      type = "none";
+      options = "bind";
+      requires = [ "zfs-mount.service" ];
+      after = [ "zfs-mount.service" "media-storage-media.mount" ];
+    }
   ];
-
-  fileSystems."${dataDir}/media" = {
-    device = "/media/storage/media";
-    fsType = "none";
-    options = [ "bind" ];
-  };
 }
