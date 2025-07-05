@@ -108,7 +108,7 @@
     enable = true;
     flavor = "macchiato";
     accent = "teal";
-    sddm.enable = false;
+    sddm.enable = true;
   };
 
 }

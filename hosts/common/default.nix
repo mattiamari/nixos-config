@@ -40,6 +40,7 @@
     gdu
     tree
     zip
+    unzip
     p7zip
     file
     helix
