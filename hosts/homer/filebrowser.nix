@@ -42,8 +42,9 @@ in
       where = "${dataDir}/media";
       type = "none";
       options = "bind";
-      requires = [ "zfs-mount.service" ];
-      after = [ "zfs-mount.service" "media-storage-media.mount" ];
+      requires = [ "media-storage-media.mount" "media-storage-filebrowser.mount" ];
+      after = [ "media-storage-media.mount" "media-storage-filebrowser.mount" ];
+      wantedBy = [ "multi-user.target" ];
     }
   ];
 }
