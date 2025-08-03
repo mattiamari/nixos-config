@@ -97,11 +97,11 @@
       name = "Adwaita-dark";
       package = pkgs.gnome-themes-extra;
     };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
-    
+    # iconTheme = {
+    #   name = "Papirus-Dark";
+    #   package = pkgs.papirus-icon-theme;
+    # };
+
     gtk2.extraConfig = ''
       gtk-application-prefer-dark-theme = true
     '';
@@ -130,7 +130,7 @@
         "HDMI-A-2,3840x2160@60,auto,1.0,bitdepth,10"
         "Unknown-1,disable"
       ];
-      
+
       input = {
         kb_layout = "it";
         numlock_by_default = true;
@@ -181,7 +181,7 @@
         "$mod, P, toggleFloating"
         "$mod, P, pin, active"
         #"$mod, P, fakefullscreen"
-      
+
         # move focus with arrow keys
         "$mod, left, movefocus, l"
         "$mod, right, movefocus, r"

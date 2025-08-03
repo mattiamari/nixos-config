@@ -6,7 +6,6 @@ in
 {
   imports = [
     ../../modules/caddy.nix
-    ../../modules/qbittorrent.nix
     ../../modules/firefly.nix
     ../../modules/radarr-ita.nix
     ../../modules/sonarr-ita.nix
@@ -170,8 +169,8 @@ in
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
-    port = 8100;
-    package = pkgs.qbittorrent-nox;
+    profileDir = "/var/lib/qbittorrent";
+    webuiPort = 8100;
   };
   myCaddy.privateServices.qbittorrent = {port = 8100;};
 

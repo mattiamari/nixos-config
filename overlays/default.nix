@@ -1,4 +1,4 @@
-{ nixpkgs-2411 }:
+{ pkgsStable, nixpkgs-2411 }:
 
 final: prev: {
   # Fix for buggy nwjs that breaks betaflight configurator
@@ -24,4 +24,8 @@ final: prev: {
   };
 
   torzu = nixpkgs-2411.legacyPackages.${prev.system}.torzu;
+
+  photoprism = pkgsStable.photoprism;
+
+  jetbrains.idea-ultimate = pkgsStable.jetbrains.idea-ultimate;
 }

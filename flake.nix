@@ -1,6 +1,7 @@
 {
     inputs = {
       nixpkgs.url = "nixpkgs/nixos-unstable";
+      nixpkgs-stable.url = "nixpkgs/nixos-25.05";
       nixpkgs-2411.url = "nixpkgs/nixos-24.11";
       nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
       nixpkgs-maven.url = "nixpkgs/79cb2cb9869d7bb8a1fac800977d3864212fd97d";
@@ -12,19 +13,25 @@
       meross-prometheus-exporter.url = "github:mattiamari/meross-prometheus-exporter";
     };
 
-    outputs = { self, nixpkgs, nixpkgs-2411, nixos-wsl, nixpkgs-maven, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
+    outputs = { self, nixpkgs, nixpkgs-stable, nixpkgs-2411, nixos-wsl, nixpkgs-maven, home-manager, catppuccin, meross-prometheus-exporter, ...} @ inputs:
       let
         system = "x86_64-linux";
 
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
-          overlays = [ (import ./overlays { inherit nixpkgs-2411; }) ];
+          overlays = [ (import ./overlays { inherit pkgsStable nixpkgs-2411; }) ];
+        };
+
+        pkgsStable = import nixpkgs-stable {
+          inherit system;
+          config.allowUnfree = true;
         };
 
         pkgsMaven = import nixpkgs-maven {
           inherit system;
         };
+
 
         lib = nixpkgs.lib;
         specialArgs = { inherit meross-prometheus-exporter; };

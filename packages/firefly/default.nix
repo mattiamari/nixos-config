@@ -3,8 +3,8 @@
   fetchzip,
 }:
 let
-  version = "6.2.16";
-  hash = "sha256-maqTupnjpaJS3TrpytJiP4sOsm5DNaQwMXaNz6d63uU=";
+  version = "6.2.21";
+  hash = "sha256-kcmWp8ctdp25Z+uqeWbAl3vpuU8m8tQBQFzMn1LOi7U=";
 in
 stdenv.mkDerivation {
   pname = "firefly-iii";
