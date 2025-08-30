@@ -31,6 +31,16 @@
       sqlitebrowser
       betaflight-configurator
       torzu
+      vscode
+      gcc
+      rustc
+      cargo
+      rustfmt
+      rust-analyzer
+      clippy
+      nodejs
+      pnpm
+      watchexec
     ];
 
     pointerCursor = {
@@ -375,134 +385,43 @@
   programs.zoxide.enable = true;
   programs.bat.enable = true;
 
-  programs.helix = {
-    enable = true;
-
-    extraPackages = [
-      pkgs.simple-completion-language-server
-    ];
-    
-    settings = {
-      editor = {
-        line-number = "relative";
-
-        cursor-shape = {
-          insert = "bar";
-          normal = "block";
-          select = "underline";
-        };
-
-        lsp = {
-          display-inlay-hints = true;
-          display-messages = true;
-        };
-      };
-    };
-  };
-
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim-unwrapped;
     defaultEditor = true;
     vimAlias = true;
-    withPython3 = true;
+    #withPython3 = true;
 
     plugins = with pkgs.vimPlugins; [
-      LazyVim
+      catppuccin-nvim
+      friendly-snippets
+      lualine-nvim
+      luasnip
+      mini-completion
+      mini-snippets
+      nvim-lspconfig
+      nvim-treesitter.withAllGrammars
+      nvim-web-devicons
+      telescope-nvim
+      vim-fugitive
     ];
 
     extraPackages = with pkgs; [
-      # lazyvim requirements
       git
-      lazygit
-      gcc
-      gnumake
-      curl
       fzf
       ripgrep
-      fd
-      tree-sitter
-
-      unzip
+      powerline-fonts
       wl-clipboard
+
+      # language servers
+      lua-language-server
       nil # Nix language server
-      bacon # Rust code checker
       rust-analyzer
+      #bacon # Rust code checker
+      jinja-lsp
     ];
 
     extraLuaConfig = ''
-      require("lazy").setup({
-        spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-          { import = "lazyvim.plugins.extras.coding.luasnip" },
-          { import = "lazyvim.plugins.extras.lang.rust" },
-
-          -- import/override with your plugins
-          -- { import = "plugins" },
-
-          {
-            "nvim-treesitter/nvim-treesitter",
-            opts = {
-              ensure_installed = {
-                "bash",
-                "html",
-                "jinja",
-                "css",
-                "javascript",
-                "sql",
-                "json",
-                "lua",
-                "markdown",
-                "markdown_inline",
-                "query",
-                "regex",
-                "vim",
-                "yaml",
-                "nix",
-              },
-            },
-          },
-
-          {
-            "neovim/nvim-lspconfig",
-            opts = {
-              servers = {
-                nil_ls = {
-                  mason = false,
-                },
-                bacon_ls = {
-                  mason = false,
-                },
-              },
-            }
-          }
-
-        },
-        defaults = {
-          lazy = false,
-          version = false, -- always use the latest git commit
-        },
-        install = { colorscheme = { "tokyonight", "habamax" } },
-        checker = {
-          enabled = true, -- check for plugin updates periodically
-          notify = false, -- notify on update
-        }, -- automatically check for plugin updates
-        performance = {
-          rtp = {
-            -- disable some rtp plugins
-            disabled_plugins = {
-              "gzip",
-              -- "matchit",
-              -- "matchparen",
-              -- "netrwPlugin",
-              "tarPlugin",
-              "tohtml",
-              "tutor",
-              "zipPlugin",
-            },
-          },
-        },
-      })
+      require("custom")
     '';
   };
 
