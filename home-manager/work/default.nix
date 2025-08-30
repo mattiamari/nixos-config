@@ -20,9 +20,10 @@
       dive
       maven
       corretto17
-      nodejs_20
+      nodePackages.nodejs
       pnpm
       watchexec
+      awscli2
     ];
 
     sessionVariables = {
