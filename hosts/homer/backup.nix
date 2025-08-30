@@ -143,6 +143,7 @@ in
     repository = "/mnt/backupb/everything/restic-everything";
     passwordFile = "${myConfig.secretsDir}/restic-everything";
     timerConfig = null;
+    progressFps = 0.1;
 
     paths = b.system.paths ++ b.mattia.paths ++ b.family.paths;
     exclude = b.system.exclude ++ b.mattia.exclude;
