@@ -164,6 +164,8 @@ in
       intel-compute-runtime
     ];
   };
+  systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
   services.qbittorrent = {
     enable = true;
