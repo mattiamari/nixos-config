@@ -3,7 +3,10 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    extraPackages = with pkgs; [nvidia-vaapi-driver];
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver
+      libvdpau-va-gl
+    ];
   };
 
   hardware.nvidia = {
@@ -102,6 +105,9 @@
     LIBVA_DRIVER_NAME = "nvidia";
     NVD_BACKEND = "direct";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+
+    # Fix chromium black screen (and probably electron apps too)
+    GBM_BACKEND = "nvidia-drm";
    };
 
   catppuccin = {
