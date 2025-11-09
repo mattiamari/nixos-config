@@ -42,7 +42,7 @@
 
   nix.gc = {
     automatic = true;
-    frequency = "weekly";
+    dates = "weekly";
     options = "--delete-older-than 7d";
   };
 
@@ -62,6 +62,16 @@
       enable = true;
       theme = "cloud";
     };
+  };
+
+  programs.git = {
+    enable = true;
+  };
+
+  # fancy diff
+  programs.delta = {
+      enable = true;
+      enableGitIntegration = true;
   };
 
   programs.eza.enable = true; # `ls` alternative

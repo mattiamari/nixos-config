@@ -19,7 +19,12 @@
 
         pkgs = import nixpkgs {
           inherit system;
-          config.allowUnfree = true;
+          config = {
+            allowUnfree = true;
+            permittedInsecurePackages = [
+              "gradle-7.6.6"
+            ];
+          };
           overlays = [ (import ./overlays { inherit pkgsStable nixpkgs-2411; }) ];
         };
 

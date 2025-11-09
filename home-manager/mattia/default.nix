@@ -54,7 +54,7 @@
 
   nix.gc = {
     automatic = true;
-    frequency = "weekly";
+    dates = "weekly";
     options = "--delete-older-than 7d";
   };
 
@@ -349,7 +349,7 @@
 
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi;
 
     plugins = [
       pkgs.rofi-calc
@@ -376,7 +376,12 @@
 
   programs.git = {
     enable = true;
-    delta.enable = true; # fancy diff
+  };
+
+  # fancy diff
+  programs.delta = {
+      enable = true;
+      enableGitIntegration = true;
   };
 
   programs.eza.enable = true;
