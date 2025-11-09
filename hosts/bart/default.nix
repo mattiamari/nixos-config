@@ -48,15 +48,19 @@
     openFirewall = true;
   };
 
+  security.rtkit.enable = true; # allows pipewire to get realtime priority
   services.pipewire = {
     enable = true;
+    wireplumber.enable = true;
     audio.enable = true;
     pulse.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
     extraConfig.pipewire = {
       "10-clock-rate" = {
         "context.properties" = {
-          "default.clock.rate" = 48000;
-          "default.clock.allowed-rates" = [ 48000 88200 96000 176400 192000 352800 384000 ];
+          "default.clock.rate" = 44100;
+          "default.clock.allowed-rates" = [ 44100 48000 88200 96000 176400 192000 352800 384000 ];
         };
       };
     };
@@ -88,7 +92,7 @@
   users.users.mattia = {
     isNormalUser = true;
     extraGroups = [
-      "wheel" "networkmanager" "libvirtd"
+      "wheel" "networkmanager" "libvirtd" "audio"
       "dialout" # serial port access for betaflight configurator
     ];
     shell = pkgs.zsh;
@@ -96,7 +100,7 @@
 
   users.users.work = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "audio" ];
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAXc/DBxDckVOYmMtlA3cAowsgW7v5FyYknfmg51It+"
