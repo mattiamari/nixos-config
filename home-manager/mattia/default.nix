@@ -142,7 +142,8 @@
       ];
 
       input = {
-        kb_layout = "us";
+        kb_layout = "us,it";
+        kb_options = "grp:ctrl_space_toggle";
         numlock_by_default = true;
       };
 
@@ -296,10 +297,16 @@
         position = "top";
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "hyprland/window" ];
-        modules-right = [ "pulseaudio" "network" "cpu" "memory" "temperature" "clock" "tray" ];
+        modules-right = [ "hyprland/language" "pulseaudio" "network" "cpu" "memory" "temperature" "clock" "tray" ];
 
         "hyprland/workspaces" = {
           active-only = false;
+        };
+
+        "hyprland/language" = {
+          format = "{}";
+          "format-en" = "EN";
+          "format-it" = "IT";
         };
 
         clock = {

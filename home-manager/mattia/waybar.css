@@ -29,14 +29,14 @@ window#waybar {
   color: @green;
 }
 
-#cpu, #memory, #temperature, #network, #pulseaudio {
+#language, #cpu, #memory, #temperature, #network, #pulseaudio {
   background-color: @surface0;
   padding: 0.3em 0.9em;
   margin: 0.3em 0em;
 }
 
 /* rounded corners on left and right */
-#pulseaudio {
+#language {
   border-radius: 8px 0 0 8px;
   padding-left: 1.2em;
 }
