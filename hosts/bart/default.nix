@@ -22,6 +22,11 @@
     "panic=0"
   ];
 
+  # Fix lofree keyboard FN keys
+  boot.extraModprobeConfig = ''
+    options hid_apple fnmode=2
+  '';
+
   fileSystems."/".options = [ "noatime" "nodiratime" ];
   services.fstrim.enable = true;
 
@@ -119,7 +124,7 @@
     keyboards = {
       default = {
         devices = [
-          "/dev/input/by-id/usb-Logitech_USB_Receiver-if02-event-mouse"
+          # Empty list means "apply to all keyboards"
         ];
         extraDefCfg = "process-unmapped-keys yes";
         config = ''

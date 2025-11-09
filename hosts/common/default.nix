@@ -25,11 +25,11 @@
   };
 
   services.xserver.xkb = {
-    layout = "it";
+    layout = "us";
     variant = "";
   };
   
-  console.keyMap = "it";
+  console.keyMap = "us";
 
   environment.systemPackages = with pkgs; [
     wget
