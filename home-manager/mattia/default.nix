@@ -1,9 +1,15 @@
-{ config, pkgs, lib, catppuccin, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  catppuccin,
+  ...
+}:
 {
   imports = [
     catppuccin.homeModules.catppuccin
   ];
-  
+
   programs.home-manager.enable = true;
 
   home = {
@@ -183,67 +189,71 @@
       "$mod" = "SUPER";
 
       # https://wiki.hyprland.org/0.45.0/Configuring/Dispatchers
-      bind = [
-        "$mod, Q, exec, alacritty"
-        "$mod, E, exec, thunar"
-        "$mod, SPACE, exec, rofi -show combi"
-        "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
-        "$mod, C, killactive"
-        "$mod, F, fullscreen, 1"
-        "$mod, M, exec, rofi -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
-        ", XF86Calculator, exec, rofi -show calc -modi calc -no-show-match -no-sort"
+      bind =
+        let
+          monitorDev = "/dev/i2c-4";
+        in
+        [
+          "$mod, Q, exec, alacritty"
+          "$mod, E, exec, thunar"
+          "$mod, SPACE, exec, rofi -show combi"
+          "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"
+          "$mod, C, killactive"
+          "$mod, F, fullscreen, 1"
+          "$mod, M, exec, rofi -show power-menu -modi power-menu:${pkgs.rofi-power-menu}/bin/rofi-power-menu"
+          ", XF86Calculator, exec, rofi -show calc -modi calc -no-show-match -no-sort"
 
-        # float and pin (i.e. picture in picture that follows you across workspaces)
-        "$mod, P, toggleFloating"
-        "$mod, P, pin, active"
-        #"$mod, P, fakefullscreen"
+          # float and pin (i.e. picture in picture that follows you across workspaces)
+          "$mod, P, toggleFloating"
+          "$mod, P, pin, active"
+          #"$mod, P, fakefullscreen"
 
-        # move focus with arrow keys
-        "$mod, left, movefocus, l"
-        "$mod, right, movefocus, r"
-        "$mod, up, movefocus, u"
-        "$mod, down, movefocus, d"
+          # move focus with arrow keys
+          "$mod, left, movefocus, l"
+          "$mod, right, movefocus, r"
+          "$mod, up, movefocus, u"
+          "$mod, down, movefocus, d"
 
-        # move window
-        "$mod SHIFT, left, movewindow, l"
-        "$mod SHIFT, right, movewindow, r"
-        "$mod SHIFT, up, movewindow, u"
-        "$mod SHIFT, down, movewindow, d"
+          # move window
+          "$mod SHIFT, left, movewindow, l"
+          "$mod SHIFT, right, movewindow, r"
+          "$mod SHIFT, up, movewindow, u"
+          "$mod SHIFT, down, movewindow, d"
 
-        # resize window
-        "$mod CONTROL, left, resizeactive, -10% 0%"
-        "$mod CONTROL, right, resizeactive, 10% 0%"
-        "$mod CONTROL, up, resizeactive, 0% -10%"
-        "$mod CONTROL, down, resizeactive, 0% 10%"
+          # resize window
+          "$mod CONTROL, left, resizeactive, -10% 0%"
+          "$mod CONTROL, right, resizeactive, 10% 0%"
+          "$mod CONTROL, up, resizeactive, 0% -10%"
+          "$mod CONTROL, down, resizeactive, 0% 10%"
 
-        # switch to prev/next workspace
-        "$mod ALT, left, workspace, e-1"
-        "$mod ALT, right, workspace, e+1"
+          # switch to prev/next workspace
+          "$mod ALT, left, workspace, e-1"
+          "$mod ALT, right, workspace, e+1"
 
-        # volume control
-        ",code:123, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+"
-        ",code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ",code:121, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          # volume control
+          ",code:123, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+"
+          ",code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          ",code:121, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
-        # media control
-        ",XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous"
-        ",XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next"
-        ",XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
+          # media control
+          ",XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous"
+          ",XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next"
+          ",XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
 
-        # brightness control
-        ",code:233, exec, ddccontrol -r 0x10 -W +5 dev:/dev/i2c-8"
-        ",code:232, exec, ddccontrol -r 0x10 -W -5 dev:/dev/i2c-8"
-        "$mod, F2, exec, ddccontrol -r 0x10 -w 100 dev:/dev/i2c-8"
-        "$mod, F1, exec, ddccontrol -r 0x10 -w 50 dev:/dev/i2c-8"
+          # brightness control
+          ",XF86MonBrightnessUp, exec, ddccontrol -r 0x10 -W +5 dev:${monitorDev}"
+          ",XF86MonBrightnessDown, exec, ddccontrol -r 0x10 -W -5 dev:${monitorDev}"
+          "$mod, F2, exec, ddccontrol -r 0x10 -w 100 dev:${monitorDev}"
+          "$mod, F1, exec, ddccontrol -r 0x10 -w 50 dev:${monitorDev}"
 
-        # screenshots
-        ",Print,exec,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
-      ]
+          # screenshots
+          ",Print,exec,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
+        ]
         # switch workspaces
-        ++ builtins.genList (n: "$mod, ${toString (n+1)}, workspace, ${toString (n+1)}") 9
-        
+        ++ builtins.genList (n: "$mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}") 9
+
         # move windows between workspaces
-        ++ builtins.genList (n: "$mod SHIFT, ${toString (n+1)}, movetoworkspace, ${toString (n+1)}") 9;
+        ++ builtins.genList (n: "$mod SHIFT, ${toString (n + 1)}, movetoworkspace, ${toString (n + 1)}") 9;
 
       bindm = [
         # mouse movements
@@ -274,7 +284,8 @@
   services.hyprpaper =
     let
       wall1 = "~/Pictures/wallpapers/yLXrKS.jpg";
-    in {
+    in
+    {
       enable = true;
       settings = {
         splash = false;
@@ -302,7 +313,16 @@
         position = "top";
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "hyprland/window" ];
-        modules-right = [ "hyprland/language" "pulseaudio" "network" "cpu" "memory" "temperature" "clock" "tray" ];
+        modules-right = [
+          "hyprland/language"
+          "pulseaudio"
+          "network"
+          "cpu"
+          "memory"
+          "temperature"
+          "clock"
+          "tray"
+        ];
 
         "hyprland/workspaces" = {
           active-only = false;
@@ -346,9 +366,12 @@
           format-source = "󰍬 {volume}%";
           format-source-muted = "󰍭";
           format-icons = {
-            default = [ "" "" ];
+            default = [
+              ""
+              ""
+            ];
           };
-          ignored-sinks = ["Easy Effects Sink"];
+          ignored-sinks = [ "Easy Effects Sink" ];
           on-click = "${pkgs.pwvucontrol}/bin/pwvucontrol";
         };
 
@@ -392,8 +415,8 @@
 
   # fancy diff
   programs.delta = {
-      enable = true;
-      enableGitIntegration = true;
+    enable = true;
+    enableGitIntegration = true;
   };
 
   programs.eza.enable = true;
@@ -462,8 +485,10 @@
   };
 
   # Fix "the system tray is not currently available" message from syncthing tray
-  systemd.user.services.syncthingtray.Service.ExecStartPre = lib.mkForce "${pkgs.coreutils}/bin/sleep 3";
-  systemd.user.services.syncthingtray.Service.ExecStart = lib.mkForce "${pkgs.syncthingtray}/bin/syncthingtray --wait";
+  systemd.user.services.syncthingtray.Service.ExecStartPre =
+    lib.mkForce "${pkgs.coreutils}/bin/sleep 3";
+  systemd.user.services.syncthingtray.Service.ExecStart =
+    lib.mkForce "${pkgs.syncthingtray}/bin/syncthingtray --wait";
   systemd.user.services.syncthingtray.Unit.After = lib.mkForce "waybar.service";
 
   services.easyeffects.enable = true;
