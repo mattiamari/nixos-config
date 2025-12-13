@@ -1,23 +1,30 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 with lib;
 let
   cfg = config.myCaddy;
 
-  serviceConfig = { name, ... }: {
-    options = {
-      name = mkOption {
-        type = types.str;
-        default = name;
-      };
-      port = mkOption {
-        type = types.port;
-      };
-      extraConfig = mkOption {
-        type = types.str;
-        default = "";
+  serviceConfig =
+    { name, ... }:
+    {
+      options = {
+        name = mkOption {
+          type = types.str;
+          default = name;
+        };
+        port = mkOption {
+          type = types.port;
+        };
+        extraConfig = mkOption {
+          type = types.str;
+          default = "";
+        };
       };
     };
-  };
 
   mkServiceConfig = domain: serviceConfig: ''
     @${serviceConfig.name} host ${serviceConfig.name}.${domain}
@@ -37,7 +44,7 @@ in
       type = types.path;
       description = mdDoc "Path to an environment file. Used to pass secrets";
     };
-    
+
     privateDomain = mkOption {
       type = types.str;
       description = mdDoc "Domain name for private services";
@@ -55,19 +62,19 @@ in
 
     privateServices = mkOption {
       type = types.attrsOf (types.submodule serviceConfig);
-      default = {};
+      default = { };
       description = mdDoc "Services accessible only from `lanIP`";
     };
 
     extraPrivateServices = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = mdDoc "Custom services accessible only from `lanIP`";
     };
 
     publicServices = mkOption {
       type = types.attrsOf (types.submodule serviceConfig);
-      default = {};
+      default = { };
       description = mdDoc "Services accessible from the internet";
     };
   };
@@ -75,12 +82,11 @@ in
   config = mkIf cfg.enable {
     services.caddy = {
       enable = true;
-      package = pkgs.callPackage ../packages/caddy {};
+      package = pkgs.callPackage ../packages/caddy { };
 
       globalConfig = ''
-        servers {
-          metrics
-        }
+        debug
+        metrics
       '';
 
       virtualHosts = {
@@ -147,5 +153,5 @@ in
       CapabilitiesBoundingSet = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
     };
   };
-  
+
 }

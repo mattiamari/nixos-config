@@ -76,8 +76,11 @@ in
       # ];
       filtering = {
         rewrites = [
-          { domain = "*.${myConfig.privateHostname}"; answer = myConfig.serverLocalIP; }
-          { domain = "*.${myConfig.publicHostname}"; answer = myConfig.serverLocalIP; }
+          {
+            domain = "*.${myConfig.publicHostname}";
+            answer = myConfig.serverLocalIP;
+            enabled = true;
+          }
         ];
       };
     };
