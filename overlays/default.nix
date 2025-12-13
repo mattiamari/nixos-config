@@ -26,6 +26,6 @@ final: prev: {
   torzu = nixpkgs-2411.legacyPackages.${prev.system}.torzu;
 
   photoprism = pkgsStable.photoprism;
-
   jetbrains.idea-ultimate = pkgsStable.jetbrains.idea-ultimate;
+  awscli2 = pkgsStable.awscli2;
 }
