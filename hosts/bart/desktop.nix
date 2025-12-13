@@ -85,7 +85,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    nvtopPackages.nvidia
+    # nvtopPackages.nvidia
     pwvucontrol
     alacritty
     ffmpegthumbnailer

@@ -148,24 +148,6 @@
     };
   };
 
-  services.ollama = {
-    enable = false;
-    package = pkgs.ollama-cuda;
-    acceleration = "cuda";
-  };
-
-  services.open-webui = {
-    enable = false;
-    package = pkgs.open-webui;
-    port = 9123;
-    environment = {
-      ANONYMIZED_TELEMETRY = "False";
-      DO_NOT_TRACK = "True";
-      SCARF_NO_ANALYTICS = "True";
-      WEBUI_AUTH = "False";
-    };
-  };
-
   virtualisation = {
     podman = {
       enable = true;

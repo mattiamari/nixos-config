@@ -18,7 +18,7 @@
       supersonic-wayland
       obsidian
       calibre
-      jellyfin-media-player
+      #jellyfin-media-player
       gimp
       xournalpp
       kdePackages.okular
@@ -27,17 +27,22 @@
       sshfs
       telegram-desktop
       ungoogled-chromium
-      (callPackage ../../packages/zen-browser.nix {})
+      # (callPackage ../../packages/zen-browser.nix {})
       sqlitebrowser
       betaflight-configurator
       torzu
       vscode
       gcc
+
       rustc
       cargo
       rustfmt
       rust-analyzer
       clippy
+      bacon
+
+      gcc
+      gnumake
       nodejs
       pnpm
       watchexec
@@ -415,6 +420,8 @@
       nvim-web-devicons
       telescope-nvim
       vim-fugitive
+      nvim-autopairs
+      conform-nvim
     ];
 
     extraPackages = with pkgs; [
@@ -430,6 +437,8 @@
       rust-analyzer
       #bacon # Rust code checker
       jinja-lsp
+      html-tidy
+      djlint
     ];
 
     extraLuaConfig = ''
