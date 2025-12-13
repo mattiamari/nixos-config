@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   myConfig = import ./common.nix;
@@ -65,7 +70,7 @@ in
       };
       dns = {
         # prevents conflicts with Podman's aardvark
-        bind_hosts = [myConfig.serverLocalIP];
+        bind_hosts = [ myConfig.serverLocalIP ];
       };
       # Commenting this so that I can change password in the config file
       # users = [
@@ -85,7 +90,9 @@ in
       };
     };
   };
-  myCaddy.privateServices.adguard = {port = 3000;};
+  myCaddy.privateServices.adguard = {
+    port = 3000;
+  };
 
   services.grafana = {
     enable = true;
@@ -97,7 +104,9 @@ in
       };
     };
   };
-  myCaddy.privateServices.grafana = { port = config.services.grafana.settings.server.http_port; };
+  myCaddy.privateServices.grafana = {
+    port = config.services.grafana.settings.server.http_port;
+  };
 
   services.prometheus = {
     enable = true;
@@ -106,7 +115,11 @@ in
     exporters = {
       node = {
         enable = true;
-        enabledCollectors = [ "systemd" "processes" "zfs" ];
+        enabledCollectors = [
+          "systemd"
+          "processes"
+          "zfs"
+        ];
         port = 9002;
       };
 
@@ -125,26 +138,32 @@ in
     scrapeConfigs = [
       {
         job_name = "homer";
-        static_configs = [{
-          targets = [
-            "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+            ];
+          }
+        ];
       }
       {
         job_name = "homer_power";
         scrape_interval = "${toString config.services.prometheus.exporters.meross.scrapeFrequencySeconds}s";
-        static_configs = [{
-          targets = [
-            "127.0.0.1:${toString config.services.prometheus.exporters.meross.port}"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "127.0.0.1:${toString config.services.prometheus.exporters.meross.port}"
+            ];
+          }
+        ];
       }
       {
         job_name = "caddy";
-        static_configs = [{
-          targets = [ "127.0.0.1:2019" ];
-        }];
+        static_configs = [
+          {
+            targets = [ "127.0.0.1:2019" ];
+          }
+        ];
       }
     ];
   };
@@ -155,7 +174,9 @@ in
     group = "mediaserver";
     package = pkgs.jellyfin;
   };
-  myCaddy.privateServices.jellyfin = {port = 8096;};
+  myCaddy.privateServices.jellyfin = {
+    port = 8096;
+  };
   environment.systemPackages = [
     pkgs.jellyfin-web
     pkgs.jellyfin-ffmpeg
@@ -168,7 +189,9 @@ in
     ];
   };
   systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
 
   services.qbittorrent = {
     enable = true;
@@ -177,7 +200,9 @@ in
     profileDir = "/var/lib/qbittorrent";
     webuiPort = 8100;
   };
-  myCaddy.privateServices.qbittorrent = {port = 8100;};
+  myCaddy.privateServices.qbittorrent = {
+    port = 8100;
+  };
 
   services.radarr = {
     enable = true;
@@ -185,7 +210,9 @@ in
     group = "mediaserver";
     package = pkgs.radarr;
   };
-  myCaddy.privateServices.radarr = {port = 7878;};
+  myCaddy.privateServices.radarr = {
+    port = 7878;
+  };
 
   services.radarrIta = {
     enable = true;
@@ -194,7 +221,9 @@ in
     port = 7879;
     package = pkgs.radarr;
   };
-  myCaddy.privateServices.radarr-ita = {port = 7879;};
+  myCaddy.privateServices.radarr-ita = {
+    port = 7879;
+  };
 
   services.sonarr = {
     enable = true;
@@ -202,7 +231,9 @@ in
     group = "mediaserver";
     package = pkgs.sonarr;
   };
-  myCaddy.privateServices.sonarr = {port = 8989;};
+  myCaddy.privateServices.sonarr = {
+    port = 8989;
+  };
 
   services.sonarrIta = {
     enable = true;
@@ -211,13 +242,17 @@ in
     port = 8990;
     package = pkgs.sonarr;
   };
-  myCaddy.privateServices.sonarr-ita = {port = 8990;};
+  myCaddy.privateServices.sonarr-ita = {
+    port = 8990;
+  };
 
   services.prowlarr = {
     enable = true;
     package = pkgs.prowlarr;
   };
-  myCaddy.privateServices.prowlarr = {port = 9696;};
+  myCaddy.privateServices.prowlarr = {
+    port = 9696;
+  };
 
   services.lidarr = {
     enable = true;
@@ -225,14 +260,18 @@ in
     user = "mediaserver";
     group = "mediaserver";
   };
-  myCaddy.privateServices.lidarr = { port = 8686; };
+  myCaddy.privateServices.lidarr = {
+    port = 8686;
+  };
 
   services.bazarr = {
     enable = true;
     user = "mediaserver";
     group = "mediaserver";
   };
-  myCaddy.privateServices.bazarr = { port = 6767; };
+  myCaddy.privateServices.bazarr = {
+    port = 6767;
+  };
 
   services.navidrome = {
     enable = true;
@@ -243,12 +282,14 @@ in
       MusicFolder = "/media/storage/media/music/main";
     };
   };
-  myCaddy.publicServices.navidrome = { port = 4533; };
+  myCaddy.publicServices.navidrome = {
+    port = 4533;
+  };
 
   services.photoprism = {
     enable = true;
     originalsPath = "/media/storage/famiglia/Immagini";
-    
+
     settings = {
       PHOTOPRISM_ADMIN_USER = "admin";
       PHOTOPRISM_ADMIN_PASSWORD = "changeme";
@@ -261,7 +302,9 @@ in
       PHOTOPRISM_WAKEUP_INTERVAL = "24h";
     };
   };
-  myCaddy.privateServices.photoprism = { port = config.services.photoprism.port; };
+  myCaddy.privateServices.photoprism = {
+    port = config.services.photoprism.port;
+  };
 
   systemd.services.photoprism.serviceConfig = {
     User = mkForce "family";
@@ -270,19 +313,21 @@ in
   };
 
   services.mysql =
-  let
-    user = config.services.photoprism.settings.PHOTOPRISM_DATABASE_USER;
-    db = config.services.photoprism.settings.PHOTOPRISM_DATABASE_NAME;
-  in
-  {
-    ensureDatabases = [ db ];
-    ensureUsers = [
-      {
-        name = user;
-        ensurePermissions = { "${db}.*" = "ALL PRIVILEGES"; };
-      }
-    ];
-  };
+    let
+      user = config.services.photoprism.settings.PHOTOPRISM_DATABASE_USER;
+      db = config.services.photoprism.settings.PHOTOPRISM_DATABASE_NAME;
+    in
+    {
+      ensureDatabases = [ db ];
+      ensureUsers = [
+        {
+          name = user;
+          ensurePermissions = {
+            "${db}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ];
+    };
 
   services.mysqlBackup.databases = [ config.services.photoprism.settings.PHOTOPRISM_DATABASE_NAME ];
 
@@ -311,8 +356,14 @@ in
 
   systemd.services.podman-pod-ghostfolio = {
     description = "Podman Pod Ghostfolio";
-    requiredBy = [ "podman-ghostfolio.service" "podman-ghostfolio-redis.service" ];
-    before = [ "podman-ghostfolio.service" "podman-ghostfolio-redis.service" ];
+    requiredBy = [
+      "podman-ghostfolio.service"
+      "podman-ghostfolio-redis.service"
+    ];
+    before = [
+      "podman-ghostfolio.service"
+      "podman-ghostfolio-redis.service"
+    ];
 
     serviceConfig = {
       Type = "oneshot";
@@ -324,7 +375,7 @@ in
   };
 
   virtualisation.oci-containers.containers.ghostfolio = {
-    image = "docker.io/ghostfolio/ghostfolio:2.125.0";
+    image = "docker.io/ghostfolio/ghostfolio:2.205.0";
     autoStart = true;
     user = "${toString config.users.users.ghostfolio.uid}:${toString config.users.groups.ghostfolio.gid}";
     dependsOn = [ "ghostfolio-redis" ];
@@ -359,8 +410,9 @@ in
     ];
   };
 
-
-  myCaddy.privateServices.ghostfolio = { port = 3333; };
+  myCaddy.privateServices.ghostfolio = {
+    port = 3333;
+  };
 
   services.postgresql = {
     enable = true;
@@ -385,5 +437,7 @@ in
       calibreLibrary = "/media/storage/media/calibre-books";
     };
   };
-  myCaddy.privateServices.calibre = { port = 8083; };
+  myCaddy.privateServices.calibre = {
+    port = 8083;
+  };
 }
