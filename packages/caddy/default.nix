@@ -7,7 +7,6 @@ buildGoModule {
   inherit version;
   src = ./src;
   vendorHash = "sha256-CaP0DSt5rK8bxlv22lmoPhgULpGalBmd1XCkdG3TXVk=";
-  GOFLAGS = [ "-tags=nobadger,nomysql,nopgx" ];
 
   meta = {
     homepage = "https://caddyserver.com";

@@ -83,6 +83,7 @@ in
     services.caddy = {
       enable = true;
       package = pkgs.callPackage ../packages/caddy { };
+      adapter = "caddyfile";
 
       globalConfig = ''
         debug
