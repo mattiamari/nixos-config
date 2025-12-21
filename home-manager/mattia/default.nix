@@ -38,6 +38,7 @@
       betaflight-configurator
       torzu
       vscode
+      opencode
       gcc
 
       rustc
@@ -445,6 +446,7 @@
       vim-fugitive
       nvim-autopairs
       conform-nvim
+      opencode-nvim
     ];
 
     extraPackages = with pkgs; [
@@ -464,9 +466,7 @@
       djlint
     ];
 
-    extraLuaConfig = ''
-      require("custom")
-    '';
+    extraLuaConfig = builtins.readFile ./nvim.lua;
   };
 
   # Keeping this here for when I'll want to move the nvim config in its own file
