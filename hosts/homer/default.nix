@@ -3,18 +3,20 @@ let
   myConfig = import ./common.nix;
 in
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ./backup.nix
-      ./smb.nix
-      ./services.nix
-      ./filebrowser.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ./backup.nix
+    ./smb.nix
+    ./services.nix
+    ./filebrowser.nix
+  ];
 
-  nix.settings.trusted-users = ["mattia"];
+  nix.settings.trusted-users = [ "mattia" ];
 
-  fileSystems."/".options = [ "noatime" "nodiratime" ];
+  fileSystems."/".options = [
+    "noatime"
+    "nodiratime"
+  ];
   services.fstrim.enable = true;
 
   boot.loader.systemd-boot.enable = true;
@@ -25,6 +27,9 @@ in
   boot.kernel.sysctl = {
     "vm.swappiness" = 30;
   };
+
+  # allows using MeshCommander to look at kernel logs
+  boot.kernelParams = [ "console=ttyS0,115200n8" ];
 
   #
   # ZFS
@@ -51,8 +56,18 @@ in
 
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 53 80 443 853 ];
-      allowedUDPPorts = [ 53 443 853 ];
+      allowedTCPPorts = [
+        22
+        53
+        80
+        443
+        853
+      ];
+      allowedUDPPorts = [
+        53
+        443
+        853
+      ];
     };
   };
 
@@ -61,8 +76,15 @@ in
     description = "Admin";
     uid = 1000;
     group = myConfig.adminUser;
-    extraGroups = [ myConfig.adminUser "networkmanager" "wheel" "family" "mediaserver" "syncthing" ];
-    packages = [];
+    extraGroups = [
+      myConfig.adminUser
+      "networkmanager"
+      "wheel"
+      "family"
+      "mediaserver"
+      "syncthing"
+    ];
+    packages = [ ];
     shell = pkgs.zsh;
     # linger = true;
   };
@@ -113,7 +135,9 @@ in
     ensureUsers = [
       {
         name = config.services.mysqlBackup.user;
-        ensurePermissions = { "*.*" = "SELECT, LOCK TABLES"; };
+        ensurePermissions = {
+          "*.*" = "SELECT, LOCK TABLES";
+        };
       }
     ];
   };
@@ -132,7 +156,7 @@ in
 
   # TODO
   # - (wireguard VPN)
-  # - https://github.com/crowdsecurity/crowdsec (o fail2ban) 
+  # - https://github.com/crowdsecurity/crowdsec (o fail2ban)
   # - service hardening
   #   - https://github.com/andir/nixpkgs/commit/4d9c0cfdab5d681ff0372bf8b5a2ac6e650c9b8c
   #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
@@ -144,16 +168,20 @@ in
 
   virtualisation.oci-containers.backend = "podman";
 
-  systemd.services.set-drive-standby = let disk = "WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876"; in {
-    description = "Set standby timeout to backup drive and put it into standby";
+  systemd.services.set-drive-standby =
+    let
+      disk = "WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876";
+    in
+    {
+      description = "Set standby timeout to backup drive and put it into standby";
 
-    wantedBy = [ "multi-user.target" ];
-    after = [ "dev-disk-by-id-ata-${disk}.device" ];
-    serviceConfig.Type = "oneshot";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "dev-disk-by-id-ata-${disk}.device" ];
+      serviceConfig.Type = "oneshot";
 
-    # Standard -S values do not apply to WD Green drives. "2" seems to be ~30 minutes
-    script = "${pkgs.hdparm}/bin/hdparm -S 2 -y /dev/disk/by-id/ata-${disk}";
-  };
+      # Standard -S values do not apply to WD Green drives. "2" seems to be ~30 minutes
+      script = "${pkgs.hdparm}/bin/hdparm -S 2 -y /dev/disk/by-id/ata-${disk}";
+    };
 
   system.stateVersion = "23.11";
 }
