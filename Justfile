@@ -4,11 +4,8 @@ switch:
 boot:
     nixos-rebuild boot --flake . --ask-sudo-password --show-trace
 
-build:
-    nixos-rebuild build --flake . --show-trace
-
-homer-test:
-    nixos-rebuild test --flake .#homer --target-host mattia@homer --ask-sudo-password
+build OUTPUT:
+    nixos-rebuild build --flake .#{{OUTPUT}} --show-trace
 
 homer-boot:
     nixos-rebuild boot --flake .#homer --target-host mattia@homer --ask-sudo-password --show-trace
@@ -22,8 +19,8 @@ wsl-build-image:
 update:
     nix flake update
 
-list-generations:
-    sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
+history:
+    nix profile history --profile /nix/var/nix/profiles/system
 
 repl:
     nix repl -f flake:nixpkgs
