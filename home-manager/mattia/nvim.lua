@@ -111,7 +111,7 @@ require("lualine").setup({
     },
 })
 
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter").setup({
     highlight = { enable = true }
 })
 
@@ -120,7 +120,7 @@ require("nvim-autopairs").setup()
 require("conform").setup({
     formatters_by_ft = {
         htmldjango = { "djlint", lsp_format = "fallback" },
-        html = { "tidy -quiet -indent -", lsp_format = "fallback" },
+        -- html = { "tidy -quiet -indent -", lsp_format = "fallback" },
         rust = { "rustfmt", lsp_format = "fallback" },
     },
     format_on_save = {

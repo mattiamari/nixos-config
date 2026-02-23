@@ -102,10 +102,21 @@ in
         http_port = 9000;
         domain = "grafana.home.mattiamari.xyz";
       };
+
+      security = {
+        secret_key = "$__file{/run/credentials/grafana.service/secret-key}";
+      };
     };
   };
   myCaddy.privateServices.grafana = {
     port = config.services.grafana.settings.server.http_port;
+  };
+  systemd.services.grafana = {
+    serviceConfig = {
+      LoadCredential = [
+        "secret-key:${myConfig.secretsDir}/grafana-secret-key"
+      ];
+    };
   };
 
   services.prometheus = {

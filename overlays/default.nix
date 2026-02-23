@@ -1,4 +1,4 @@
-{ pkgsStable, nixpkgs-2411 }:
+{ pkgsStable, pkgs2411 }:
 
 final: prev: {
   # Fix for buggy nwjs that breaks betaflight configurator
@@ -23,7 +23,7 @@ final: prev: {
     installPhase = "mkdir -p $out";
   };
 
-  torzu = nixpkgs-2411.legacyPackages.${prev.system}.torzu;
+  torzu = pkgs2411.torzu;
 
   photoprism = pkgsStable.photoprism;
   jetbrains.idea-ultimate = pkgsStable.jetbrains.idea-ultimate;

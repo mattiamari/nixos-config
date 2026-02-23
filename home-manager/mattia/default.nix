@@ -34,12 +34,12 @@
       telegram-desktop
       ungoogled-chromium
       # (callPackage ../../packages/zen-browser.nix {})
+      sqlite
       sqlitebrowser
       betaflight-configurator
       torzu
       vscode
       opencode
-      gcc
 
       rustc
       cargo
@@ -176,6 +176,9 @@
       misc = {
         # force "hyprland logo" wallpaper
         force_default_wallpaper = 0;
+
+        # prevents "your XDG_CURRENT_DESKTOP seems to be managed externally" warning
+        disable_xdg_env_checks = true;
       };
 
       debug = {
@@ -262,16 +265,14 @@
         "$mod, mouse:273, resizewindow"
       ];
 
-      windowrulev2 = [
+      windowrule = [
         # Smart gaps
-        "bordersize 0, floating:0, onworkspace:w[tv1]"
-        "rounding 0, floating:0, onworkspace:w[tv1]"
-        "bordersize 0, floating:0, onworkspace:f[1]"
-        "rounding 0, floating:0, onworkspace:f[1]"
+        "border_size 0, rounding 0, match:float no, match:workspace w[tv1]"
+        "border_size 0, rounding 0, match:float no, match:workspace f[1]"
 
-        "tile, title:^web\.whatsapp\.com.*$"
-        "float, title:Calculator"
-        "float, title:^Extension.*Bitwarden.*$"
+        # "tile, title:^web\.whatsapp\.com.*$"
+        # "float, title:Calculator"
+        # "float, title:^Extension.*Bitwarden.*$"
       ];
 
       workspace = [
@@ -403,6 +404,7 @@
 
   programs.zsh = {
     enable = true;
+    dotDir = "${config.xdg.configHome}/zsh";
 
     oh-my-zsh = {
       enable = true;
@@ -442,6 +444,7 @@
       nvim-lspconfig
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
+      plenary-nvim # needed by telescope
       telescope-nvim
       vim-fugitive
       nvim-autopairs
@@ -453,29 +456,22 @@
       git
       fzf
       ripgrep
+      fd # faster 'find'
       powerline-fonts
       wl-clipboard
+      tree-sitter
 
       # language servers
       lua-language-server
       nil # Nix language server
       rust-analyzer
-      #bacon # Rust code checker
       jinja-lsp
       html-tidy
       djlint
     ];
 
-    extraLuaConfig = builtins.readFile ./nvim.lua;
+    initLua = builtins.readFile ./nvim.lua;
   };
-
-  # Keeping this here for when I'll want to move the nvim config in its own file
-  #home.file = {
-  #  ".config/nvim" = {
-  #    source = ./nvim;
-  #    recursive = true;
-  #  };
-  #};
 
   programs.lazygit.enable = true;
 
