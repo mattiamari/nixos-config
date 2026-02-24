@@ -47,10 +47,28 @@ in
   networking = {
     hostName = "homer";
 
-    networkmanager.enable = true;
-    networkmanager.insertNameservers = [ "1.1.1.1" ];
+    interfaces.eno1 = {
+      ipv4.addresses = [
+        {
+          address = "192.168.0.20";
+          prefixLength = 24;
+        }
+      ];
+      useDHCP = false;
+    };
 
-    resolvconf.useLocalResolver = false;
+    defaultGateway = {
+      address = "192.168.0.1";
+      interface = "eno1";
+    };
+
+    nameservers = [
+      # use Adguard
+      # can't use localhost directly because it does not listen on that, to prevent conflicts with podman
+      "192.168.0.20"
+    ];
+
+    resolvconf.enable = false;
 
     nftables.enable = true;
 
@@ -69,6 +87,11 @@ in
         853
       ];
     };
+  };
+
+  services.resolved = {
+    enable = true;
+    fallbackDns = [ "1.1.1.1" ];
   };
 
   users.users.${myConfig.adminUser} = {
