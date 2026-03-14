@@ -23,7 +23,7 @@
       vlc
       supersonic-wayland
       obsidian
-      calibre
+      # calibre
       #jellyfin-media-player
       gimp
       xournalpp

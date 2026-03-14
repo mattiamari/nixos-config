@@ -21,7 +21,7 @@
 
     packages = with pkgs; [
       openfortivpn
-      (jetbrains.idea-ultimate.override { vmopts = "-Xmx8192m"; })
+      (jetbrains.idea.override { vmopts = "-Xmx8192m"; })
       podman-compose
       podman-tui
       dive

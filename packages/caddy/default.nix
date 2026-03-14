@@ -1,12 +1,12 @@
 { lib, buildGoModule, ... }:
 let
-  version = "2.10.2";
+  version = "2.11.1";
 in
 buildGoModule {
   pname = "caddy";
   inherit version;
   src = ./src;
-  vendorHash = "sha256-CaP0DSt5rK8bxlv22lmoPhgULpGalBmd1XCkdG3TXVk=";
+  vendorHash = "sha256-NVAUEE4Mi1l1/p4vRdDpBcBjfU+E6yuNv9aTpnE4Mps=";
 
   meta = {
     homepage = "https://caddyserver.com";
