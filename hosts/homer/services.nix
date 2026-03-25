@@ -265,6 +265,8 @@ in
     port = 9696;
   };
 
+  services.flaresolverr.enable = true;
+
   services.lidarr = {
     enable = true;
     package = pkgs.lidarr;
