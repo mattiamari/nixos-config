@@ -352,8 +352,8 @@
 
         temperature = {
           format = " {temperatureC}°C";
-          hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
-          critical-threshold = 86;
+          hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
+          critical-threshold = 85;
         };
 
         network = {
