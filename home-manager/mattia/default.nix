@@ -40,6 +40,7 @@
       torzu
       vscode
       opencode
+      podman-compose
 
       rustc
       cargo
