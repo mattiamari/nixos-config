@@ -427,20 +427,49 @@ in
     port = 3333;
   };
 
+  services.miniflux = {
+    enable = true;
+    createDatabaseLocally = true;
+    adminCredentialsFile = "${myConfig.secretsDir}/miniflux";
+    config = {
+      BASE_URL = "https://miniflux.${myConfig.privateHostname}";
+    };
+  };
+  myCaddy.privateServices.miniflux = {
+    port = 8080;
+  };
+
+  services.shiori = {
+    enable = true;
+    databaseUrl = "postgres:///shiori?host=/run/postgresql";
+    port = 8081;
+  };
+  myCaddy.privateServices.shiori = {
+    port = 8081;
+  };
+
   services.postgresql = {
     enable = true;
     ensureDatabases = [
       "ghostfolio"
+      "shiori"
     ];
     ensureUsers = [
       {
         name = "ghostfolio";
         ensureDBOwnership = true;
       }
+      {
+        name = "shiori";
+        ensureDBOwnership = true;
+      }
     ];
   };
-
-  services.postgresqlBackup.databases = [ "ghostfolio" ];
+  services.postgresqlBackup.databases = [
+    "ghostfolio"
+    "miniflux"
+    "shiori"
+  ];
 
   services.calibre-web = {
     enable = true;
