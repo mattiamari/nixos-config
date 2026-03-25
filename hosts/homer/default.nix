@@ -66,9 +66,8 @@ in
       # use Adguard
       # can't use localhost directly because it does not listen on that, to prevent conflicts with podman
       "192.168.0.20"
+      "1.1.1.1"
     ];
-
-    resolvconf.enable = false;
 
     nftables.enable = true;
 
@@ -87,11 +86,6 @@ in
         853
       ];
     };
-  };
-
-  services.resolved = {
-    enable = true;
-    settings.Resolve.FallbackDNS = [ "1.1.1.1" ];
   };
 
   users.users.${myConfig.adminUser} = {
