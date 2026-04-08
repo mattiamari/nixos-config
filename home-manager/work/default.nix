@@ -105,6 +105,9 @@
     };
   };
 
+  # new default since nixos 26.05
+  gtk.gtk4.theme = null;
+
   qt = {
     enable = true;
     style.name = "adwaita-dark";
@@ -372,6 +375,7 @@
 
   programs.git = {
     enable = true;
+    signing.format = "openpgp";
   };
 
   # fancy diff
