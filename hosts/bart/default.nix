@@ -32,6 +32,17 @@
 
   networking.hostName = "bart";
   networking.networkmanager.enable = true;
+  networking.nftables.enable = true;
+
+  networking.firewall = {
+    enable = true;
+    extraInputRules =
+      # nextjs dev server + backend
+      ''
+        ip saddr 192.168.0.0/24 tcp dport 3000 accept
+        ip saddr 192.168.0.0/24 tcp dport 8080 accept
+      '';
+  };
 
   services.openssh = {
     enable = true;
