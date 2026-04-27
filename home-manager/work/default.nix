@@ -34,6 +34,7 @@
       spotify
       ungoogled-chromium
       libxml2 # for xmllint
+      claude-code
     ];
 
     pointerCursor = {
@@ -46,12 +47,12 @@
 
     sessionVariables = {
       COLORTERM = "truecolor";
-      JAVA_8_HOME = pkgs.jdk8.home;
+      # JAVA_8_HOME = pkgs.jdk8.home;
       JAVA_17_HOME = pkgs.corretto17.home;
       JAVA_HOME = pkgs.corretto17.home;
-      MAVEN_36_HOME = "${pkgsMaven.maven}/maven";
+      # MAVEN_36_HOME = "${pkgsMaven.maven}/maven";
       MAVEN_HOME = "${pkgs.maven}/maven";
-      CATALINA_8_HOME = pkgsMaven.tomcat8;
+      # CATALINA_8_HOME = pkgsMaven.tomcat8;
       CATALINA_9_HOME = pkgs.tomcat9;
       CATALINA_BASE = "/home/work/vivaticket/catalina-base";
       CATALINA_TMPDIR = "/tmp";
@@ -406,6 +407,8 @@
     enable = true;
     defaultEditor = true;
     vimAlias = true;
+    withPython3 = false;
+    withRuby = false;
 
     plugins = with pkgs.vimPlugins; [
       catppuccin-nvim
@@ -417,17 +420,30 @@
       nvim-lspconfig
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
+      plenary-nvim # needed by telescope
       telescope-nvim
       vim-fugitive
+      nvim-autopairs
+      conform-nvim
+      opencode-nvim
     ];
 
     extraPackages = with pkgs; [
       git
       fzf
       ripgrep
+      fd # faster 'find'
       powerline-fonts
       wl-clipboard
+      tree-sitter
 
+      # language servers
+      lua-language-server
+      nil # Nix language server
+      rust-analyzer
+      jinja-lsp
+      html-tidy
+      djlint
     ];
 
     initLua = builtins.readFile ../mattia/nvim.lua;

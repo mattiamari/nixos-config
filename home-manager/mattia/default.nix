@@ -38,8 +38,10 @@
       sqlitebrowser
       betaflight-configurator
       torzu
+      prismlauncher
       vscode
       opencode
+      claude-code
       podman-compose
 
       rustc
@@ -48,6 +50,7 @@
       rust-analyzer
       clippy
       bacon
+      sqlx-cli
 
       gcc
       gnumake
@@ -437,7 +440,8 @@
     enable = true;
     defaultEditor = true;
     vimAlias = true;
-    #withPython3 = true;
+    withPython3 = false;
+    withRuby = false;
 
     plugins = with pkgs.vimPlugins; [
       catppuccin-nvim
