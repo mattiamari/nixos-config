@@ -10,7 +10,6 @@
   };
 
   hardware.nvidia = {
-
     # Modesetting is required.
     modesetting.enable = true;
 
@@ -45,63 +44,7 @@
     videoDrivers = [ "nvidia" ];
   };
 
-  services.displayManager.sddm = {
-    enable = true;
-    package = pkgs.kdePackages.sddm;
-    wayland.enable = true;
-  };
-
-  programs.uwsm.enable = true;
-
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
-  };
-
-  programs.thunar = {
-    enable = true;
-    plugins = with pkgs; [
-      thunar-volman
-      thunar-archive-plugin
-    ];
-  };
-
-  services.gvfs.enable = true; # for automount, trash, etc.
-  services.tumbler.enable = true; # fot thumnbnails
-
-  # Keyring
-  services.gnome.gnome-keyring.enable = true;
-  security.pam.services.sddm.enableGnomeKeyring = true;
-  programs.seahorse.enable = true;
-
-  programs.virt-manager.enable = true;
-
-  # list installed fonts: `fc-list -v`
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
-    nerd-fonts.noto
-  ];
-
-  environment.systemPackages = with pkgs; [
-    # nvtopPackages.nvidia
-    pwvucontrol
-    alacritty
-    ffmpegthumbnailer
-    loupe
-    gnome-calculator
-    kdePackages.ark
-    # rar
-    firefox
-    home-manager
-  ];
-
   environment.sessionVariables = {
-    # Hint electron apps to use wayland
-    NIXOS_OZONE_WL = "1";
-
     # VAAPI
     LIBVA_DRIVER_NAME = "nvidia";
     NVD_BACKEND = "direct";
@@ -110,12 +53,4 @@
     # Fix chromium black screen (and probably electron apps too)
     GBM_BACKEND = "nvidia-drm";
   };
-
-  catppuccin = {
-    enable = true;
-    flavor = "macchiato";
-    accent = "teal";
-    sddm.enable = true;
-  };
-
 }

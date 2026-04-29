@@ -1,6 +1,14 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [
+    ../common
+  ];
+
   wsl.enable = true;
   wsl.defaultUser = "work";
   wsl.interop.includePath = false;

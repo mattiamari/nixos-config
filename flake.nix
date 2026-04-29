@@ -54,16 +54,12 @@
       };
 
       lib = nixpkgs.lib;
-
-      defaultModules = [
-        ./hosts/common
-      ];
     in
     {
       nixosConfigurations = {
 
         bart = lib.nixosSystem {
-          modules = defaultModules ++ [
+          modules = [
             { nixpkgs.pkgs = pkgs; }
             catppuccin.nixosModules.catppuccin
             ./hosts/bart
@@ -84,21 +80,21 @@
           specialArgs = {
             meross-prometheus-exporter = meross-prometheus-exporter.packages.x86_64-linux.default;
           };
-          modules = defaultModules ++ [
+          modules = [
             { nixpkgs.pkgs = pkgs; }
             ./hosts/homer
           ];
         };
 
         marge = lib.nixosSystem {
-          modules = defaultModules ++ [
+          modules = [
             { nixpkgs.pkgs = pkgs; }
             ./hosts/marge
           ];
         };
 
         wsl = lib.nixosSystem {
-          modules = defaultModules ++ [
+          modules = [
             nixos-wsl.nixosModules.default
             catppuccin.nixosModules.catppuccin
             ./hosts/wsl

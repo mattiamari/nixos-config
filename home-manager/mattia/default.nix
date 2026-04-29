@@ -19,7 +19,6 @@
     stateVersion = "23.11";
 
     packages = with pkgs; [
-      mpv
       vlc
       supersonic-wayland
       obsidian
@@ -36,13 +35,11 @@
       # (callPackage ../../packages/zen-browser.nix {})
       sqlite
       sqlitebrowser
-      betaflight-configurator
       torzu
       prismlauncher
       vscode
       opencode
       claude-code
-      podman-compose
 
       rustc
       cargo

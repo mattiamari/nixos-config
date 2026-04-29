@@ -2,11 +2,12 @@
 
 {
   imports = [
+    ../common
     ./hardware-configuration.nix
     ./smb.nix
   ];
 
-  nix.settings.trusted-users = ["mattia"];
+  nix.settings.trusted-users = [ "mattia" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -46,8 +47,12 @@
   users.users.mattia = {
     isNormalUser = true;
     description = "Mattia";
-    extraGroups = [ "networkmanager" "wheel" "cdrom" ];
-    packages = with pkgs; [];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "cdrom"
+    ];
+    packages = with pkgs; [ ];
   };
 
   environment.systemPackages = with pkgs; [

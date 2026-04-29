@@ -4,6 +4,7 @@ let
 in
 {
   imports = [
+    ../common
     ./hardware-configuration.nix
     ./backup.nix
     ./smb.nix
