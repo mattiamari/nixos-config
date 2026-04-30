@@ -22,7 +22,6 @@
     packages = with pkgs; [
       openfortivpn
       (jetbrains.idea.override { vmopts = "-Xmx8192m"; })
-      podman-compose
       podman-tui
       dive
       maven
@@ -385,23 +384,13 @@
     enableGitIntegration = true;
   };
 
-  programs.eza.enable = true; # `ls` alternative
+  # programs.eza.enable = true; # `ls` alternative
   programs.fzf.enable = true; # fuzzy finder
-  programs.fd.enable = true; # `find` alternative
-  programs.ripgrep.enable = true;
+  # programs.fd.enable = true; # `find` alternative
+  # programs.ripgrep.enable = true;
   programs.zoxide.enable = true; # smart `cd` command
-  programs.bat.enable = true; # nicer `cat`
+  # programs.bat.enable = true; # nicer `cat`
   programs.lazygit.enable = true;
-
-  programs.tmux = {
-    enable = true;
-    terminal = "tmux-256color";
-
-    extraConfig = ''
-      set-option -sg escape-time 10
-      set-option -g focus-events on
-    '';
-  };
 
   programs.neovim = {
     enable = true;

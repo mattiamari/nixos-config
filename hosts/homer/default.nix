@@ -4,8 +4,9 @@ let
 in
 {
   imports = [
-    ../common
     ./hardware-configuration.nix
+    ../common
+    ../features/podman.nix
     ./backup.nix
     ./smb.nix
     ./services.nix
@@ -130,14 +131,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    shadow
-    hdparm
   ];
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
 
   services.openssh = {
     enable = true;
@@ -178,13 +172,6 @@ in
   # - service hardening
   #   - https://github.com/andir/nixpkgs/commit/4d9c0cfdab5d681ff0372bf8b5a2ac6e650c9b8c
   #   - https://discourse.nixos.org/t/pre-rfc-systemd-hardening/39772
-
-  virtualisation.podman = {
-    enable = true;
-    defaultNetwork.settings.dns_enabled = true;
-  };
-
-  virtualisation.oci-containers.backend = "podman";
 
   systemd.services.set-drive-standby =
     let

@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   nix.gc = {
     automatic = true;
@@ -28,33 +31,57 @@
     layout = "us";
     variant = "";
   };
-  
+
   console.keyMap = "us";
 
   environment.systemPackages = with pkgs; [
     wget
+    rsync
+    curl
     git
     btop
     htop
     smartmontools
+    hdparm
     gdu
     tree
     zip
     unzip
     p7zip
     file
-    helix
-    nil # Nix language server
     just
     parallel
+    ripgrep # 'grep' alternative
+    fzf # fuzzy finder
+    eza # 'ls' alternative
+    fd # 'find' alternative
   ];
 
   programs.zsh.enable = true;
+  programs.bat.enable = true;
+
   programs.tmux = {
     enable = true;
+
+    # Recommended by neovim
+    terminal = "tmux-256color";
+
+    extraConfig = ''
+      set-option -sg escape-time 10
+      set-option -g focus-events on
+    '';
+  };
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    vimAlias = true;
+    withPython3 = false;
+    withRuby = false;
   };
 
   environment.shellAliases = {
+    ls = "eza";
     ll = "ls -lah";
     ".." = "cd ..";
   };
