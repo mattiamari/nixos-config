@@ -67,8 +67,8 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.mattia = import ./home-manager/mattia;
-              home-manager.users.work = import ./home-manager/work;
+              home-manager.users.mattia = import ./home/mattia;
+              home-manager.users.work = import ./home/work;
               home-manager.extraSpecialArgs = {
                 inherit catppuccin pkgsMaven;
               };
@@ -102,7 +102,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.work = import ./home-manager/work;
+              home-manager.users.work = import ./home/work;
               home-manager.extraSpecialArgs = {
                 inherit catppuccin pkgsMaven;
               };
@@ -123,7 +123,7 @@
         mattia = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
-            ./home-manager/mattia
+            ./home/mattia
           ];
           extraSpecialArgs = { inherit catppuccin; };
         };
@@ -131,7 +131,7 @@
         work = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
-            ./home-manager/work
+            ./home/work
           ];
           extraSpecialArgs = { inherit catppuccin; };
         };
