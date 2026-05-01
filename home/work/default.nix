@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsMaven,
   catppuccin,
   ...
 }:
@@ -25,6 +24,7 @@
     packages = with pkgs; [
       openfortivpn
       (jetbrains.idea.override { vmopts = "-Xmx8192m"; })
+      vscode
       podman-tui
       dive
       maven
@@ -40,12 +40,12 @@
     ];
 
     sessionVariables = {
-      # JAVA_8_HOME = pkgs.jdk8.home;
+      JAVA_8_HOME = pkgs.jdk8.home;
       JAVA_17_HOME = pkgs.corretto17.home;
       JAVA_HOME = pkgs.corretto17.home;
-      # MAVEN_36_HOME = "${pkgsMaven.maven}/maven";
+      MAVEN_36_HOME = "${pkgs.maven36}/maven";
       MAVEN_HOME = "${pkgs.maven}/maven";
-      # CATALINA_8_HOME = pkgsMaven.tomcat8;
+      CATALINA_8_HOME = pkgs.tomcat8;
       CATALINA_9_HOME = pkgs.tomcat9;
       CATALINA_BASE = "/home/work/vivaticket/catalina-base";
       CATALINA_TMPDIR = "/tmp";

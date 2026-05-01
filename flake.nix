@@ -32,11 +32,9 @@
         inherit localSystem;
         config = {
           allowUnfree = true;
-          permittedInsecurePackages = [
-            "gradle-7.6.6"
-          ];
+          permittedInsecurePackages = [ ];
         };
-        overlays = [ (import ./overlays { inherit pkgsStable pkgs2411; }) ];
+        overlays = [ (import ./overlays { inherit pkgsStable pkgs2411 pkgsMaven; }) ];
       };
 
       pkgsStable = import nixpkgs-stable {
@@ -70,7 +68,7 @@
               home-manager.users.mattia = import ./home/mattia;
               home-manager.users.work = import ./home/work;
               home-manager.extraSpecialArgs = {
-                inherit catppuccin pkgsMaven;
+                inherit catppuccin;
               };
             }
           ];
@@ -104,7 +102,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.work = import ./home/work;
               home-manager.extraSpecialArgs = {
-                inherit catppuccin pkgsMaven;
+                inherit catppuccin;
               };
             }
           ];

@@ -66,4 +66,6 @@
     platformTheme.name = "adwaita";
   };
 
+  services.easyeffects.enable = true;
+
 }

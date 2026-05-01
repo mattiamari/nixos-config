@@ -3,6 +3,7 @@
 
   environment.systemPackages = with pkgs; [
     betaflight-configurator
+    edgetx
   ];
 
   # betaflight access to STM DFU

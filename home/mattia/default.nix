@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   catppuccin,
   ...
 }:
@@ -8,9 +7,11 @@
   imports = [
     ../features/gc.nix
     ../features/desktop-environment
+    ../features/syncthing-with-tray.nix
     ../features/neovim
     ../features/git.nix
     ../features/zsh.nix
+    ../features/development.nix
     catppuccin.homeModules.catppuccin
   ];
 
@@ -36,28 +37,8 @@
       sshfs
       telegram-desktop
       ungoogled-chromium
-      # (callPackage ../../packages/zen-browser.nix {})
-      sqlite
-      sqlitebrowser
       torzu
       prismlauncher
-      vscode
-      opencode
-      claude-code
-
-      rustc
-      cargo
-      rustfmt
-      rust-analyzer
-      clippy
-      bacon
-      sqlx-cli
-
-      gcc
-      gnumake
-      nodejs
-      pnpm
-      watchexec
     ];
   };
 
@@ -81,18 +62,4 @@
       # icon = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48/apps/whatsapp.svg";
     };
   };
-
-  services.syncthing = {
-    enable = true;
-    tray.enable = true;
-  };
-
-  # Fix "the system tray is not currently available" message from syncthing tray
-  systemd.user.services.syncthingtray.Service.ExecStartPre =
-    lib.mkForce "${pkgs.coreutils}/bin/sleep 3";
-  systemd.user.services.syncthingtray.Service.ExecStart =
-    lib.mkForce "${pkgs.syncthingtray}/bin/syncthingtray --wait";
-  systemd.user.services.syncthingtray.Unit.After = lib.mkForce "waybar.service";
-
-  services.easyeffects.enable = true;
 }
