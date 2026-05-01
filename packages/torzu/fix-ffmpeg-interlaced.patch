@@ -1,0 +1,26 @@
+diff --git a/src/video_core/host1x/ffmpeg/ffmpeg.cpp b/src/video_core/host1x/ffmpeg/ffmpeg.cpp
+index 6655399c6..7d2fc569f 100644
+--- a/src/video_core/host1x/ffmpeg/ffmpeg.cpp
++++ b/src/video_core/host1x/ffmpeg/ffmpeg.cpp
+@@ -464,7 +464,7 @@ std::shared_ptr<Frame> DecoderContext::ReceiveFrame() {
+         }
+     }
+ 
+-#if defined(FF_API_INTERLACED_FRAME) || LIBAVUTIL_VERSION_MAJOR >= 59
++#if defined(FF_API_INTERLACED_FRAME) && LIBAVUTIL_VERSION_MAJOR < 59
+     m_temp_frame->GetFrame()->interlaced_frame =
+         (m_temp_frame->GetFrame()->flags & AV_FRAME_FLAG_INTERLACED) != 0;
+ #endif
+diff --git a/src/video_core/host1x/ffmpeg/ffmpeg.h b/src/video_core/host1x/ffmpeg/ffmpeg.h
+index bd0ad97ad..05380391a 100644
+--- a/src/video_core/host1x/ffmpeg/ffmpeg.h
++++ b/src/video_core/host1x/ffmpeg/ffmpeg.h
+@@ -106,7 +106,7 @@ public:
+     }
+ 
+     bool IsInterlaced() const {
+-        return m_frame->interlaced_frame != 0;
++        return (m_frame->flags & AV_FRAME_FLAG_INTERLACED) != 0;
+     }
+ 
+     bool IsHardwareDecoded() const {

@@ -1,0 +1,64 @@
+diff --git a/src/core/debugger/debugger.cpp b/src/core/debugger/debugger.cpp
+index e86aae846..03bf4eaff 100644
+--- a/src/core/debugger/debugger.cpp
++++ b/src/core/debugger/debugger.cpp
+@@ -5,8 +5,14 @@
+ #include <mutex>
+ #include <thread>
+ 
+-#include <boost/asio.hpp>
+-#include <boost/process/async_pipe.hpp>
++// Use basic asio functionality only
++#define BOOST_ASIO_STANDALONE
++#include <boost/asio/basic_io_object.hpp>
++#include <boost/asio/ip/tcp.hpp>
++#include <boost/asio/write.hpp>
++#include <boost/asio/read.hpp>
++
++#include <boost/process/v1/async_pipe.hpp>
+ 
+ #include "common/logging/log.h"
+ #include "common/polyfill_thread.h"
+@@ -21,17 +27,22 @@
+ 
+ template <typename Readable, typename Buffer, typename Callback>
+ static void AsyncReceiveInto(Readable& r, Buffer& buffer, Callback&& c) {
+-    static_assert(std::is_trivial_v<Buffer>);
+-    auto boost_buffer{boost::asio::buffer(&buffer, sizeof(Buffer))};
+-    r.async_read_some(
+-        boost_buffer, [&, c](const boost::system::error_code& error, size_t bytes_read) {
+-            if (!error.failed()) {
+-                const u8* buffer_start = reinterpret_cast<const u8*>(&buffer);
+-                std::span<const u8> received_data{buffer_start, buffer_start + bytes_read};
+-                c(received_data);
+-                AsyncReceiveInto(r, buffer, c);
+-            }
+-        });
++    try {
++            static_assert(std::is_trivial_v<Buffer>);
++            auto boost_buffer{boost::asio::buffer(&buffer, sizeof(Buffer))};
++            r.async_read_some(
++                boost_buffer,
++                [&, c](const boost::system::error_code& error, size_t bytes_read) {
++                    if (!error) {
++                        const u8* buffer_start = reinterpret_cast<const u8*>(&buffer);
++                        std::span<const u8> received_data{buffer_start, buffer_start + bytes_read};
++                        c(received_data);
++                        AsyncReceiveInto(r, buffer, c);
++                    }
++                });
++        } catch (const std::exception& e) {
++            LOG_ERROR(Debug_GDBStub, "AsyncReceiveInto error: {}", e.what());
++        }
+ }
+ 
+ template <typename Callback>
+@@ -326,7 +337,7 @@ private:
+ 
+     struct ConnectionState {
+         boost::asio::ip::tcp::socket client_socket;
+-        boost::process::async_pipe signal_pipe;
++        boost::process::v1::async_pipe signal_pipe;
+ 
+         SignalInfo info;
+         Kernel::KScopedAutoObject<Kernel::KThread> active_thread;

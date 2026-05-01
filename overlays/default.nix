@@ -1,7 +1,7 @@
-{ pkgsStable, pkgs2411, ... }:
+{ pkgsStable, torzuSrc, ... }:
 
 final: prev: {
-  torzu = pkgs2411.torzu;
+  torzu = final.callPackage ../packages/torzu { src = torzuSrc; };
 
   photoprism = pkgsStable.photoprism;
   calibre-web = pkgsStable.calibre-web;

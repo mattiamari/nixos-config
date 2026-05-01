@@ -2,7 +2,10 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-25.05";
-    nixpkgs-2411.url = "nixpkgs/nixos-24.11";
+    torzu-src = {
+      url = "git+file:///home/mattia/repos/torzu?submodules=1&rev=eaa9c9e3a46eb5099193b11d620ddfe96b6aec83";
+      flake = false;
+    };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,7 +25,6 @@
     {
       nixpkgs,
       nixpkgs-stable,
-      nixpkgs-2411,
       home-manager,
       catppuccin,
       ...
@@ -35,15 +37,10 @@
         config.allowUnfree = true;
       };
 
-      pkgs2411 = import nixpkgs-2411 {
-        inherit system;
-        config.allowUnfree = true;
-      };
-
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ (import ./overlays { inherit pkgsStable pkgs2411; }) ];
+        overlays = [ (import ./overlays { inherit pkgsStable; torzuSrc = inputs.torzu-src; }) ];
       };
 
       lib = nixpkgs.lib;
