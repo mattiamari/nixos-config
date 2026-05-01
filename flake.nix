@@ -3,13 +3,18 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-25.05";
     nixpkgs-2411.url = "nixpkgs/nixos-24.11";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-    nixpkgs-maven.url = "nixpkgs/79cb2cb9869d7bb8a1fac800977d3864212fd97d";
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     meross-prometheus-exporter.url = "github:mattiamari/meross-prometheus-exporter";
   };
 
@@ -18,93 +23,81 @@
       nixpkgs,
       nixpkgs-stable,
       nixpkgs-2411,
-      nixos-wsl,
-      nixpkgs-maven,
       home-manager,
       catppuccin,
-      meross-prometheus-exporter,
       ...
-    }:
+    }@inputs:
     let
-      localSystem = "x86_64-linux";
-
-      pkgs = import nixpkgs {
-        inherit localSystem;
-        config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [ ];
-        };
-        overlays = [ (import ./overlays { inherit pkgsStable pkgs2411 pkgsMaven; }) ];
-      };
+      system = "x86_64-linux";
 
       pkgsStable = import nixpkgs-stable {
-        inherit localSystem;
+        inherit system;
         config.allowUnfree = true;
       };
 
       pkgs2411 = import nixpkgs-2411 {
-        inherit localSystem;
+        inherit system;
         config.allowUnfree = true;
       };
 
-      pkgsMaven = import nixpkgs-maven {
-        inherit localSystem;
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ (import ./overlays { inherit pkgsStable pkgs2411; }) ];
       };
 
       lib = nixpkgs.lib;
+
+      mkHost =
+        {
+          hostName,
+          hmUsers ? [ ],
+          extraModules ? [ ],
+        }:
+        lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules =
+            [
+              { nixpkgs.pkgs = pkgs; }
+              ./hosts/${hostName}
+            ]
+            ++ lib.optionals (hmUsers != [ ]) [
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = { inherit catppuccin; };
+                home-manager.users = lib.genAttrs hmUsers (name: import ./home/${name});
+              }
+            ]
+            ++ extraModules;
+        };
+
+      mkHMConfig = name: home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./home/${name} ];
+        extraSpecialArgs = { inherit catppuccin; };
+      };
     in
     {
       nixosConfigurations = {
 
-        bart = lib.nixosSystem {
-          modules = [
-            { nixpkgs.pkgs = pkgs; }
+        bart = mkHost {
+          hostName = "bart";
+          hmUsers = [ "mattia" "work" ];
+          extraModules = [ catppuccin.nixosModules.catppuccin ];
+        };
+
+        homer = mkHost { hostName = "homer"; };
+
+        marge = mkHost { hostName = "marge"; };
+
+        wsl = mkHost {
+          hostName = "wsl";
+          hmUsers = [ "work" ];
+          extraModules = [
+            inputs.nixos-wsl.nixosModules.default
             catppuccin.nixosModules.catppuccin
-            ./hosts/bart
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.mattia = import ./home/mattia;
-              home-manager.users.work = import ./home/work;
-              home-manager.extraSpecialArgs = {
-                inherit catppuccin;
-              };
-            }
-          ];
-        };
-
-        homer = lib.nixosSystem {
-          specialArgs = {
-            meross-prometheus-exporter = meross-prometheus-exporter.packages.x86_64-linux.default;
-          };
-          modules = [
-            { nixpkgs.pkgs = pkgs; }
-            ./hosts/homer
-          ];
-        };
-
-        marge = lib.nixosSystem {
-          modules = [
-            { nixpkgs.pkgs = pkgs; }
-            ./hosts/marge
-          ];
-        };
-
-        wsl = lib.nixosSystem {
-          modules = [
-            nixos-wsl.nixosModules.default
-            catppuccin.nixosModules.catppuccin
-            ./hosts/wsl
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.work = import ./home/work;
-              home-manager.extraSpecialArgs = {
-                inherit catppuccin;
-              };
-            }
           ];
         };
 
@@ -117,22 +110,6 @@
 
       };
 
-      homeConfigurations = {
-        mattia = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home/mattia
-          ];
-          extraSpecialArgs = { inherit catppuccin; };
-        };
-
-        work = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home/work
-          ];
-          extraSpecialArgs = { inherit catppuccin; };
-        };
-      };
+      homeConfigurations = lib.genAttrs [ "mattia" "work" ] mkHMConfig;
     };
 }

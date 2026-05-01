@@ -1,9 +1,4 @@
-{
-  pkgsStable,
-  pkgs2411,
-  pkgsMaven,
-  ...
-}:
+{ pkgsStable, pkgs2411, ... }:
 
 final: prev: {
   torzu = pkgs2411.torzu;
@@ -13,6 +8,6 @@ final: prev: {
   weston = pkgsStable.weston;
 
   awscli2 = pkgsStable.awscli2;
-  maven36 = pkgsMaven.maven;
-  tomcat8 = pkgsMaven.tomcat8;
+  maven36 = final.callPackage ../packages/maven36 { jdk = final.jdk8; };
+  tomcat8 = final.callPackage ../packages/tomcat8 { };
 }

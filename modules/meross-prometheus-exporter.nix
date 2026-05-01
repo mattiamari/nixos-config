@@ -1,8 +1,8 @@
-{ config, lib, meross-prometheus-exporter, ...}:
+{ config, lib, inputs, ...}:
 with lib;
 let
   cfg = config.services.prometheus.exporters.meross;
-  pkg = meross-prometheus-exporter;
+  pkg = inputs.meross-prometheus-exporter.packages.x86_64-linux.default;
 in
 { 
   options.services.prometheus.exporters.meross = {

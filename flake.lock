@@ -2,7 +2,9 @@
   "nodes": {
     "catppuccin": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1777024856,
@@ -56,7 +58,7 @@
     },
     "meross-prometheus-exporter": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 1723989914,
@@ -75,7 +77,9 @@
     "nixos-wsl": {
       "inputs": {
         "flake-compat": "flake-compat",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1776910211,
@@ -94,16 +98,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1776548001,
-        "narHash": "sha256-ZSK0NL4a1BwVbbTBoSnWgbJy9HeZFXLYQizjb2DPF24=",
-        "owner": "NixOS",
+        "lastModified": 1723891200,
+        "narHash": "sha256-uljX21+D/DZgb9uEFFG2dkkQbPZN+ig4Z6+UCLWFVAk=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b12141ef619e0a9c1c84dc8c684040326f27cdcc",
+        "rev": "a0d6390cb3e82062a35d0288979c45756e481f60",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "owner": "nixos",
+        "ref": "a0d6390cb3e82062a35d0288979c45756e481f60",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -120,21 +124,6 @@
       "original": {
         "id": "nixpkgs",
         "ref": "nixos-24.11",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs-maven": {
-      "locked": {
-        "lastModified": 1619375682,
-        "narHash": "sha256-JdF4lF1L38MT+acEGb+SZ+RaJaSMEgUAT6a9ewP6AZs=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "79cb2cb9869d7bb8a1fac800977d3864212fd97d",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "rev": "79cb2cb9869d7bb8a1fac800977d3864212fd97d",
         "type": "indirect"
       }
     },
@@ -155,38 +144,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1723891200,
-        "narHash": "sha256-uljX21+D/DZgb9uEFFG2dkkQbPZN+ig4Z6+UCLWFVAk=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "a0d6390cb3e82062a35d0288979c45756e481f60",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "a0d6390cb3e82062a35d0288979c45756e481f60",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
-        "lastModified": 1776169885,
-        "narHash": "sha256-l/iNYDZ4bGOAFQY2q8y5OAfBBtrDAaPuRQqWaFHVRXM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
         "lastModified": 1776877367,
         "narHash": "sha256-EHq1/OX139R1RvBzOJ0aMRT3xnWyqtHBRUBuO1gFzjI=",
         "owner": "NixOS",
@@ -206,9 +163,8 @@
         "home-manager": "home-manager",
         "meross-prometheus-exporter": "meross-prometheus-exporter",
         "nixos-wsl": "nixos-wsl",
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs_2",
         "nixpkgs-2411": "nixpkgs-2411",
-        "nixpkgs-maven": "nixpkgs-maven",
         "nixpkgs-stable": "nixpkgs-stable"
       }
     }
