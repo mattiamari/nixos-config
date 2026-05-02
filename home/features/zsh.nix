@@ -13,7 +13,22 @@
 
   home.sessionVariables.COLORTERM = "truecolor";
 
-  programs.fzf.enable = true; # fuzzy finder
-  programs.zoxide.enable = true; # smart `cd` command
+  # fuzzy finder
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # smart `cd` command
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # better `ls`
+  programs.eza = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
 }

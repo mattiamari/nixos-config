@@ -42,11 +42,7 @@
     btop
     htop
     smartmontools
-    hdparm
     gdu
-    tree
-    zip
-    unzip
     p7zip
     file
     just
@@ -84,7 +80,8 @@
 
   environment.shellAliases = {
     ls = "eza";
-    ll = "ls -lah";
-    ".." = "cd ..";
+    l = "eza -lah";
+    ll = "eza -l";
+    lt = "eza --tree";
   };
 }
