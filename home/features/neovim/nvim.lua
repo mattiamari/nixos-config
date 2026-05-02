@@ -31,6 +31,7 @@ vim.o.undodir = vim.fn.expand("~/.nvim/undo")
 
 -- Behaviour
 vim.o.backspace = "indent,eol,start"
+vim.o.mousescroll = "ver:1,hor:1"
 
 
 --

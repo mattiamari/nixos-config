@@ -78,6 +78,9 @@
     programs.ghostty = {
       enable = true;
       enableZshIntegration = true;
+      settings = {
+        # mouse-scroll-multiplier = "precision:1,discrete:3";
+      };
     };
   };
 
