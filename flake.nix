@@ -2,10 +2,6 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-25.05";
-    torzu-src = {
-      url = "git+file:///home/mattia/repos/torzu?submodules=1&rev=eaa9c9e3a46eb5099193b11d620ddfe96b6aec83";
-      flake = false;
-    };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,7 +36,7 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ (import ./overlays { inherit pkgsStable; torzuSrc = inputs.torzu-src; }) ];
+        overlays = [ (import ./overlays { inherit pkgsStable; }) ];
       };
 
       lib = nixpkgs.lib;
@@ -53,35 +49,39 @@
         }:
         lib.nixosSystem {
           specialArgs = { inherit inputs; };
-          modules =
-            [
-              { nixpkgs.pkgs = pkgs; }
-              ./hosts/${hostName}
-            ]
-            ++ lib.optionals (hmUsers != [ ]) [
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = { inherit catppuccin; };
-                home-manager.users = lib.genAttrs hmUsers (name: import ./home/${name});
-              }
-            ]
-            ++ extraModules;
+          modules = [
+            { nixpkgs.pkgs = pkgs; }
+            ./hosts/${hostName}
+          ]
+          ++ lib.optionals (hmUsers != [ ]) [
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit catppuccin; };
+              home-manager.users = lib.genAttrs hmUsers (name: import ./home/${name});
+            }
+          ]
+          ++ extraModules;
         };
 
-      mkHMConfig = name: home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./home/${name} ];
-        extraSpecialArgs = { inherit catppuccin; };
-      };
+      mkHMConfig =
+        name:
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./home/${name} ];
+          extraSpecialArgs = { inherit catppuccin; };
+        };
     in
     {
       nixosConfigurations = {
 
         bart = mkHost {
           hostName = "bart";
-          hmUsers = [ "mattia" "work" ];
+          hmUsers = [
+            "mattia"
+            "work"
+          ];
           extraModules = [ catppuccin.nixosModules.catppuccin ];
         };
 

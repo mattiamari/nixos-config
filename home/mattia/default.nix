@@ -37,7 +37,7 @@
       sshfs
       telegram-desktop
       ungoogled-chromium
-      torzu
+      eden
       prismlauncher
     ];
   };

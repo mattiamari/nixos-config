@@ -149,27 +149,7 @@
         "meross-prometheus-exporter": "meross-prometheus-exporter",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-stable": "nixpkgs-stable",
-        "torzu-src": "torzu-src"
-      }
-    },
-    "torzu-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1740243435,
-        "narHash": "sha256-OzXtuJDVML4HvNjAxTD17h+6uPdIl+HJUuPOZvldcxc=",
-        "ref": "refs/heads/master",
-        "rev": "eaa9c9e3a46eb5099193b11d620ddfe96b6aec83",
-        "revCount": 27206,
-        "submodules": true,
-        "type": "git",
-        "url": "file:///home/mattia/repos/torzu"
-      },
-      "original": {
-        "rev": "eaa9c9e3a46eb5099193b11d620ddfe96b6aec83",
-        "submodules": true,
-        "type": "git",
-        "url": "file:///home/mattia/repos/torzu"
+        "nixpkgs-stable": "nixpkgs-stable"
       }
     }
   },
