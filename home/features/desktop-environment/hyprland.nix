@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
 
   wayland.windowManager.hyprland = {
@@ -58,7 +58,7 @@
           monitorDev = "/dev/i2c-4";
         in
         [
-          "$mod, Q, exec, alacritty"
+          "$mod, Q, exec, ${config.desktop.terminal}"
           "$mod, E, exec, thunar"
           "$mod, SPACE, exec, rofi -show combi"
           "$mod, W, exec, rofi -show calc -modi calc -no-show-match -no-sort"

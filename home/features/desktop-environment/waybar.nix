@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
 
   programs.waybar = {
@@ -41,7 +41,7 @@
 
         cpu = {
           format = "  {usage}%  {avg_frequency}Ghz";
-          on-click = "${pkgs.alacritty}/bin/alacritty -e '${pkgs.btop}/bin/btop'";
+          on-click = "${config.desktop.terminal} -e '${pkgs.btop}/bin/btop'";
         };
 
         memory = {

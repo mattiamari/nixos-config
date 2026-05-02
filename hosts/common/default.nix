@@ -55,6 +55,8 @@
     fzf # fuzzy finder
     eza # 'ls' alternative
     fd # 'find' alternative
+    yazi # terminal file manager
+    ghostty.terminfo # ghostty support for hosts without ghostty installed (e.g. via SSH)
   ];
 
   programs.zsh.enable = true;

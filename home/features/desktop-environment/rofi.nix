@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
 
   programs.rofi = {
@@ -14,7 +14,7 @@
       modes = "drun,window,ssh";
       combi-modes = "window,drun,ssh";
       show-icons = true;
-      terminal = "alacritty";
+      terminal = config.desktop.terminal;
       combi-display-format = " <span weight='light'>{mode}</span> {text}";
     };
   };

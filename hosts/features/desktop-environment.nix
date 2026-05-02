@@ -32,7 +32,7 @@
   environment.systemPackages = with pkgs; [
     pwvucontrol
     easyeffects
-    alacritty
+    ghostty
     ffmpegthumbnailer
     loupe # image viewer
     gnome-calculator
