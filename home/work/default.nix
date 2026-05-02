@@ -1,16 +1,20 @@
 {
   pkgs,
+  lib,
   catppuccin,
+  hasDesktopEnvironment ? true,
   ...
 }:
 {
   imports = [
     ../features/gc.nix
-    ../features/desktop-environment
     ../features/neovim
     ../features/git.nix
     ../features/zsh.nix
     catppuccin.homeModules.catppuccin
+  ]
+  ++ lib.optionals hasDesktopEnvironment [
+    ../features/desktop-environment
   ];
 
   programs.home-manager.enable = true;
@@ -21,23 +25,27 @@
 
     stateVersion = "24.05";
 
-    packages = with pkgs; [
-      openfortivpn
-      (jetbrains.idea.override { vmopts = "-Xmx8192m"; })
-      vscode
-      podman-tui
-      dive
-      maven
-      corretto17
-      nodejs_20
-      pnpm
-      watchexec
-      awscli2
-      spotify
-      ungoogled-chromium
-      libxml2 # for xmllint
-      claude-code
-    ];
+    packages =
+      with pkgs;
+      [
+        openfortivpn
+        (jetbrains.idea.override { vmopts = "-Xmx8192m"; })
+        podman-tui
+        dive
+        maven
+        corretto17
+        nodejs_20
+        pnpm
+        watchexec
+        awscli2
+        libxml2 # for xmllint
+        claude-code
+      ]
+      ++ lib.optionals hasDesktopEnvironment [
+        vscode
+        ungoogled-chromium
+        spotify
+      ];
 
     sessionVariables = {
       JAVA_8_HOME = pkgs.jdk8.home;

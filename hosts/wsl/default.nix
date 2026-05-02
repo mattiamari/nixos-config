@@ -20,6 +20,11 @@
     shell = pkgs.zsh;
   };
 
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
+
   environment.systemPackages = with pkgs; [
     scc
   ];

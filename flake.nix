@@ -46,6 +46,7 @@
           hostName,
           hmUsers ? [ ],
           extraModules ? [ ],
+          hmArgs ? { },
         }:
         lib.nixosSystem {
           specialArgs = { inherit inputs; };
@@ -58,7 +59,10 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit catppuccin; };
+              home-manager.extraSpecialArgs = {
+                inherit catppuccin;
+              }
+              // hmArgs;
               home-manager.users = lib.genAttrs hmUsers (name: import ./home/${name});
             }
           ]
@@ -96,9 +100,13 @@
             inputs.nixos-wsl.nixosModules.default
             catppuccin.nixosModules.catppuccin
           ];
+          hmArgs = {
+            hasDesktopEnvironment = false;
+          };
         };
 
         rescusb = lib.nixosSystem {
+          inherit system;
           modules = [
             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
             ./hosts/rescusb

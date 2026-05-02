@@ -14,7 +14,10 @@ homer-switch:
     nixos-rebuild switch --flake .#homer --target-host mattia@homer --ask-sudo-password --show-trace
 
 wsl-build-image:
-  sudo nix run .#nixosConfigurations.wsl.config.system.build.tarballBuilder
+    sudo nix run .#nixosConfigurations.wsl.config.system.build.tarballBuilder
+
+rescusb-build-image:
+    nix build .#nixosConfigurations.rescusb.config.system.build.isoImage
 
 update:
     nix flake update
