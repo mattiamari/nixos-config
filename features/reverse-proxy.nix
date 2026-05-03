@@ -6,7 +6,7 @@
 }:
 with lib;
 let
-  cfg = config.myCaddy;
+  cfg = config.reverseProxy;
 
   serviceConfig =
     { name, ... }:
@@ -37,8 +37,8 @@ let
   '';
 in
 {
-  options.myCaddy = {
-    enable = mkEnableOption "Custom Caddy service";
+  options.reverseProxy = {
+    enable = mkEnableOption "Enable reverse proxy (Caddy)";
 
     environmentFilePath = mkOption {
       type = types.path;
@@ -86,7 +86,7 @@ in
       adapter = "caddyfile";
 
       globalConfig = ''
-        debug
+        # debug
         metrics
       '';
 

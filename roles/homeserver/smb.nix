@@ -1,7 +1,4 @@
-{ ... }:
-let
-  myConfig = import ./common.nix;
-in
+{ config, ... }:
 {
   services.samba = {
     enable = true;
@@ -12,7 +9,7 @@ in
     # https://wiki.archlinux.org/title/Samba#Improve_throughput
     settings = {
       global = {
-        "invalid users" = ["root"];
+        "invalid users" = [ "root" ];
         "passwd program" = "/run/wrappers/bin/passwd %u";
         security = "user";
 
@@ -34,7 +31,7 @@ in
         writable = "yes";
         browseable = "yes";
         "guest ok" = "no";
-        "valid users" = myConfig.adminUser;
+        "valid users" = config.homeserver.adminUser;
       };
       family = {
         path = "/media/storage/famiglia";

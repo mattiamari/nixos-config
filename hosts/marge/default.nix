@@ -21,9 +21,9 @@
   networking.hostName = "marge";
   networking.networkmanager.enable = true;
 
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "it";
-    xkbVariant = "";
+    variant = "";
   };
 
   console.keyMap = "it";

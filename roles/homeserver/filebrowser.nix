@@ -1,4 +1,4 @@
-{config, ...}:
+{ config, ... }:
 let
   dataDir = "/media/storage/filebrowser";
 in
@@ -15,7 +15,7 @@ in
     group = "filebrowser";
   };
 
-  myCaddy.publicServices.filebrowser = {
+  reverseProxy.publicServices.filebrowser = {
     port = config.services.filebrowser.settings.port;
   };
 
@@ -35,15 +35,21 @@ in
   #   "d ${dataDir} 0750 filebrowser filebrowser -"
   #   "d ${dataDir}/media 0750 filebrowser filebrowser -"
   # ];
-  
+
   systemd.mounts = [
     {
       what = "/media/storage/media";
       where = "${dataDir}/media";
       type = "none";
       options = "bind";
-      requires = [ "media-storage-media.mount" "media-storage-filebrowser.mount" ];
-      after = [ "media-storage-media.mount" "media-storage-filebrowser.mount" ];
+      requires = [
+        "media-storage-media.mount"
+        "media-storage-filebrowser.mount"
+      ];
+      after = [
+        "media-storage-media.mount"
+        "media-storage-filebrowser.mount"
+      ];
       wantedBy = [ "multi-user.target" ];
     }
   ];

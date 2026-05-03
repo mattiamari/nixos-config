@@ -1,16 +1,10 @@
-{ config, pkgs, ... }:
-let
-  myConfig = import ./common.nix;
-in
+{ pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
     ../common
-    ../features/podman.nix
+    ../../roles/homeserver
     ./backup.nix
-    ./smb.nix
-    ./services.nix
-    ./filebrowser.nix
   ];
 
   nix.settings.trusted-users = [ "mattia" ];
@@ -71,67 +65,7 @@ in
       "1.1.1.1"
     ];
 
-    nftables.enable = true;
-
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        22
-        53
-        80
-        443
-        853
-      ];
-      allowedUDPPorts = [
-        53
-        443
-        853
-      ];
-    };
   };
-
-  users.users.${myConfig.adminUser} = {
-    isNormalUser = true;
-    description = "Admin";
-    uid = 1000;
-    group = myConfig.adminUser;
-    extraGroups = [
-      myConfig.adminUser
-      "networkmanager"
-      "wheel"
-      "family"
-      "mediaserver"
-      "syncthing"
-    ];
-    packages = [ ];
-    shell = pkgs.zsh;
-    # linger = true;
-  };
-  users.groups.${myConfig.adminUser} = {
-    gid = 1000;
-  };
-
-  users.users.family = {
-    isNormalUser = true;
-    description = "family";
-    group = "family";
-    uid = 1001;
-  };
-  users.groups.family = {
-    gid = 1001;
-  };
-
-  users.users.mediaserver = {
-    isSystemUser = true;
-    group = "mediaserver";
-    uid = 993;
-  };
-  users.groups.mediaserver = {
-    gid = 993;
-  };
-
-  environment.systemPackages = with pkgs; [
-  ];
 
   services.openssh = {
     enable = true;
@@ -139,31 +73,6 @@ in
       PermitRootLogin = "no";
       PasswordAuthentication = false;
     };
-  };
-
-  services.mysql = {
-    enable = true;
-    package = pkgs.mariadb;
-    ensureUsers = [
-      {
-        name = config.services.mysqlBackup.user;
-        ensurePermissions = {
-          "*.*" = "SELECT, LOCK TABLES";
-        };
-      }
-    ];
-  };
-
-  services.mysqlBackup = {
-    enable = true;
-    calendar = "*-*-* 01:00";
-  };
-
-  services.postgresqlBackup = {
-    enable = true;
-    startAt = "*-*-* 01:00:00";
-    compression = "zstd";
-    compressionLevel = 10;
   };
 
   # TODO
@@ -187,6 +96,17 @@ in
       # Standard -S values do not apply to WD Green drives. "2" seems to be ~30 minutes
       script = "${pkgs.hdparm}/bin/hdparm -S 2 -y /dev/disk/by-id/ata-${disk}";
     };
+
+  homeserver = {
+    adminUser = "mattia";
+    localIP = "192.168.0.20";
+  };
+
+  reverseProxy = {
+    publicDomain = "mattiamari.xyz";
+    privateDomain = "home.mattiamari.xyz";
+    privateNetworkAddr = "192.168.0.0/16";
+  };
 
   system.stateVersion = "23.11";
 }

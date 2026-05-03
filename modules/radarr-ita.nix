@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -22,10 +27,10 @@ in
 {
   options = {
     services.radarrIta = {
-      enable = mkEnableOption (lib.mdDoc "Radarr ITA");
+      enable = mkEnableOption ("Radarr ITA");
 
       package = mkOption {
-        description = lib.mdDoc "Radarr package to use";
+        description = "Radarr package to use";
         default = pkgs.radarr;
         defaultText = literalExpression "pkgs.radarr";
         example = literalExpression "pkgs.radarr";
@@ -34,17 +39,17 @@ in
 
       port = mkOption {
         type = types.port;
-        description = lib.mdDoc "Port for the web server to listen on";
+        description = "Port for the web server to listen on";
       };
-      
+
       user = mkOption {
         type = types.str;
-        description = lib.mdDoc "User account under which Radarr runs.";
+        description = "User account under which Radarr runs.";
       };
 
       group = mkOption {
         type = types.str;
-        description = lib.mdDoc "Group under which Radarr runs.";
+        description = "Group under which Radarr runs.";
       };
     };
   };

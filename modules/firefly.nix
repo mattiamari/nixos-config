@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -16,7 +21,10 @@ let
     version = src.version;
     src = cfg.package;
 
-    buildInputs = [ phpPkg pkgs.php84Packages.composer ];
+    buildInputs = [
+      phpPkg
+      pkgs.php84Packages.composer
+    ];
 
     installPhase = ''
       runHook preInstall
@@ -30,7 +38,7 @@ let
       # Temporary key to make Laravel happy
       APP_KEY=AFeducvAHDtEMbZJ7hVpnNrLUdr6XLs4 php artisan package:discover
       cd -
-      
+
       rm -rf $out/storage
       ln -s ${storageDir} $out/storage
       runHook postInstall
@@ -384,13 +392,13 @@ let
     # Please make sure this URL matches the external URL of your Firefly III installation.
     # It is used to validate specific requests and to generate URLs in emails.
     #
-    APP_URL=https://firefly.${config.myCaddy.publicDomain}
+    APP_URL=https://firefly.${config.reverseProxy.privateDomain}
   '';
 
   initScript = pkgs.writeShellScript "firefly-init.sh" ''
     PHP=${phpPkg}/bin/php
     set -xe
-    
+
     # Init required directories
     cp -r ${cfg.package}/storage/. ${storageDir}/
     chmod -R 750 ${storageDir}/
@@ -409,7 +417,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = pkgs.callPackage ../packages/firefly {};
+      default = pkgs.callPackage ../packages/firefly { };
     };
 
     environmentFilePath = mkOption {
@@ -428,17 +436,20 @@ in
       user = user;
       group = group;
       phpPackage = phpPkg.buildEnv {
-        extensions = { enabled, all }: enabled ++ (with all; [
-          bcmath
-          intl
-          curl
-          zip
-          sodium
-          gd
-          xml
-          mbstring
-          pdo_mysql
-        ]);
+        extensions =
+          { enabled, all }:
+          enabled
+          ++ (with all; [
+            bcmath
+            intl
+            curl
+            zip
+            sodium
+            gd
+            xml
+            mbstring
+            pdo_mysql
+          ]);
       };
       settings = {
         "listen.owner" = config.services.caddy.user;
@@ -481,7 +492,10 @@ in
     };
 
     systemd.services.firefly-cron = {
-      requires = [ "mysql.service" "phpfpm-firefly.service" ];
+      requires = [
+        "mysql.service"
+        "phpfpm-firefly.service"
+      ];
 
       serviceConfig = {
         Type = "oneshot";
@@ -509,16 +523,18 @@ in
       ensureUsers = [
         {
           name = user;
-          ensurePermissions = { "firefly.*" = "ALL PRIVILEGES"; };
+          ensurePermissions = {
+            "firefly.*" = "ALL PRIVILEGES";
+          };
         }
       ];
     };
 
     services.mysqlBackup.databases = [ "firefly" ];
 
-    myCaddy.extraPrivateServices = [
+    reverseProxy.extraPrivateServices = [
       ''
-        @firefly host firefly.${config.myCaddy.privateDomain}
+        @firefly host firefly.${config.reverseProxy.privateDomain}
         handle @firefly {
           root * ${pkg}/public
 

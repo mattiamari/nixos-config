@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -22,28 +27,28 @@ in
 {
   options = {
     services.sonarrIta = {
-      enable = mkEnableOption (lib.mdDoc "Sonarr ITA");
+      enable = mkEnableOption ("Sonarr ITA");
 
       package = mkOption {
         default = pkgs.sonarr;
         defaultText = literalExpression "pkgs.sonarr";
-        description = lib.mdDoc "Sonarr package to use.";
+        description = "Sonarr package to use.";
         type = types.package;
       };
 
       port = mkOption {
         type = types.port;
-        description = lib.mdDoc "Port for the web server to listen on";
+        description = "Port for the web server to listen on";
       };
 
       user = mkOption {
         type = types.str;
-        description = lib.mdDoc "User account under which Sonarr runs.";
+        description = "User account under which Sonarr runs.";
       };
 
       group = mkOption {
         type = types.str;
-        description = lib.mdDoc "Group under which Sonarr runs.";
+        description = "Group under which Sonarr runs.";
       };
     };
   };
