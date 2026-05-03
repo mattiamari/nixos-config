@@ -1,9 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
   ];
+
+  nix.settings.trusted-users = [ "mattia" ];
 
   nix.gc = {
     automatic = true;
@@ -54,6 +56,14 @@
     yazi # terminal file manager
     ghostty.terminfo # ghostty support for hosts without ghostty installed (e.g. via SSH)
   ];
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = lib.mkDefault "no";
+      PasswordAuthentication = false;
+    };
+  };
 
   programs.zsh.enable = true;
   programs.bat.enable = true;

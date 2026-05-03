@@ -7,8 +7,6 @@
     ./smb.nix
   ];
 
-  nix.settings.trusted-users = [ "mattia" ];
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -43,14 +41,8 @@
     abcde
   ];
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      # Allow root login with key for ZFS receive
-      PermitRootLogin = "prohibit-password";
-      PasswordAuthentication = false;
-    };
-  };
+  # Allow root login with key for ZFS receive
+  services.openssh.settings.PermitRootLogin = "prohibit-password";
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

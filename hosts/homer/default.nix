@@ -7,8 +7,6 @@
     ./backup.nix
   ];
 
-  nix.settings.trusted-users = [ "mattia" ];
-
   fileSystems."/".options = [
     "noatime"
     "nodiratime"
@@ -65,14 +63,6 @@
       "1.1.1.1"
     ];
 
-  };
-
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
-    };
   };
 
   # TODO

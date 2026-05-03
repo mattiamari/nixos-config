@@ -29,13 +29,5 @@
     scc
   ];
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
-    };
-  };
-
   system.stateVersion = "23.11";
 }
