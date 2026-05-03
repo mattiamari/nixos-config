@@ -4,7 +4,6 @@
   pkgs,
   ...
 }:
-with lib;
 let
   partA = "7a251ca0-e687-4806-ab32-745239051fe3";
   diskA = "ata-WDC_WD20EZRX-00DC0B0_WD-WCC1T0831876";
@@ -59,7 +58,7 @@ in
   # Backup A
   #
 
-  services.borgbackup.jobs = mapAttrs (name: opts: {
+  services.borgbackup.jobs = lib.mapAttrs (name: opts: {
     startAt = opts.startAt;
     paths = opts.paths;
     exclude = opts.exclude;
@@ -89,7 +88,7 @@ in
   }) backupAJobs;
 
   systemd.mounts =
-    mapAttrsToList (name: opts: {
+    lib.mapAttrsToList (name: opts: {
       what = "/dev/disk/by-uuid/${partA}";
       where = "/mnt/backupa/${name}";
       type = "ext4";
@@ -113,9 +112,9 @@ in
   # mapAttrs' is like mapAttrs but allows the name to be changed as well.
   # See: https://github.com/NixOS/nixpkgs/blob/23.11/lib/attrsets.nix#L506
   systemd.services =
-    mapAttrs' (
+    lib.mapAttrs' (
       name: opts:
-      nameValuePair "borgbackup-job-${name}" {
+      lib.nameValuePair "borgbackup-job-${name}" {
         wants = [ "mnt-backupa-${name}.mount" ];
         after = [ "mnt-backupa-${name}.mount" ];
 

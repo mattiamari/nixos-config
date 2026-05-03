@@ -4,7 +4,6 @@
   pkgs,
   ...
 }:
-with lib;
 let
   cfg = config.reverseProxy;
 
@@ -12,15 +11,15 @@ let
     { name, ... }:
     {
       options = {
-        name = mkOption {
-          type = types.str;
+        name = lib.mkOption {
+          type = lib.types.str;
           default = name;
         };
-        port = mkOption {
-          type = types.port;
+        port = lib.mkOption {
+          type = lib.types.port;
         };
-        extraConfig = mkOption {
-          type = types.str;
+        extraConfig = lib.mkOption {
+          type = lib.types.str;
           default = "";
         };
       };
@@ -38,48 +37,48 @@ let
 in
 {
   options.reverseProxy = {
-    enable = mkEnableOption "Enable reverse proxy (Caddy)";
+    enable = lib.mkEnableOption "Enable reverse proxy (Caddy)";
 
-    environmentFilePath = mkOption {
-      type = types.path;
-      description = mdDoc "Path to an environment file. Used to pass secrets";
+    environmentFilePath = lib.mkOption {
+      type = lib.types.path;
+      description = "Path to an environment file. Used to pass secrets";
     };
 
-    privateDomain = mkOption {
-      type = types.str;
-      description = mdDoc "Domain name for private services";
+    privateDomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Domain name for private services";
     };
 
-    publicDomain = mkOption {
-      type = types.str;
-      description = mdDoc "Domain name for public services";
+    publicDomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Domain name for public services";
     };
 
-    privateNetworkAddr = mkOption {
-      type = types.str;
-      description = mdDoc "LAN IP address";
+    privateNetworkAddr = lib.mkOption {
+      type = lib.types.str;
+      description = "LAN IP address";
     };
 
-    privateServices = mkOption {
-      type = types.attrsOf (types.submodule serviceConfig);
+    privateServices = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule serviceConfig);
       default = { };
-      description = mdDoc "Services accessible only from `lanIP`";
+      description = "Services accessible only from `lanIP`";
     };
 
-    extraPrivateServices = mkOption {
-      type = types.listOf types.str;
+    extraPrivateServices = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = mdDoc "Custom services accessible only from `lanIP`";
+      description = "Custom services accessible only from `lanIP`";
     };
 
-    publicServices = mkOption {
-      type = types.attrsOf (types.submodule serviceConfig);
+    publicServices = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule serviceConfig);
       default = { };
-      description = mdDoc "Services accessible from the internet";
+      description = "Services accessible from the internet";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     services.caddy = {
       enable = true;
       package = pkgs.callPackage ../packages/caddy { };
@@ -115,9 +114,9 @@ in
             abort
           }
 
-          ${concatMapStringsSep "\n" (mkServiceConfig cfg.privateDomain) (attrValues cfg.privateServices)}
+          ${lib.concatMapStringsSep "\n" (mkServiceConfig cfg.privateDomain) (lib.attrValues cfg.privateServices)}
 
-          ${concatStringsSep "\n" cfg.extraPrivateServices}
+          ${lib.concatStringsSep "\n" cfg.extraPrivateServices}
 
           # Abort requests not handled above
           handle {
@@ -137,7 +136,7 @@ in
             resolvers 1.1.1.1
           }
 
-          ${concatMapStringsSep "\n" (mkServiceConfig cfg.publicDomain) (attrValues cfg.publicServices)}
+          ${lib.concatMapStringsSep "\n" (mkServiceConfig cfg.publicDomain) (lib.attrValues cfg.publicServices)}
 
           # Abort requests not handled above
           handle {

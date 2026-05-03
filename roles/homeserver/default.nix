@@ -1,5 +1,4 @@
 { config, lib, ... }:
-with lib;
 {
   imports = [
     ../../features/podman.nix
@@ -20,16 +19,16 @@ with lib;
   ];
 
   options.homeserver = {
-    adminUser = mkOption {
-      type = types.str;
+    adminUser = lib.mkOption {
+      type = lib.types.str;
       default = "admin";
     };
-    secretsDir = mkOption {
-      type = types.str;
+    secretsDir = lib.mkOption {
+      type = lib.types.str;
       default = "/home/${config.homeserver.adminUser}/secrets";
     };
-    localIP = mkOption {
-      type = types.str;
+    localIP = lib.mkOption {
+      type = lib.types.str;
     };
   };
 

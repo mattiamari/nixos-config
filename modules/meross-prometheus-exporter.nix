@@ -1,33 +1,32 @@
 { config, lib, inputs, ...}:
-with lib;
 let
   cfg = config.services.prometheus.exporters.meross;
   pkg = inputs.meross-prometheus-exporter.packages.x86_64-linux.default;
 in
-{ 
+{
   options.services.prometheus.exporters.meross = {
-    enable = mkEnableOption (mdDoc "Meross Prometheus Exporter");
+    enable = lib.mkEnableOption "Meross Prometheus Exporter";
 
-    port = mkOption {
-      type = types.port;
+    port = lib.mkOption {
+      type = lib.types.port;
     };
 
-    secretsFilePath = mkOption {
-      type = types.str;
+    secretsFilePath = lib.mkOption {
+      type = lib.types.str;
     };
 
-    scrapeFrequencySeconds = mkOption {
-      type = types.int;
+    scrapeFrequencySeconds = lib.mkOption {
+      type = lib.types.int;
       default = 300;
     };
 
-    merossApiUrl = mkOption {
-      type = types.str;
+    merossApiUrl = lib.mkOption {
+      type = lib.types.str;
       default = "https://iotx-eu.meross.com";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.services.meross-prometheus-exporter = {
       enable = true;
 

@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.firefly;
 
@@ -413,25 +411,25 @@ let
 in
 {
   options.services.firefly = {
-    enable = mkEnableOption "Firefly III";
+    enable = lib.mkEnableOption "Firefly III";
 
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.callPackage ../packages/firefly { };
     };
 
-    environmentFilePath = mkOption {
-      type = types.path;
-      description = mdDoc "Path to an environment file. Used to pass secrets";
+    environmentFilePath = lib.mkOption {
+      type = lib.types.path;
+      description = "Path to an environment file. Used to pass secrets";
     };
 
-    dbSocketPath = mkOption {
-      type = types.path;
+    dbSocketPath = lib.mkOption {
+      type = lib.types.path;
       default = "/run/mysqld/mysqld.sock";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     services.phpfpm.pools.firefly = {
       user = user;
       group = group;

@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.sonarrIta;
   configDir = "/var/lib/sonarrIta/.config/NzbDrone";
@@ -27,33 +25,33 @@ in
 {
   options = {
     services.sonarrIta = {
-      enable = mkEnableOption ("Sonarr ITA");
+      enable = lib.mkEnableOption "Sonarr ITA";
 
-      package = mkOption {
+      package = lib.mkOption {
         default = pkgs.sonarr;
-        defaultText = literalExpression "pkgs.sonarr";
+        defaultText = lib.literalExpression "pkgs.sonarr";
         description = "Sonarr package to use.";
-        type = types.package;
+        type = lib.types.package;
       };
 
-      port = mkOption {
-        type = types.port;
+      port = lib.mkOption {
+        type = lib.types.port;
         description = "Port for the web server to listen on";
       };
 
-      user = mkOption {
-        type = types.str;
+      user = lib.mkOption {
+        type = lib.types.str;
         description = "User account under which Sonarr runs.";
       };
 
-      group = mkOption {
-        type = types.str;
+      group = lib.mkOption {
+        type = lib.types.str;
         description = "Group under which Sonarr runs.";
       };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.services.sonarrIta = {
       description = "Sonarr ITA";
       after = [ "network.target" ];

@@ -4,7 +4,6 @@
   pkgs,
   ...
 }:
-with lib;
 {
   imports = [
     ../../modules/firefly.nix
@@ -46,9 +45,9 @@ with lib;
   reverseProxy.privateServices.photoprism.port = config.services.photoprism.port;
 
   systemd.services.photoprism.serviceConfig = {
-    User = mkForce "family";
-    Group = mkForce "family";
-    DynamicUser = mkForce false;
+    User = lib.mkForce "family";
+    Group = lib.mkForce "family";
+    DynamicUser = lib.mkForce false;
   };
 
   services.mysql =

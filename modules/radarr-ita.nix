@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.radarrIta;
   configDir = "/var/lib/radarrIta/.config/Radarr";
@@ -27,34 +25,34 @@ in
 {
   options = {
     services.radarrIta = {
-      enable = mkEnableOption ("Radarr ITA");
+      enable = lib.mkEnableOption "Radarr ITA";
 
-      package = mkOption {
+      package = lib.mkOption {
         description = "Radarr package to use";
         default = pkgs.radarr;
-        defaultText = literalExpression "pkgs.radarr";
-        example = literalExpression "pkgs.radarr";
-        type = types.package;
+        defaultText = lib.literalExpression "pkgs.radarr";
+        example = lib.literalExpression "pkgs.radarr";
+        type = lib.types.package;
       };
 
-      port = mkOption {
-        type = types.port;
+      port = lib.mkOption {
+        type = lib.types.port;
         description = "Port for the web server to listen on";
       };
 
-      user = mkOption {
-        type = types.str;
+      user = lib.mkOption {
+        type = lib.types.str;
         description = "User account under which Radarr runs.";
       };
 
-      group = mkOption {
-        type = types.str;
+      group = lib.mkOption {
+        type = lib.types.str;
         description = "Group under which Radarr runs.";
       };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.services.radarrIta = {
       description = "Radarr ITA";
       after = [ "network.target" ];
