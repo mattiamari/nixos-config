@@ -1,13 +1,8 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 {
   imports = [
     ../common
-    ../features/podman.nix
+    ../../features/podman.nix
   ];
 
   wsl.enable = true;
